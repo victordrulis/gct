@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import br.com.drulis.gct.core.Acao;
 import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.DominioInterface;
 import br.com.drulis.gct.dominio.Mensagem;
@@ -29,14 +30,22 @@ public class ContatoViewHelper implements ViewHelperInterface {
         Contato contato = new Contato();
         
         if(acao == null) {
-            acao = "listar";
+            acao = Acao.LISTAR.getAcao();
         }
         
-        if(acao.equals("salvar") && request.getMethod().equals("POST")) {
+        if(acao.equals(Acao.LISTAR.getAcao()) && request.getMethod().equals("GET")) {
             contato.setNome(request.getParameter("nome"));
             contato.setCpfCnpj(request.getParameter("cpfCnpj"));
             contato.setEmail(request.getParameter("email"));
             contato.setTel(request.getParameter("telefone"));
+        }
+        
+        if(acao.equals(Acao.SALVAR.getAcao()) && request.getMethod().equals("POST")) {
+            contato.setNome(request.getParameter("nome"));
+            contato.setCpfCnpj(request.getParameter("cpfCnpj"));
+            contato.setEmail(request.getParameter("email"));
+            contato.setTel(request.getParameter("telefone"));
+            contato.setAtivo(Integer.parseInt(request.getParameter("ativo")));
         }
         
         return contato;
@@ -66,8 +75,8 @@ public class ContatoViewHelper implements ViewHelperInterface {
         }
         
         if(listContato != null && listContato.size() > 1) {
-            request.setAttribute("listContato", listContato);
-            request.getRequestDispatcher("list.jsp").forward(request, response);
+            request.setAttribute("resultado", listContato);
+            request.getRequestDispatcher("/jsp/contato/index.jsp").forward(request, response);
         }
         
         if(listContato != null && listContato.size() == 1) {

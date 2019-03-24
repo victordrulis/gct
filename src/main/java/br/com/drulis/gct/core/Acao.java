@@ -10,13 +10,13 @@ package br.com.drulis.gct.core;
  */
 public enum Acao {
 
-    EXIBIR("Exibir"),
-    CONSULTAR("Consultar"),
-    LISTAR("Listar"),
-    SALVAR("Salvar"),
-    ALTERAR("Alterar"),
-    EXCLUIR("Excluir"),
-    CANCELAR("Cancelar"), 
+    EXIBIR("exibir"),
+    CONSULTAR("consultar"),
+    LISTAR("listar"),
+    SALVAR("salvar"),
+    ALTERAR("alterar"),
+    EXCLUIR("excluir"),
+    CANCELAR("cancelar"), 
     ;
     
     private String acao;

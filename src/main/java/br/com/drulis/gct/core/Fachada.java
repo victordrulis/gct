@@ -12,6 +12,7 @@ import java.util.Map;
 import br.com.drulis.gct.dao.ContatoDao;
 import br.com.drulis.gct.dao.DaoInterface;
 import br.com.drulis.gct.dominio.Contato;
+import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.util.Resultado;
 
 /**
@@ -81,18 +82,19 @@ public class Fachada implements FachadaInterface {
     @Override
     public Resultado consultar(Entidade entidade) {
         this.resultado = new Resultado();
+        List<Entidade> listaEntidade = new ArrayList<Entidade>();
         String nomeEntidade = entidade.getClass().getName();
-        System.out.println("NOME NA FACHADA: " + nomeEntidade);
         DaoInterface dao = this.mapDao.get(nomeEntidade);
 
+        System.out.println("Fachada: " + nomeEntidade);
+
         try {
-            List<Entidade> listaEntidade = dao.consultar(entidade);
+            listaEntidade = dao.consultar(entidade);
             this.resultado.setEntidades(listaEntidade);
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println(this.getClass().getName() + entidade.getClass()
-                    + ": Não foi possível consultar o registro!\n" + e.getMessage());
-            this.resultado.setMensagem("Não foi possível consultar o registro!");
+            System.out.println(this.getClass().getSimpleName() + entidade.getClass() + Mensagem.ERRO_EXIBIR.getDescricao() + "\n" + e.getMessage());
+            this.resultado.setMensagem(Mensagem.ERRO_EXIBIR.getDescricao());
         }
 
         return this.resultado;
