@@ -83,6 +83,7 @@ public class Servlet extends HttpServlet {
         listaCommand.put(Acao.ALTERAR.getAcao(), new AlterarCommand());
         listaCommand.put(Acao.EXCLUIR.getAcao(), new ExcluirCommand());
         listaCommand.put(Acao.LISTAR.getAcao(), new ConsultarCommand());
+        listaCommand.put(Acao.NOVO.getAcao(), new ConsultarCommand());
         
     }
     
@@ -90,20 +91,25 @@ public class Servlet extends HttpServlet {
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println(this.getClass() + ": doGet");
         HttpSession session = request.getSession();
         Resultado resultado = new Resultado();
         String uri = request.getRequestURI();
         String acao = request.getParameter("acao");
+        
+        System.out.println(this.getClass() + ": doGet, " + uri + ", " + acao);
 
         if (acao == null) {
             acao = Acao.LISTAR.getAcao();
-            request.setAttribute("acao", Acao.LISTAR.getAcao());
+            request.setAttribute("acao", acao);
         }
+        
         CommandInterface command = listaCommand.get(acao);
+        
+        System.out.println("command ---------->>> " + command.toString());
+        
         ViewHelperInterface viewHelper = listaViewHelper.get(uri);
         Entidade entidade = (Entidade) viewHelper.getData(request);
-        resultado = (command.execute(entidade));
+        resultado = command.execute(entidade);
         viewHelper.setView(resultado, request, response);
     }
 

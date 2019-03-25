@@ -21,7 +21,7 @@
         <div class="container">
             <h2>Contatos</h2>
             <p>Lista de contatos</p>
-            <a href="contato/novo">Novo Contato</a>
+            <a href="/gct/contato?acao=novo">Novo Contato</a>
         </div>
 
     </div>

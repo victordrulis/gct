@@ -25,10 +25,11 @@ public class ContatoViewHelper implements ViewHelperInterface {
 
     @Override
     public DominioInterface getData(HttpServletRequest request) {
-        System.out.println(this.getClass() + " --getData");
-        String acao = request.getParameter("operacao");
+        String acao = request.getParameter("acao");
         Contato contato = new Contato();
         
+        System.out.println(this.getClass() + " --getData, ACAO = " + acao);
+
         if(acao == null) {
             acao = Acao.LISTAR.getAcao();
         }
@@ -40,12 +41,14 @@ public class ContatoViewHelper implements ViewHelperInterface {
             contato.setTel(request.getParameter("telefone"));
         }
         
-        if(acao.equals(Acao.SALVAR.getAcao()) && request.getMethod().equals("POST")) {
+        if(acao.equals(Acao.SALVAR.getAcao()) || acao.equals(Acao.ALTERAR.getAcao()) && request.getMethod().equals("POST")) {
             contato.setNome(request.getParameter("nome"));
             contato.setCpfCnpj(request.getParameter("cpfCnpj"));
             contato.setEmail(request.getParameter("email"));
             contato.setTel(request.getParameter("telefone"));
-            contato.setAtivo(Integer.parseInt(request.getParameter("ativo")));
+            
+            if(request.getParameter("ativo") != null)
+                contato.setAtivo(1);
         }
         
         return contato;
@@ -53,11 +56,12 @@ public class ContatoViewHelper implements ViewHelperInterface {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void setView(Resultado resultado, HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
-        System.out.println(this.getClass() + " --setView");
+    public void setView(Resultado resultado, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         List<Contato> listContato = new ArrayList<>();
         String mensagem = null;
+        String acao = request.getParameter("acao");
+        
+        System.out.println(this.getClass() + " -- setView");
         
         if(resultado != null) {
             mensagem = resultado.getMensagem();
@@ -67,6 +71,10 @@ public class ContatoViewHelper implements ViewHelperInterface {
         if(mensagem !=null && !mensagem.equals("")) {
             request.setAttribute("mensagem", mensagem);
             request.getRequestDispatcher("mensagem.jsp").forward(request, response);
+        }
+        
+        if(acao != null && acao.equals("novo") || listContato.size() == 0) {
+            request.getRequestDispatcher("/jsp/contato/form.jsp").forward(request, response);
         }
         
         if(listContato == null || listContato.size() < 1) {
@@ -81,9 +89,9 @@ public class ContatoViewHelper implements ViewHelperInterface {
         
         if(listContato != null && listContato.size() == 1) {
             request.setAttribute("contato", listContato.get(0));
-            request.getRequestDispatcher("show.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/contato/show.jsp").forward(request, response);
         }
-
+        
     }
 
 }

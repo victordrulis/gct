@@ -41,7 +41,8 @@ public class ContatoDao extends DaoEntidade {
             ps.setString(3, contato.getTel());
             ps.setString(4, contato.getEmail());
             ps.setInt(5, contato.getAtivo());
-            ps.setInt(6, contato.getUsuarioInclusao().getId());
+//            ps.setInt(6, contato.getUsuarioInclusao().getId());
+            ps.setInt(6, 1);
             ps.setTimestamp(7, dataInclusao);
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();

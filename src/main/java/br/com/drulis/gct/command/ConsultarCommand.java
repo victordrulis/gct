@@ -17,7 +17,7 @@ public class ConsultarCommand extends AbstractCommand {
      */
     @Override
     public Resultado execute(Entidade entidade) {
-        System.out.println("Command: " + Acao.CONSULTAR.getClass().getSimpleName());
+        System.out.println("Command: " + Acao.CONSULTAR);
         return this.fachada.consultar(entidade);
     }
 }
