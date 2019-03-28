@@ -13,6 +13,7 @@ import java.util.List;
 
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.dominio.Contato;
+import br.com.drulis.gct.dominio.Mensagem;
 
 /**
  * @author Victor Drulis Oliveira
@@ -86,7 +87,7 @@ public class ContatoDao extends DaoEntidade {
             this.conectar();
 
             if (contato.getId() > 0) {
-                sql.append(" OR c.contato_id = " + contato.getId());
+                sql.append(" AND c.contato_id = " + contato.getId());
             }
 
             ps = conexao.prepareStatement(sql.toString());
@@ -101,7 +102,7 @@ public class ContatoDao extends DaoEntidade {
                 con.setDataAlteracao(resultado.getDate("c.data_alteracao"));
                 con.setDataInativacao(resultado.getDate("c.data_inativacao"));
                 con.setEmail(resultado.getString("c.email"));
-                System.out.println("Id: " + con.getId() + " Nome: " + con.getNome() + " cpf/cnpj: " + con.getCpfCnpj());
+                System.out.println("Id: " + con.getId() + ", Nome: " + con.getNome() + ", cpf/cnpj: " + con.getCpfCnpj());
                 listaContatos.add(con);
             }
             ps.close();
@@ -118,8 +119,25 @@ public class ContatoDao extends DaoEntidade {
 
     @Override
     public Boolean excluir(Entidade entidade) {
-        // TODO Colocar lógica para excluir
-        System.out.println(this.getClass() + ": Excluir ok.");
-        return false;
+        PreparedStatement ps = null;
+        Contato contato = (Contato) entidade;
+        StringBuilder sql = new StringBuilder();
+        
+        System.out.println(this.getClass() + ": -- Excluir id: " + contato.getId());
+        
+        try {
+            this.conectar();
+            this.conexao.setAutoCommit(false);
+            sql.append("DELETE FROM contato WHERE id = ?");
+            ps = this.conexao.prepareStatement(sql.toString());
+            ps.setInt(1,  contato.getId());
+            ps.executeUpdate();
+            this.conexao.commit();
+            ps.close();
+            return true;
+        } catch(SQLException e) {
+            System.out.println(Mensagem.ERRO_EXCLUIR.getDescricao()+ " --- id: " + contato.getId() + e.getMessage());
+            return false;
+        }
     }
 }

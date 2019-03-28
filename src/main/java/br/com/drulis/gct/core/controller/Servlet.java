@@ -71,6 +71,9 @@ public class Servlet extends HttpServlet {
         listaViewHelper.put("/gct/home", new ChamadoViewHelper());
         listaViewHelper.put("/gct/config", new ConfigViewHelper());
         listaViewHelper.put("/gct/contato", new ContatoViewHelper());
+        listaViewHelper.put("/gct/contato/exibir", new ContatoViewHelper());
+        listaViewHelper.put("/gct/contato/editar", new ContatoViewHelper());
+        listaViewHelper.put("/gct/contato/excluir", new ContatoViewHelper());
         listaViewHelper.put("/gct/chamado", new ChamadoViewHelper());
         listaViewHelper.put("/gct/cliente", new ClienteViewHelper());
         listaViewHelper.put("/gct/dashboard", new DashboardViewHelper());
@@ -78,12 +81,13 @@ public class Servlet extends HttpServlet {
         listaViewHelper.put("/gct/produto", new ProdutoViewHelper());
         listaViewHelper.put("/gct/usuario", new UsuarioViewHelper());
         
-        listaCommand.put(Acao.SALVAR.getAcao(), new InserirCommand());
-        listaCommand.put(Acao.CONSULTAR.getAcao(), new ConsultarCommand());
         listaCommand.put(Acao.ALTERAR.getAcao(), new AlterarCommand());
+        listaCommand.put(Acao.CONSULTAR.getAcao(), new ConsultarCommand());
         listaCommand.put(Acao.EXCLUIR.getAcao(), new ExcluirCommand());
+        listaCommand.put(Acao.EXIBIR.getAcao(), new ConsultarCommand());
         listaCommand.put(Acao.LISTAR.getAcao(), new ConsultarCommand());
         listaCommand.put(Acao.NOVO.getAcao(), new ConsultarCommand());
+        listaCommand.put(Acao.SALVAR.getAcao(), new InserirCommand());
         
     }
     
@@ -103,11 +107,8 @@ public class Servlet extends HttpServlet {
             request.setAttribute("acao", acao);
         }
         
-        CommandInterface command = listaCommand.get(acao);
-        
-        System.out.println("command ---------->>> " + command.toString());
-        
         ViewHelperInterface viewHelper = listaViewHelper.get(uri);
+        CommandInterface command = listaCommand.get(acao);
         Entidade entidade = (Entidade) viewHelper.getData(request);
         resultado = command.execute(entidade);
         viewHelper.setView(resultado, request, response);

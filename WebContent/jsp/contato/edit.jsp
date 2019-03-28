@@ -16,15 +16,16 @@
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 	<div class="row conteudo-topo">
 		<div class="container">
-			<h2>Novo Contato</h2>
-			<p>Inserir dados de contato.</p>
+			<h2>Alterar Contato</h2>
+			<p>Alterar ou atualizar dados de contato.</p>
 		</div>
 
 	</div>
 	<div class="container">
 		<!-- Example row of columns -->
 
-		<form>
+		<form action="/gct/contato" method="post">
+		      <input type="hidden" name="id" id="id" value="${ resultado.getId() }">
 			<div class="row">
 	            <div class="form-group col-md-5">
 	                <label for="nome">Nome</label>

@@ -67,7 +67,7 @@
           <td><%= contato.getCpfCnpj() %></td>
           <td><%= contato.getDataInclusao() %></td>
           <td>
-            <a href="../../jsp/contato/show.jsp"><span>Visualiar</span></a>
+            <a href="/gct/contato?acao=exibir&id=<%= contato.getId() %>"><span>Visualiar</span></a>
           </td>
       </tr>
       <%
