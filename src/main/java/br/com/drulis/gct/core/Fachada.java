@@ -69,9 +69,8 @@ public class Fachada implements FachadaInterface {
                 System.out.println("obj gravado!");
             } catch (SQLException e) {
                 e.printStackTrace();
-                System.out.println(this.getClass().getName() + entidade.getClass()
-                        + ": Não foi possível realizar o registro!\n" + e.getMessage());
-                resultado.setMensagem("Não foi possível realizar o registro!");
+                System.out.println(this.getClass().getName() + Mensagem.ERRO_INSERIR.getDescricao() + "-- Entidade: " + entidade.getClass() + "\n" + e.getMessage());
+                resultado.setMensagem(Mensagem.ERRO_INSERIR.getDescricao());
             }
         }
 

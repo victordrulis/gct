@@ -37,7 +37,7 @@ public class ContatoViewHelper implements ViewHelperInterface {
         if(!acao.equals(Acao.LISTAR.getAcao()) && !acao.equals(Acao.SALVAR.getAcao()) && !acao.equals(Acao.NOVO.getAcao())) {
             String id = request.getParameter("id");
             
-            if(id != null || id != "")
+            if(id != null && id != "")
                 contato.setId(Integer.parseInt(id));
         }
         

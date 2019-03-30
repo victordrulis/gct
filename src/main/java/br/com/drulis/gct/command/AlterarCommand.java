@@ -17,7 +17,7 @@ public class AlterarCommand extends AbstractCommand {
      */
     @Override
     public Resultado execute(Entidade entidade) {
-        System.out.println("Command: " + Acao.ALTERAR.getAcao());
+        System.out.println(this.getClass().getName() + "    -- Acao: " + Acao.ALTERAR.getAcao());
         return this.fachada.alterar(entidade);
     }
 

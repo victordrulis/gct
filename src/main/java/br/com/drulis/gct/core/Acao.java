@@ -13,6 +13,7 @@ public enum Acao {
     ALTERAR("alterar"),
     CANCELAR("cancelar"), 
     CONSULTAR("consultar"),
+    EDITAR("editar"),
     EXCLUIR("excluir"),
     EXIBIR("exibir"),
     LISTAR("listar"),
