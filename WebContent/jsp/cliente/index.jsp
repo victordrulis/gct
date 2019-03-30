@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@page import="br.com.drulis.gct.dominio.Contato"%>
+<%@page import="br.com.drulis.gct.dominio.Cliente"%>
 <%@include file="../fragmentos/header.jsp" %>
 <!DOCTYPE html>
 <html>
@@ -19,7 +21,8 @@
         <div class="container">
             <h2>Clientes</h2>
             <p>Lista    </p>
-            <a href="../../jsp/cliente/form.jsp">Novo Contato</a>
+            <a href="/gct/contato">Contatos</a>
+            <a href="/gct/cliente?acao=novo">Novo Cliente</a>
         </div>
     </div>
     <hr>
