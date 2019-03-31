@@ -28,13 +28,13 @@ public class ContatoViewHelper implements ViewHelperInterface {
         String acao = request.getParameter("acao");
         Contato contato = new Contato();
         
-        System.out.println(this.getClass() + " --getData, ACAO = " + acao + ", URI: " + request.getRequestURI());
+        System.out.println(this.getClass().getSimpleName() + ": --getData, ACAO = " + acao + ", URI: " + request.getRequestURI());
 
         if(acao == null) {
             acao = Acao.LISTAR.getAcao();
         }
         
-        if(!acao.equals(Acao.LISTAR.getAcao()) && !acao.equals(Acao.SALVAR.getAcao()) && !acao.equals(Acao.NOVO.getAcao())) {
+        if(!acao.equals(Acao.SALVAR.getAcao()) && !acao.equals(Acao.NOVO.getAcao())) {
             String id = request.getParameter("id");
             
             if(id != null && id != "")
@@ -72,7 +72,7 @@ public class ContatoViewHelper implements ViewHelperInterface {
         String uri = request.getRequestURI();
         String acao = request.getParameter("acao");
         
-        System.out.println(this.getClass() + " -- setView: Acao = " + acao + ", URI: " + uri);
+        System.out.println(this.getClass().getSimpleName() + ": -- setView: Acao = " + acao + ", URI: " + uri);
         
         if(resultado != null) {
             mensagem = resultado.getMensagem();
@@ -86,7 +86,7 @@ public class ContatoViewHelper implements ViewHelperInterface {
         
         case 1:
             request.setAttribute("resultado", listContato.get(0));
-            if(acao.equals(Acao.ALTERAR.getAcao())) {
+            if(acao != null && acao.equals(Acao.ALTERAR.getAcao())) {
                 request.getRequestDispatcher("/jsp/contato/edit.jsp").forward(request, response);
                 break;
             }

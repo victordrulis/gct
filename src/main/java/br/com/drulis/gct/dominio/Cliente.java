@@ -1,6 +1,8 @@
 package br.com.drulis.gct.dominio;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.dominio.core.TipoContrato;
@@ -13,6 +15,9 @@ import br.com.drulis.gct.dominio.core.TipoContrato;
  */
 public class Cliente extends Entidade {
     
+    private Contato contato;
+    private ClienteStatus status;
+    private List<Produto> listaProdutos;
     private int sla;
     private Date inicioContrato;
     private int duracaoContrato;
@@ -26,14 +31,59 @@ public class Cliente extends Entidade {
      * @param duracaoContrato
      * @param tipoContrato
      */
-    public Cliente(int sla, Date inicioContrato, int duracaoContrato, TipoContrato tipoContrato) {
+    public Cliente(Contato contato, int sla, Date inicioContrato, int duracaoContrato, TipoContrato tipoContrato) {
         super();
+        this.contato = contato;
         this.sla = sla;
         this.inicioContrato = inicioContrato;
         this.duracaoContrato = duracaoContrato;
         this.tipoContrato = tipoContrato;
+        this.status = ClienteStatus.CADASTRADO;
+        this.listaProdutos = new ArrayList<Produto>();
     }
     
+    /**
+     * @return the contato
+     */
+    public Contato getContato() {
+        return contato;
+    }
+
+    /**
+     * @param contato the contato to set
+     */
+    public void setContato(Contato contato) {
+        this.contato = contato;
+    }
+
+    /**
+     * @return the status
+     */
+    public ClienteStatus getStatusCliente() {
+        return status;
+    }
+
+    /**
+     * @param status the status to set
+     */
+    public void setStatusCliente(ClienteStatus status) {
+        this.status = status;
+    }
+
+    /**
+     * @return the listaProdutos
+     */
+    public List<Produto> getListaProdutos() {
+        return listaProdutos;
+    }
+
+    /**
+     * @param listaProdutos the listaProdutos to set
+     */
+    public void setListaProdutos(List<Produto> listaProdutos) {
+        this.listaProdutos = listaProdutos;
+    }
+
     /**
      * @return the sla
      */

@@ -27,7 +27,7 @@ public abstract class DaoEntidade implements DaoInterface {
 
             if(this.conexao == null || this.conexao.isClosed()) {
                 this.conexao = Conexao.getConnection();
-                System.out.println(this.getClass() + ": Conexão iniciada");
+                System.out.println(this.getClass().getSimpleName() + ": Conexão iniciada");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -39,7 +39,7 @@ public abstract class DaoEntidade implements DaoInterface {
         try {
             if(this.conexao != null) {
                 this.conexao.close();
-                System.out.println(this.getClass() + ": Conexão encerrada");
+                System.out.println(this.getClass().getSimpleName() + ": Conexão encerrada");
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -38,27 +38,7 @@ public class Servlet extends HttpServlet {
     
     private static HashMap<String, ViewHelperInterface> listaViewHelper;
     private static HashMap<String, CommandInterface> listaCommand;
-    /*
-    private static String uri  = null;
-    private static String acao = null;
-    private static HttpServletRequest request;
-    private static ViewHelperInterface vh;
-    */
     
-    /*
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-        
-        /**
-         * Executa o método setView do view helper específico passando o resultado
-         * da consulta com os dados de domínio que será colocado no contexto para montar 
-         * as combos
-         *
-        vh.setView(resultado, config);
-        
-    }
-*/
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -100,7 +80,7 @@ public class Servlet extends HttpServlet {
         String uri = request.getRequestURI();
         String acao = request.getParameter("acao");
         
-        System.out.println(this.getClass() + ": doGet, " + uri + ", " + acao);
+        System.out.println(this.getClass().getSimpleName() + ": doGet, URI: " + uri + ", Acao: " + acao);
 
         if (acao == null) {
             acao = Acao.LISTAR.getAcao();

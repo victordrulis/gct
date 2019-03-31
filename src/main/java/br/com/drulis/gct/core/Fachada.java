@@ -9,8 +9,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.drulis.gct.dao.ClienteDao;
 import br.com.drulis.gct.dao.ContatoDao;
 import br.com.drulis.gct.dao.DaoInterface;
+import br.com.drulis.gct.dominio.Cliente;
 import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.util.Resultado;
@@ -27,6 +29,7 @@ public class Fachada implements FachadaInterface {
     private Map<String, DaoInterface> mapDao;
     private Map<String, Map<String, List<StrategyInterface>>> mapRegrasNegocio;
     private Map<String, List<StrategyInterface>> mapRegrasContato;
+    private Map<String, List<StrategyInterface>> mapRegrasCliente;
 
     /**
      * 
@@ -35,9 +38,12 @@ public class Fachada implements FachadaInterface {
         this.mapDao = new HashMap<String, DaoInterface>();
         this.mapRegrasNegocio = new HashMap<String, Map<String, List<StrategyInterface>>>();
         this.mapRegrasContato = new HashMap<String, List<StrategyInterface>>();
+        this.mapRegrasCliente = new HashMap<String, List<StrategyInterface>>();
 
         ContatoDao contatoDao = new ContatoDao();
+        ClienteDao clienteDao = new ClienteDao();
         this.mapDao.put(Contato.class.getName(), contatoDao);
+        this.mapDao.put(Cliente.class.getName(), clienteDao);
 
         List<StrategyInterface> listRegrasSalvar = new ArrayList<StrategyInterface>();
         List<StrategyInterface> listRegrasAlterar = new ArrayList<StrategyInterface>();
@@ -48,8 +54,14 @@ public class Fachada implements FachadaInterface {
         this.mapRegrasContato.put("ALTERAR", listRegrasAlterar);
         this.mapRegrasContato.put("CONSULTAR", listRegrasConsultar);
         this.mapRegrasContato.put("EXCLUIR", listRegrasExcluir);
+        
+        this.mapRegrasCliente.put("SALVAR", listRegrasSalvar);
+        this.mapRegrasCliente.put("ALTERAR", listRegrasAlterar);
+        this.mapRegrasCliente.put("CONSULTAR", listRegrasConsultar);
+        this.mapRegrasCliente.put("EXCLUIR", listRegrasExcluir);
 
         this.mapRegrasNegocio.put(Contato.class.getName(), mapRegrasContato);
+        this.mapRegrasNegocio.put(Cliente.class.getName(), mapRegrasCliente);
     }
 
     @Override
@@ -66,10 +78,10 @@ public class Fachada implements FachadaInterface {
                 List<Entidade> entidades = new ArrayList<Entidade>();
                 entidades.add(entidade);
                 resultado.setEntidades(entidades);
-                System.out.println("obj gravado!");
+                System.out.println(this.getClass().getSimpleName() + ": obj gravado!");
             } catch (SQLException e) {
                 e.printStackTrace();
-                System.out.println(this.getClass().getName() + Mensagem.ERRO_INSERIR.getDescricao() + "-- Entidade: " + entidade.getClass() + "\n" + e.getMessage());
+                System.out.println(this.getClass().getSimpleName() + Mensagem.ERRO_INSERIR.getDescricao() + "-- Entidade: " + entidade.getClass() + "\n" + e.getMessage());
                 resultado.setMensagem(Mensagem.ERRO_INSERIR.getDescricao());
             }
         }
@@ -85,7 +97,7 @@ public class Fachada implements FachadaInterface {
         String nomeEntidade = entidade.getClass().getName();
         DaoInterface dao = this.mapDao.get(nomeEntidade);
 
-        System.out.println("Fachada: " + nomeEntidade);
+        System.out.println(this.getClass().getSimpleName() + ": " + nomeEntidade);
 
         try {
             listaEntidade = dao.consultar(entidade);
@@ -116,9 +128,8 @@ public class Fachada implements FachadaInterface {
                 System.out.println("obj alterado!");
             } catch (SQLException e) {
                 e.printStackTrace();
-                System.out.println(this.getClass().getName() + entidade.getClass()
-                        + ": Não foi possível atualizar o registro!" + e.getMessage());
-                resultado.setMensagem("Não foi possível atualizar o registro!");
+                System.out.println(this.getClass().getSimpleName() + entidade.getClass() + Mensagem.ERRO_ATUALIZAR.getDescricao() + ":\n" + e.getMessage());
+                resultado.setMensagem(Mensagem.ERRO_ATUALIZAR.getDescricao());
             }
         }
 
@@ -143,9 +154,8 @@ public class Fachada implements FachadaInterface {
                 System.out.println("obj excluído!");
             } catch (SQLException e) {
                 e.printStackTrace();
-                System.out.println(this.getClass().getName() + entidade.getClass()
-                        + ": Não foi possível excluir o registro!" + e.getMessage());
-                resultado.setMensagem("Não foi possível excluir o registro!");
+                System.out.println(this.getClass().getName() + entidade.getClass() + Mensagem.ERRO_EXCLUIR.getDescricao() + ":\n" + e.getMessage());
+                resultado.setMensagem(Mensagem.ERRO_EXCLUIR.getDescricao());
             }
         }
 

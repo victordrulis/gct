@@ -25,7 +25,7 @@ public class ContatoDao extends DaoEntidade {
 
     @Override
     public Entidade inserir(Entidade entidade) {
-        System.out.println(this.getClass() + ": Inserir");
+        System.out.println(this.getClass().getSimpleName() + ": Inserir");
         PreparedStatement ps = null;
         Contato contato = (Contato) entidade;
         StringBuilder sql = new StringBuilder();
@@ -47,21 +47,21 @@ public class ContatoDao extends DaoEntidade {
             ps.setTimestamp(7, dataInclusao);
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
-            System.out.println("ResultSet: " + rs.getFetchSize());
+            System.out.println(this.getClass().getSimpleName() + "ResultSet: " + rs.getFetchSize());
             while(rs.next()) {
                 contato.setId(rs.getInt(1));
             }
             conexao.commit();
             ps.close();
             rs.close();
-            System.out.println(this.getClass().getName() + Mensagem.OK_INSERIR.getDescricao() +" id: " + contato.getId());
+            System.out.println(this.getClass().getSimpleName() + Mensagem.OK_INSERIR.getDescricao() +" id: " + contato.getId());
             return contato;
         } catch (SQLException e) {
-            System.out.println(this.getClass().getName() + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e);
+            System.out.println(this.getClass().getSimpleName() + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e);
             e.printStackTrace();
             return null;
         } catch (Exception e) {
-            System.out.println(this.getClass().getName() + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e);
+            System.out.println(this.getClass().getSimpleName() + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e);
             e.printStackTrace();
             return null;
         }
@@ -100,18 +100,18 @@ public class ContatoDao extends DaoEntidade {
             ps.setInt(4, contato.getId());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
-            System.out.println(this.getClass().getName() + "   -- ResultSet: " + rs.getFetchSize());
+            System.out.println(this.getClass().getSimpleName() + "   -- ResultSet: " + rs.getFetchSize());
             conexao.commit();
             ps.close();
             rs.close();
-            System.out.println(this.getClass().getName() + ": " + Mensagem.OK_ATUALIZAR.getDescricao() + "id: " + contato.getId());
+            System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.OK_ATUALIZAR.getDescricao() + "id: " + contato.getId());
             return contato;
         } catch (SQLException e) {
-            System.out.println(this.getClass().getName() + Mensagem.ERRO_ATUALIZAR + ": " + e.getMessage());
+            System.out.println(this.getClass().getSimpleName() + Mensagem.ERRO_ATUALIZAR + ": " + e.getMessage());
             e.printStackTrace();
             return null;
         } catch (Exception e) {
-            System.out.println(this.getClass().getName() + Mensagem.ERRO_ATUALIZAR + ": " + e.getMessage());
+            System.out.println(this.getClass().getSimpleName() + Mensagem.ERRO_ATUALIZAR + ": " + e.getMessage());
             e.printStackTrace();
             return null;
         }
@@ -151,12 +151,12 @@ public class ContatoDao extends DaoEntidade {
                 listaContatos.add(con);
             }
             ps.close();
-            System.out.println(this.getClass() + ": " + Mensagem.OK_CONSULTAR.getDescricao() + "\n   -- Elementos encontrados = " + listaContatos.size());
+            System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.OK_CONSULTAR.getDescricao() + "\n   -- Elementos encontrados = " + listaContatos.size());
         } catch (SQLException e) {
-            System.out.println(this.getClass() + ": " + Mensagem.ERRO_NAO_ENCONTRADO.getDescricao()+ "\n" + e.getMessage());
+            System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.ERRO_NAO_ENCONTRADO.getDescricao()+ "\n" + e.getMessage());
             e.printStackTrace();
         } catch (Exception e) {
-            System.out.println(this.getClass() + ": " + Mensagem.ERRO_EXIBIR.getDescricao() + e.getMessage());
+            System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.ERRO_EXIBIR.getDescricao() + e.getMessage());
             e.printStackTrace();
         }
         return listaContatos;
@@ -168,7 +168,7 @@ public class ContatoDao extends DaoEntidade {
         Contato contato = (Contato) entidade;
         StringBuilder sql = new StringBuilder();
         
-        System.out.println(this.getClass() + ": -- Excluir id: " + contato.getId());
+        System.out.println(this.getClass().getSimpleName() + ": -- Excluir id: " + contato.getId());
         
         try {
             this.conectar();
@@ -181,7 +181,7 @@ public class ContatoDao extends DaoEntidade {
             ps.close();
             return true;
         } catch(SQLException e) {
-            System.out.println(Mensagem.ERRO_EXCLUIR.getDescricao()+ " --- id: " + contato.getId() + e.getMessage());
+            System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.ERRO_EXCLUIR.getDescricao()+ " --- id: " + contato.getId() + e.getMessage());
             return false;
         }
     }

@@ -2,6 +2,7 @@ package br.com.drulis.gct.viewhelper;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -9,8 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import br.com.drulis.gct.core.Acao;
-import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.Cliente;
+import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.DominioInterface;
 import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.util.Resultado;
@@ -28,8 +29,14 @@ public class ClienteViewHelper implements ViewHelperInterface {
     public DominioInterface getData(HttpServletRequest request) {
         String acao = request.getParameter("acao");
         Cliente cliente = new Cliente();
+        Contato contato = new Contato();
         
-        System.out.println(this.getClass().getName() + " --getData, ACAO = " + acao + ", URI: " + request.getRequestURI());
+        String contatoId = request.getParameter("contatoId");
+        String sla = request.getParameter("sla");
+        String dataInicioContrato = request.getParameter("dataInicioContrato");
+        String duracaoContrato = request.getParameter("duracaoContrato");
+        
+        System.out.println(this.getClass().getSimpleName() + ": --getData, ACAO: " + acao + ", URI: " + request.getRequestURI());
 
         if(acao == null) {
             acao = Acao.LISTAR.getAcao();
@@ -43,13 +50,24 @@ public class ClienteViewHelper implements ViewHelperInterface {
         }
         
         if(!acao.equals(Acao.EXCLUIR.getAcao()) || acao.equals(Acao.SALVAR.getAcao()) && request.getMethod().equals("GET")) {
-//            cliente.getSla(Integer.parseInt(request.getAttribute("sla")));
+//            contato.setId(Integer.parseInt(contatoId));
+            
+            cliente.setContato(contato);
+            cliente.setSla(Integer.parseUnsignedInt(sla));
+//            cliente.setDuracaoContrato(duracaoContrato);
+            cliente.setDuracaoContrato(Integer.parseInt(duracaoContrato));
             
             if(request.getParameter("ativo") != null)
                 cliente.setAtivo(1);
         }
         
         if(acao.equals(Acao.SALVAR.getAcao()) && request.getMethod().equals("POST")) {
+            contato.setId(Integer.parseInt(contatoId));
+            
+            cliente.setContato(contato);
+            cliente.setSla(Integer.parseUnsignedInt(sla));
+//            cliente.setDuracaoContrato(duracaoContrato);
+            cliente.setDuracaoContrato(Integer.parseInt(duracaoContrato));
             
             if(request.getParameter("ativo") != null)
                 cliente.setAtivo(1);
@@ -61,30 +79,37 @@ public class ClienteViewHelper implements ViewHelperInterface {
     @SuppressWarnings("unchecked")
     @Override
     public void setView(Resultado resultado, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        List<Contato> listContato = new ArrayList<>();
+        List<Cliente> listCliente = new ArrayList<>();
         String mensagem = null;
         String uri = request.getRequestURI();
         String acao = request.getParameter("acao");
         
-        System.out.println(this.getClass() + " -- setView: Acao = " + acao + ", URI: " + uri);
+        System.out.println(this.getClass().getSimpleName() + " -- setView: Acao = " + acao + ", URI: " + uri);
         
         if(resultado != null) {
             mensagem = resultado.getMensagem();
-            listContato = (List<Contato>) (Object) resultado.getEntidades();
+            listCliente = (List<Cliente>) (Object) resultado.getEntidades();
         }
         
-        switch(listContato.size()) {
+        switch(listCliente.size()) {
         case 0:
-            request.getRequestDispatcher("/jsp/contato/form.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/cliente/form.jsp").forward(request, response);
             break;
         
         case 1:
-            request.setAttribute("resultado", listContato.get(0));
-            if(acao.equals(Acao.ALTERAR.getAcao())) {
-                request.getRequestDispatcher("/jsp/contato/edit.jsp").forward(request, response);
+            if(acao == null || acao.equals(Acao.LISTAR.getAcao())) {
+                request.setAttribute("resultado", listCliente);
+                request.getRequestDispatcher("/jsp/cliente/index.jsp").forward(request, response);
                 break;
             }
-            request.getRequestDispatcher("/jsp/contato/show.jsp").forward(request, response);
+            
+            request.setAttribute("resultado", listCliente.get(0));
+            
+            if(acao != null && acao.equals(Acao.ALTERAR.getAcao())) {
+                request.getRequestDispatcher("/jsp/cliente/edit.jsp").forward(request, response);
+                break;
+            }
+            request.getRequestDispatcher("/jsp/cliente/show.jsp").forward(request, response);
             break;
         
         default:
@@ -95,18 +120,18 @@ public class ClienteViewHelper implements ViewHelperInterface {
             }
             
             if(acao != null && acao.equals(Acao.NOVO.getAcao())) {
-                request.getRequestDispatcher("/jsp/contato/form.jsp").forward(request, response);
+                request.getRequestDispatcher("/jsp/cliente/form.jsp").forward(request, response);
                 break;
             }
             
-            if(listContato == null || listContato.size() < 1) {
+            if(listCliente == null || listCliente.size() < 1) {
                 request.setAttribute("mensagem", Mensagem.ERRO_NAO_ENCONTRADO.getDescricao());
                 request.getRequestDispatcher("mensagem.jsp").forward(request, response);
                 break;
             }
             
-            request.setAttribute("resultado", listContato);
-            request.getRequestDispatcher("/jsp/contato/index.jsp").forward(request, response);
+            request.setAttribute("resultado", listCliente);
+            request.getRequestDispatcher("/jsp/cliente/index.jsp").forward(request, response);
             break;
         }
         

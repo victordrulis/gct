@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@page import="br.com.drulis.gct.dominio.Contato"%>
 <%@page import="br.com.drulis.gct.dominio.Cliente"%>
+<%@page import="java.util.List"%>
 <%@include file="../fragmentos/header.jsp" %>
 <!DOCTYPE html>
 <html>
@@ -21,7 +22,7 @@
         <div class="container">
             <h2>Clientes</h2>
             <p>Lista    </p>
-            <a href="/gct/contato">Contatos</a>
+            <a href="/gct/cliente">Clientes</a>
             <a href="/gct/cliente?acao=novo">Novo Cliente</a>
         </div>
     </div>
@@ -39,15 +40,14 @@
 	    </div>
     </div>
 </div>
-    
     <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
 		<thead>
 		  <tr>
 		      <th class="th-sm">Nome</th>
-		      <th class="th-sm">Email</th>
-			  <th class="th-sm">Telefone</th>
-	          <th class="th-sm">CPF/CNPJ</th>
-			  <th class="th-sm">Cadastrado em</th>
+		      <th class="th-sm">SLA</th>
+			  <th class="th-sm">Início do Contrato</th>
+	          <th class="th-sm">Duração</th>
+			  <th class="th-sm">Ativo</th>
 			  <th class="th-sm">Produtos</th>
 			  <th class="th-sm">Ação</th>
 		  </tr>
@@ -66,15 +66,21 @@
             </ul>
       </td>
       <td>
-            <a href="../../jsp/cliente/show.jsp"><span>Visualizar</span></a>
+            <a href="/gct/cliente?acao=exibir&id=1"><span>Visualizar</span></a>
       </td>
     </tr>
+    <%
+       List<Cliente> resultado = (List<Cliente>) request.getAttribute("resultado");
+   
+       if(resultado != null) {
+           for(Cliente cliente : resultado) {
+   %>
     <tr>
-      <td>Garrett Winters</td>
-      <td>email@exemplo.com.br</td>
-      <td>(99) 9999-0000</td>
-      <td>123.123.123-12</td>
-      <td>2011/07/25</td>
+      <td><%= cliente.getContato().getNome() %></td>
+      <td><%= cliente.getSla() %></td>
+      <td><%= cliente.getInicioContrato() %></td>
+      <td><%= cliente.getDuracaoContrato() %></td>
+      <td><%= cliente.getAtivo() %></td>
       <td>
             <ul>
                 <li>Produto 1</li>
@@ -82,122 +88,13 @@
             </ul>
       </td>
       <td>
-        <a href="../../jsp/cliente/show.jsp"><span>Visualizar</span></a>
+            <a href="/gct/cliente?acao=exibir&id=<%= cliente.getId() %>"><span>Visualizar</span></a>
       </td>
     </tr>
-    <tr>
-      <td>Ashton Cox</td>
-      <td>email@exemplo.com.br</td>
-      <td>(99) 9999-0000</td>
-      <td>123.123.123-12</td>
-      <td>2009/01/12</td>
-      <td>
-            <ul>
-                <li>Produto 1</li>
-                <li>Produto 2</li>
-            </ul>
-      </td>
-      <td>
-            <a href="../../jsp/cliente/show.jsp"><span>Visualizar</span></a>
-      </td>
-    </tr>
-    <tr>
-      <td>Cedric Kelly</td>
-      <td>email@exemplo.com.br</td>
-      <td>(99) 9999-0000</td>
-      <td>123.123.123-12</td>
-      <td>2012/03/29</td>
-      <td>
-            <ul>
-                <li>Produto 1</li>
-                <li>Produto 2</li>
-            </ul>
-      </td>
-      <td>
-            <a href="../../jsp/cliente/show.jsp"><span>Visualizar</span></a>
-      </td>
-    </tr>
-    <tr>
-      <td>Airi Satou</td>
-      <td>email@exemplo.com.br</td>
-      <td>(99) 9999-0000</td>
-      <td>123.123.123-12</td>
-      <td>2008/11/28</td>
-      <td>
-            <ul>
-                <li>Produto 1</li>
-                <li>Produto 2</li>
-            </ul>
-      </td>
-      <td>
-            <a href="../../jsp/cliente/show.jsp"><span>Visualizar</span></a>
-      </td>
-    </tr>
-    <tr>
-      <td>Brielle Williamson</td>
-      <td>email@exemplo.com.br</td>
-      <td>(99) 9999-0000</td>
-      <td>123.123.123-12</td>
-      <td>2012/12/02</td>
-      <td>
-            <ul>
-                <li>Produto 1</li>
-                <li>Produto 2</li>
-            </ul>
-      </td>
-      <td>
-            <a href="../../jsp/cliente/show.jsp"><span>Visualizar</span></a>
-      </td>
-    </tr>
-    <tr>
-      <td>Herrod Chandler</td>
-      <td>email@exemplo.com.br</td>
-      <td>(99) 9999-0000</td>
-      <td>123.123.123-12</td>
-      <td>2012/08/06</td>
-      <td>
-            <ul>
-                <li>Produto 1</li>
-                <li>Produto 2</li>
-            </ul>
-      </td>
-      <td>
-            <a href="../../jsp/cliente/show.jsp"><span>Visualizar</span></a>
-      </td>
-    </tr>
-    <tr>
-      <td>Rhona Davidson</td>
-      <td>email@exemplo.com.br</td>
-      <td>(99) 9999-0000</td>
-      <td>123.123.123-12</td>
-      <td>2010/10/14</td>
-      <td>
-            <ul>
-                <li>Produto 1</li>
-                <li>Produto 2</li>
-            </ul>
-      </td>
-      <td>
-            <a href="../../jsp/cliente/show.jsp"><span>Visualizar</span></a>
-      </td>
-    </tr>
-    <tr>
-      <td>Colleen Hurst</td>
-      <td>email@exemplo.com.br</td>
-      <td>(99) 9999-0000</td>
-      <td>123.123.123-12</td>
-      <td>2009/09/15</td>
-      <td>
-            <ul>
-                <li>Produto 1</li>
-                <li>Produto 2</li>
-            </ul>
-      </td>
-      <td>
-            <a href="../../jsp/cliente/show.jsp"><span>Visualizar</span></a>
-      </td>
-    </tr>
-    
+    <%
+           }
+       }
+    %>
   </tbody>
 </table>
 </div>
