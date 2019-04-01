@@ -1,6 +1,8 @@
 package br.com.drulis.gct.viewhelper;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,6 +32,7 @@ public class ClienteViewHelper implements ViewHelperInterface {
         String acao = request.getParameter("acao");
         Cliente cliente = new Cliente();
         Contato contato = new Contato();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         
         String contatoId = request.getParameter("contatoId");
         String sla = request.getParameter("sla");
@@ -50,12 +53,18 @@ public class ClienteViewHelper implements ViewHelperInterface {
         }
         
         if(!acao.equals(Acao.EXCLUIR.getAcao()) || acao.equals(Acao.SALVAR.getAcao()) && request.getMethod().equals("GET")) {
-//            contato.setId(Integer.parseInt(contatoId));
             
-            cliente.setContato(contato);
-            cliente.setSla(Integer.parseUnsignedInt(sla));
-//            cliente.setDuracaoContrato(duracaoContrato);
-            cliente.setDuracaoContrato(Integer.parseInt(duracaoContrato));
+            try {
+                contato.setId((contatoId != null) ? Integer.parseInt(contatoId) : 0);
+                
+                cliente.setContato(contato);
+                cliente.setSla((sla != null) ? Integer.parseUnsignedInt(sla) : 0);
+                cliente.setInicioContrato((dataInicioContrato != null) ? dateFormat.parse(dataInicioContrato) : new Date());
+                cliente.setDuracaoContrato((duracaoContrato != null) ? Integer.parseInt(duracaoContrato) : 0);
+            } catch (ParseException e) {
+                System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.ERRO_CONVERTER_DADOS.getDescricao() + "; \n" + e.getMessage());
+                e.printStackTrace();
+            }
             
             if(request.getParameter("ativo") != null)
                 cliente.setAtivo(1);

@@ -80,12 +80,12 @@ public class Servlet extends HttpServlet {
         String uri = request.getRequestURI();
         String acao = request.getParameter("acao");
         
-        System.out.println(this.getClass().getSimpleName() + ": doGet, URI: " + uri + ", Acao: " + acao);
-
         if (acao == null) {
             acao = Acao.LISTAR.getAcao();
             request.setAttribute("acao", acao);
         }
+        
+        System.out.println(this.getClass().getSimpleName() + ": doGet, URI: " + uri + ", Acao: " + acao);
         
         ViewHelperInterface viewHelper = listaViewHelper.get(uri);
         CommandInterface command = listaCommand.get(acao);

@@ -53,22 +53,6 @@
 		  </tr>
 		</thead>
   <tbody>
-    <tr>
-      <td>Tiger Nixon</td>
-      <td>email@exemplo.com.br</td>
-      <td>(99) 9999-0000</td>
-      <td>123.123.123-12</td>
-      <td>2011/04/25</td>
-      <td>
-            <ul>
-                <li>Produto 1</li>
-                <li>Produto 2</li>
-            </ul>
-      </td>
-      <td>
-            <a href="/gct/cliente?acao=exibir&id=1"><span>Visualizar</span></a>
-      </td>
-    </tr>
     <%
        List<Cliente> resultado = (List<Cliente>) request.getAttribute("resultado");
    
@@ -76,9 +60,11 @@
            for(Cliente cliente : resultado) {
    %>
     <tr>
+      <%-- <td><%= cliente.getContato().getNome() %></td> --%>
       <td><%= cliente.getContato().getNome() %></td>
       <td><%= cliente.getSla() %></td>
-      <td><%= cliente.getInicioContrato() %></td>
+      <%-- <td><%= cliente.getInicioContrato() %></td> --%>
+      <td><%= cliente.getDataInclusao() %></td>
       <td><%= cliente.getDuracaoContrato() %></td>
       <td><%= cliente.getAtivo() %></td>
       <td>

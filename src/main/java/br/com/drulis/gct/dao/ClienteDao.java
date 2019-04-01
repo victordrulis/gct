@@ -11,6 +11,7 @@ import java.util.List;
 
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.dominio.Cliente;
+import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.Mensagem;
 
 /**
@@ -40,7 +41,7 @@ public class ClienteDao extends DaoEntidade {
         List<Entidade> listaClientes = new ArrayList<Entidade>();
         StringBuilder sql = new StringBuilder();
 
-        sql.append("SELECT cli.* FROM cliente cli WHERE 1 = 1 ");
+        sql.append("SELECT cli.*, c.* FROM cliente cli LEFT JOIN contato c ON c.contato_id = cli.contato_id WHERE 1 = 1 ");
         
         try {
             this.conectar();
@@ -53,14 +54,21 @@ public class ClienteDao extends DaoEntidade {
             ResultSet resultado = ps.executeQuery();
 
             while (resultado.next()) {
-                Cliente con = new Cliente();
-                con.setId(resultado.getInt("cli.cliente_id"));
-                con.setSla(resultado.getInt("cli.sla"));
-                con.setDataInclusao(resultado.getDate("cli.data_inclusao"));
-                con.setDataAlteracao(resultado.getDate("cli.data_alteracao"));
-                con.setDataInativacao(resultado.getDate("cli.data_inativacao"));
-                System.out.println("Id: " + con.getId() + ", SLA: " + con.getSla());
-                listaClientes.add(con);
+                Cliente cli = new Cliente();
+                Contato con = new Contato();
+                
+                con.setId(resultado.getInt("c.contato_id"));
+                con.setNome(resultado.getString(("c.nome")));
+                con.setEmail(resultado.getString(("c.Email")));
+                
+                cli.setContato(con);
+                cli.setId(resultado.getInt("cli.cliente_id"));
+                cli.setSla(resultado.getInt("cli.sla"));
+                cli.setDataInclusao(resultado.getDate("cli.data_inclusao"));
+                cli.setDataAlteracao(resultado.getDate("cli.data_alteracao"));
+                cli.setDataInativacao(resultado.getDate("cli.data_inativacao"));
+                System.out.println("Id: " + cli.getId() + ", Nome: " + cli.getContato().getNome() + ", SLA: " + cli.getSla());
+                listaClientes.add(cli);
             }
             ps.close();
             this.encerrar();

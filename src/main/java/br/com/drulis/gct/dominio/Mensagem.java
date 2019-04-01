@@ -19,6 +19,7 @@ public enum Mensagem {
     ERRO_INSERIR("Erro ao inserir registro."),
     ERRO_ATUALIZAR("Erro ao atualizar registro."),
     ERRO_EXCLUIR("Erro ao excluir registro."),
+    ERRO_CONVERTER_DADOS("Erro ao converter dados."),
     ;
     
     private String descricao;
