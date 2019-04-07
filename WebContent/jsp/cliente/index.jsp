@@ -21,8 +21,7 @@
 <div class="row conteudo-topo">
         <div class="container">
             <h2>Clientes</h2>
-            <p>Lista    </p>
-            <a href="/gct/cliente">Clientes</a>
+            <p>Todos os clientes cadastrados.</p>
             <a href="/gct/cliente?acao=novo">Novo Cliente</a>
         </div>
     </div>
@@ -40,9 +39,10 @@
 	    </div>
     </div>
 </div>
-    <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+    <table id="listaCliente" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
 		<thead>
 		  <tr>
+		      <th class="th-sm">ID</th>
 		      <th class="th-sm">Nome</th>
 		      <th class="th-sm">SLA</th>
 			  <th class="th-sm">Início do Contrato</th>
@@ -60,10 +60,9 @@
            for(Cliente cliente : resultado) {
    %>
     <tr>
-      <%-- <td><%= cliente.getContato().getNome() %></td> --%>
+      <td><%= cliente.getId() %></td>
       <td><%= cliente.getContato().getNome() %></td>
       <td><%= cliente.getSla() %></td>
-      <%-- <td><%= cliente.getInicioContrato() %></td> --%>
       <td><%= cliente.getDataInclusao() %></td>
       <td><%= cliente.getDuracaoContrato() %></td>
       <td><%= cliente.getAtivo() %></td>

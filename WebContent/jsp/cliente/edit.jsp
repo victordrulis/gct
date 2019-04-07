@@ -1,5 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@page import="br.com.drulis.gct.dominio.Cliente"%>
+<%@page import="br.com.drulis.gct.dominio.Contato"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,119 +14,51 @@
 </head>
 <body>
 	<%@include file="../fragmentos/nav.jsp"%>
+    <%
+       System.out.println(this.getClass().getSimpleName() + "-- Formulário de edição");
+       Cliente cliente = (Cliente) request.getAttribute("resultado");
+    %>
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 	<div class="row conteudo-topo">
 		<div class="container">
-			<h2>Novo Cliente</h2>
-			<p>Inserir dados do cliente.</p>
+			<h2>Alterar Cliente - ID: <%= cliente.getId() %></h2>
+			<p>Alterar ou atualizar dados de cliente.</p>
 		</div>
 
 	</div>
 	<div class="container">
-		<!-- Example row of columns -->
-
-		<form action="../../jsp/cliente/list.jsp">
+		<form action="/gct/contato?acao=alterar" method="post">
+		      <input type="hidden" name="id" id="id" value="<%= cliente.getId() %>">
 			<div class="row">
-                <div class="form-group col-md-3">
-                    <label for="contato"><strong>Contato</strong></label>
-                    <select class="form-control" id="contato">
-                        <option>Contato 1</option>
-                        <option>Contato 2</option>
-                        <option>Contato 3</option>
-                        <option>Contato 4</option>
-                        <option>Contato 5</option>
-                    </select>
-                </div>
-            </div>
-	        <hr>
-	        <h5><strong>Produtos contratados</strong></h5>
-	        <div class="row">
-                <div class="form-group col-md-3">
-                    <label for="produto">Produto</label>
-                    <select class="form-control" id="produto">
-                        <option>Produto 1</option>
-                        <option>Produto 2</option>
-                        <option>Produto 3</option>
-                        <option>Produto 4</option>
-                        <option>Produto 5</option>
-                    </select>
-                </div>
-                
-                <div class="form-group col-md-2">
-                    <label for="contratoProdutoInicio">Início contrato</label> 
-                    <input type="text" class="form-control" id="contratoProdutoInicio" placeholder="22/02/2019">
-                </div>
-                
-                <div class="form-group col-md-2">
-                    <label for="duracaoContrato">Duracao</label> 
-                    <input type="text" class="form-control" id="duracaoContrato" placeholder="XX (meses)">
-                </div>
-				<div class="form-check">
-					<label class="form-check-label" for="stivo">Ativo</label>
-					<input type="checkbox" class="form-check-input form-control" id="ativo" checked="checked">
-				</div>
+	            <div class="form-group col-md-5">
+	                <label for="nome">Nome</label>
+	                <input type="text" class="form-control" id="nome" name="nome" value="<%= cliente.getContato().getNome() %>" readonly>
+	            </div>
+	            
+	            <div class="form-group col-md-4">
+	                <label for="cpfCnpj">CPF/CNPJ</label>
+	                <input type="text" class="form-control" id="cpfCnpj" name="cpfCnpj" value="<%= cliente.getContato().getCpfCnpj() %>" readonly>
+	            </div>
+	            
+	            
 	        </div>
 	        
 	        <div class="row">
-                <div class="form-group col-md-3">
-                    <label for="produto">Produto</label>
-                    <select class="form-control" id="produto">
-                        <option>Produto 1</option>
-                        <option>Produto 2</option>
-                        <option>Produto 3</option>
-                        <option>Produto 4</option>
-                        <option>Produto 5</option>
-                    </select>
+                <div class="form-group col-md-4">
+	                <label for="email">Email</label> 
+	                <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" value="<%= contato.getEmail() %>">
+	                <small id="emailHelp" class="form-text text-muted">Receberá link de confirmação</small>
                 </div>
                 
-                <div class="form-group col-md-2">
-                    <label for="contratoProdutoInicio">Início contrato</label> 
-                    <input type="text" class="form-control" id="contratoProdutoInicio" placeholder="22/02/2019">
+                <div class="form-group col-md-4">
+                    <label for="telefone">Telefone</label> 
+                    <input type="text" class="form-control" id="telefone" name="telefone" value="<%= contato.getTel() %>">
                 </div>
-                
-                <div class="form-group col-md-2">
-                    <label for="duracaoContrato">Duracao</label> 
-                    <input type="text" class="form-control" id="duracaoContrato" placeholder="XX (meses)">
-                </div>
-                <div class="form-check">
-                    <label class="form-check-label" for="stivo">Ativo</label>
-                    <input type="checkbox" class="form-check-input form-control" id="ativo" checked="checked">
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="form-group col-md-3">
-                    <label for="produto">Produto</label>
-                    <select class="form-control" id="produto">
-                        <option>Produto 1</option>
-                        <option>Produto 2</option>
-                        <option>Produto 3</option>
-                        <option>Produto 4</option>
-                        <option>Produto 5</option>
-                    </select>
-                </div>
-                
-                <div class="form-group col-md-2">
-                    <label for="contratoProdutoInicio">Início contrato</label> 
-                    <input type="text" class="form-control" id="contratoProdutoInicio" placeholder="22/02/2019">
-                </div>
-                
-                <div class="form-group col-md-2">
-                    <label for="duracaoContrato">Duracao</label> 
-                    <input type="text" class="form-control" id="duracaoContrato" placeholder="XX (meses)">
-                </div>
-                <div class="form-check">
-                    <label class="form-check-label" for="stivo">Ativo</label>
-                    <input type="checkbox" class="form-check-input form-control" id="ativo" checked="checked">
-                </div>
-                
-            </div>
-            <div class="form-group col-md-3">
-                <div class="form-group col-md-3">
-                    <a href="#"><button type="submit" class="btn btn-primary">+ Produto</button></a>
-                </div>
-            </div>
-                <hr>
+	        </div>
+				<div class="form-check">
+					<input type="checkbox" class="form-check-input" id="ativo" name="ativo" <%= contato.getAtivo() == 1 ? "checked" : null%>>
+					<label class="form-check-label" for="ativo">Ativo</label>
+				</div>
 				<div class="row">
 				     <button type="submit" class="btn btn-primary col-md-1">Salvar</button>
 				     <button type="submit" class="btn btn-secundary col-md-1">Cancelar</button>

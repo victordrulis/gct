@@ -16,6 +16,7 @@ import br.com.drulis.gct.dominio.Cliente;
 import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.DominioInterface;
 import br.com.drulis.gct.dominio.Mensagem;
+import br.com.drulis.gct.dominio.Produto;
 import br.com.drulis.gct.util.Resultado;
 
 /**
@@ -32,6 +33,7 @@ public class ClienteViewHelper implements ViewHelperInterface {
         String acao = request.getParameter("acao");
         Cliente cliente = new Cliente();
         Contato contato = new Contato();
+        List<Produto> listaProduto = new ArrayList<Produto>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         
         String contatoId = request.getParameter("contatoId");
@@ -45,7 +47,7 @@ public class ClienteViewHelper implements ViewHelperInterface {
             acao = Acao.LISTAR.getAcao();
         }
         
-        if(!acao.equals(Acao.LISTAR.getAcao()) && !acao.equals(Acao.SALVAR.getAcao()) && !acao.equals(Acao.NOVO.getAcao())) {
+        if(!acao.equals(Acao.SALVAR.getAcao()) && !acao.equals(Acao.NOVO.getAcao())) {
             String id = request.getParameter("id");
             
             if(id != null && id != "")
@@ -70,7 +72,7 @@ public class ClienteViewHelper implements ViewHelperInterface {
                 cliente.setAtivo(1);
         }
         
-        if(acao.equals(Acao.SALVAR.getAcao()) && request.getMethod().equals("POST")) {
+        if(acao.equals(Acao.SALVAR.getAcao()) || acao.equals(Acao.ALTERAR.getAcao()) || acao.equals(Acao.EDITAR.getAcao()) && request.getMethod().equals("POST")) {
             contato.setId(Integer.parseInt(contatoId));
             
             cliente.setContato(contato);
@@ -100,25 +102,30 @@ public class ClienteViewHelper implements ViewHelperInterface {
             listCliente = (List<Cliente>) (Object) resultado.getEntidades();
         }
         
+        if(acao != null && acao.equals(Acao.NOVO.getAcao())) {
+            request.getRequestDispatcher("/jsp/cliente/form.jsp").forward(request, response);
+        }
+        
         switch(listCliente.size()) {
         case 0:
             request.getRequestDispatcher("/jsp/cliente/form.jsp").forward(request, response);
             break;
         
         case 1:
-            if(acao == null || acao.equals(Acao.LISTAR.getAcao())) {
-                request.setAttribute("resultado", listCliente);
-                request.getRequestDispatcher("/jsp/cliente/index.jsp").forward(request, response);
-                break;
-            }
-            
             request.setAttribute("resultado", listCliente.get(0));
             
-            if(acao != null && acao.equals(Acao.ALTERAR.getAcao())) {
+            if(acao != null && acao.equals(Acao.EDITAR.getAcao())) {
                 request.getRequestDispatcher("/jsp/cliente/edit.jsp").forward(request, response);
                 break;
             }
-            request.getRequestDispatcher("/jsp/cliente/show.jsp").forward(request, response);
+            
+            if(acao != null && acao.equals(Acao.EXIBIR.getAcao())) {
+                request.getRequestDispatcher("/jsp/cliente/show.jsp").forward(request, response);
+                break;
+            }
+            
+            request.setAttribute("resultado", listCliente);
+            request.getRequestDispatcher("/jsp/cliente/index.jsp").forward(request, response);
             break;
         
         default:

@@ -42,7 +42,7 @@ public class ContatoViewHelper implements ViewHelperInterface {
                 contato.setId(Integer.parseInt(id));
         }
         
-        if(!acao.equals(Acao.EXCLUIR.getAcao()) && request.getMethod().equals("GET")) {
+        if(!acao.equals(Acao.EXCLUIR.getAcao()) || acao.equals(Acao.SALVAR.getAcao()) && request.getMethod().equals("GET")) {
             contato.setNome(request.getParameter("nome"));
             contato.setCpfCnpj(request.getParameter("cpfCnpj"));
             contato.setEmail(request.getParameter("email"));
@@ -88,11 +88,19 @@ public class ContatoViewHelper implements ViewHelperInterface {
         
         case 1:
             request.setAttribute("resultado", listContato.get(0));
+            
             if(acao != null && acao.equals(Acao.EDITAR.getAcao())) {
                 request.getRequestDispatcher("/jsp/contato/edit.jsp").forward(request, response);
                 break;
             }
-            request.getRequestDispatcher("/jsp/contato/show.jsp").forward(request, response);
+            
+            if(acao != null && acao.equals(Acao.EXIBIR.getAcao())) {
+                request.getRequestDispatcher("/jsp/contato/show.jsp").forward(request, response);
+                break;
+            }
+            
+            request.setAttribute("resultado", listContato);
+            request.getRequestDispatcher("/jsp/contato/index.jsp").forward(request, response);
             break;
         
         default:
