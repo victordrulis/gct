@@ -31,9 +31,6 @@ public class Fachada implements FachadaInterface {
     private Map<String, List<StrategyInterface>> mapRegrasContato;
     private Map<String, List<StrategyInterface>> mapRegrasCliente;
 
-    /**
-     * 
-     */
     public Fachada() {
         this.mapDao = new HashMap<String, DaoInterface>();
         this.mapRegrasNegocio = new HashMap<String, Map<String, List<StrategyInterface>>>();
@@ -125,7 +122,7 @@ public class Fachada implements FachadaInterface {
                 List<Entidade> entidades = new ArrayList<Entidade>();
                 entidades.add(entidade);
                 resultado.setEntidades(entidades);
-                System.out.println("obj alterado!");
+                System.out.println(this.getClass().getSimpleName() + " -- Entidade alterada! --");
             } catch (SQLException e) {
                 e.printStackTrace();
                 System.out.println(this.getClass().getSimpleName() + entidade.getClass() + Mensagem.ERRO_ATUALIZAR.getDescricao() + ":\n" + e.getMessage());
@@ -151,7 +148,7 @@ public class Fachada implements FachadaInterface {
                 List<Entidade> entidades = new ArrayList<Entidade>();
                 entidades.add(entidade);
                 resultado.setEntidades(entidades);
-                System.out.println("obj excluído!");
+                System.out.println(this.getClass().getSimpleName() + ": obj excluído!");
             } catch (SQLException e) {
                 e.printStackTrace();
                 System.out.println(this.getClass().getName() + entidade.getClass() + Mensagem.ERRO_EXCLUIR.getDescricao() + ":\n" + e.getMessage());

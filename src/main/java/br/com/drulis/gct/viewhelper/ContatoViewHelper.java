@@ -27,6 +27,7 @@ public class ContatoViewHelper implements ViewHelperInterface {
     public DominioInterface getData(HttpServletRequest request) {
         String acao = request.getParameter("acao");
         Contato contato = new Contato();
+        contato.setAtivo(0);
         
         System.out.println(this.getClass().getSimpleName() + ": --getData, ACAO = " + acao + ", URI: " + request.getRequestURI());
 
@@ -41,7 +42,7 @@ public class ContatoViewHelper implements ViewHelperInterface {
                 contato.setId(Integer.parseInt(id));
         }
         
-        if(!acao.equals(Acao.EXCLUIR.getAcao()) || acao.equals(Acao.SALVAR.getAcao()) && request.getMethod().equals("GET")) {
+        if(!acao.equals(Acao.EXCLUIR.getAcao()) && request.getMethod().equals("GET")) {
             contato.setNome(request.getParameter("nome"));
             contato.setCpfCnpj(request.getParameter("cpfCnpj"));
             contato.setEmail(request.getParameter("email"));
@@ -51,11 +52,12 @@ public class ContatoViewHelper implements ViewHelperInterface {
                 contato.setAtivo(1);
         }
         
-        if(acao.equals(Acao.SALVAR.getAcao()) && request.getMethod().equals("POST")) {
+        if(acao.equals(Acao.SALVAR.getAcao()) || acao.equals(Acao.ALTERAR.getAcao()) || acao.equals(Acao.EDITAR.getAcao()) && request.getMethod().equals("POST")) {
             contato.setNome(request.getParameter("nome"));
             contato.setCpfCnpj(request.getParameter("cpfCnpj"));
             contato.setEmail(request.getParameter("email"));
             contato.setTel(request.getParameter("telefone"));
+            contato.setAtivo(1);
             
             if(request.getParameter("ativo") != null)
                 contato.setAtivo(1);
@@ -86,7 +88,7 @@ public class ContatoViewHelper implements ViewHelperInterface {
         
         case 1:
             request.setAttribute("resultado", listContato.get(0));
-            if(acao != null && acao.equals(Acao.ALTERAR.getAcao())) {
+            if(acao != null && acao.equals(Acao.EDITAR.getAcao())) {
                 request.getRequestDispatcher("/jsp/contato/edit.jsp").forward(request, response);
                 break;
             }

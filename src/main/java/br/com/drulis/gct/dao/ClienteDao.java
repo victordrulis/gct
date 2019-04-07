@@ -1,11 +1,10 @@
-/**
- * 
- */
 package br.com.drulis.gct.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +23,44 @@ public class ClienteDao extends DaoEntidade {
 
     @Override
     public Entidade inserir(Entidade entidade) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        System.out.println(this.getClass().getSimpleName() + ": Inserir");
+        PreparedStatement ps = null;
+        Cliente cliente = (Cliente) entidade;
+        StringBuilder sql = new StringBuilder();
+        Timestamp dataInclusao = new Timestamp(System.currentTimeMillis());
+        
+        try {
+            this.conectar();
+            conexao.setAutoCommit(false);
+            sql.append("INSERT INTO cliente (contato_id, sla, status,ativo, usuario_inclusao_id, data_inclusao)");
+            sql.append(" VALUES (?,?,?,?,?,?)");
+            ps = conexao.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, cliente.getContato().getId());
+            ps.setInt(2, cliente.getSla());
+            ps.setInt(3, cliente.getStatus());
+            ps.setInt(4, cliente.getAtivo());
+            ps.setInt(5, 1);
+            ps.setTimestamp(6, dataInclusao);
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            System.out.println(this.getClass().getSimpleName() + "ResultSet: " + rs.getFetchSize());
+            while(rs.next()) {
+                cliente.setId(rs.getInt(1));
+            }
+            conexao.commit();
+            ps.close();
+            rs.close();
+            System.out.println(this.getClass().getSimpleName() + Mensagem.OK_INSERIR.getDescricao() +" id: " + cliente.getId());
+            return cliente;
+        } catch (SQLException e) {
+            System.out.println(this.getClass().getSimpleName() + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        } catch (Exception e) {
+            System.out.println(this.getClass().getSimpleName() + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override

@@ -12,12 +12,9 @@ import br.com.drulis.gct.util.Resultado;
  */
 public class ExcluirCommand extends AbstractCommand implements CommandInterface {
 
-    /* (non-Javadoc)
-     * @see br.com.drulis.gct.command.CommandInterface#execute(br.com.drulis.gct.core.Entidade)
-     */
     @Override
     public Resultado execute(Entidade entidade) {
-        System.out.println("Command: " + Acao.EXCLUIR.getAcao());
+        System.out.println(this.getClass().getSimpleName() + ": " + Acao.EXCLUIR.getAcao());
         return this.fachada.excluir(entidade);
     }
 

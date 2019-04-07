@@ -13,21 +13,19 @@
 </head>
 <body>
 	<%@include file="../fragmentos/nav.jsp"%>
+    <%
+        Contato contato = (Contato) request.getAttribute("resultado");
+    %>
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 	<div class="row conteudo-topo">
 		<div class="container">
-			<h2>Contato</h2>
+			<h2>Contato - ID: <%= contato.getId() %></h2>
 			<p>Dados de contato.</p>
 		</div>
 
 	</div>
 	<div class="container">
 
-        <%
-        Contato contato = (Contato) request.getAttribute("resultado");
-        
-        %>
-		<form action="/gct/contato?acao=alterar&id<%= contato.getId() %>" method="post">
 			<div class="row">
 	            <div class="form-group col-md-5">
 	                <label for="nome">Nome</label>
@@ -63,27 +61,27 @@
                 
                 <div class="form-group col-md-4">
                     <label for="dataAlteracao">Data alteração</label> 
-                    <input type="text" class="form-control" id="dataAlteracao" name="dataAlteracao" value="<%= contato.getDataAlteracao() %>">
+                    <input type="date" class="form-control" id="dataAlteracao" name="dataAlteracao" value="<%= contato.getDataAlteracao() %>">
                 </div>
             </div>
             
             <div class="row">
 				<div class="form-check">
-					<input type="checkbox" class="form-check-input" id="ativo" name="ativo" checked="checked">
+					<input type="checkbox" class="form-check-input" id="ativo" name="ativo" <%= contato.getAtivo() == 1 ? "checked" : null %>>
 					<label class="form-check-label" for="ativo">Ativo</label>
 				</div>
 			</div>
 				<div class="row">
-				    <div class="form-group col-md-4">
-					     <button type="submit" class="btn btn-primary">Editar</button>
+				    <div class="form-group">
+					     <a href="/gct/contato?acao=editar&id=<%= contato.getId() %>"><button type="button" class="btn btn-primary">Editar</button></a>
 				     </div>
-				</div>
-			
-		</form>
-		      <div class="row">
-                    <div class="form-group col-md-4">
-					     <a href="/gct/contato"><button type="submit" class="btn btn-secundary">Voltar</button></a>
+                    <div class="form-group ">
+					     <a href="/gct/contato?acao=excluir&id=<%= contato.getId() %>"><button type="button" class="btn btn-warning">Excluir</button></a>
 				     </div>
+				     
+				     <div class="form-group ">
+                         <a href="/gct/contato"><button type="button" class="btn btn-secundary">Voltar</button></a>
+                     </div>
 		     </div>
 
 	</div>

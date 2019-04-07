@@ -51,9 +51,6 @@ public class Servlet extends HttpServlet {
         listaViewHelper.put("/gct/home", new ChamadoViewHelper());
         listaViewHelper.put("/gct/config", new ConfigViewHelper());
         listaViewHelper.put("/gct/contato", new ContatoViewHelper());
-        listaViewHelper.put("/gct/contato/exibir", new ContatoViewHelper());
-        listaViewHelper.put("/gct/contato/editar", new ContatoViewHelper());
-        listaViewHelper.put("/gct/contato/excluir", new ContatoViewHelper());
         listaViewHelper.put("/gct/chamado", new ChamadoViewHelper());
         listaViewHelper.put("/gct/cliente", new ClienteViewHelper());
         listaViewHelper.put("/gct/dashboard", new DashboardViewHelper());
@@ -65,6 +62,7 @@ public class Servlet extends HttpServlet {
         listaCommand.put(Acao.CONSULTAR.getAcao(), new ConsultarCommand());
         listaCommand.put(Acao.EXCLUIR.getAcao(), new ExcluirCommand());
         listaCommand.put(Acao.EXIBIR.getAcao(), new ConsultarCommand());
+        listaCommand.put(Acao.EDITAR.getAcao(), new ConsultarCommand());
         listaCommand.put(Acao.LISTAR.getAcao(), new ConsultarCommand());
         listaCommand.put(Acao.NOVO.getAcao(), new ConsultarCommand());
         listaCommand.put(Acao.SALVAR.getAcao(), new InserirCommand());

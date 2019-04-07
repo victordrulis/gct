@@ -22,6 +22,7 @@ public abstract class Entidade implements DominioInterface {
     protected int id;
     public Usuario usuarioInclusao;
     private Usuario usuarioUpdate;
+    private Usuario usuarioInativacao;
     protected Date dataInclusao;
     protected Date dataAlteracao;
     protected Date dataInativacao;
@@ -68,6 +69,20 @@ public abstract class Entidade implements DominioInterface {
      */
     public void setUsuarioUpdate(Usuario usuarioUpdate) {
         this.usuarioUpdate = usuarioUpdate;
+    }
+
+    /**
+     * @return the usuarioInativacao
+     */
+    public Usuario getUsuarioInativacao() {
+        return usuarioInativacao;
+    }
+
+    /**
+     * @param usuarioInativacao the usuarioInativacao to set
+     */
+    public void setUsuarioInativacao(Usuario usuarioInativacao) {
+        this.usuarioInativacao = usuarioInativacao;
     }
 
     /**

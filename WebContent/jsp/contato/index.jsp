@@ -49,6 +49,7 @@
 			  <th class="th-sm">Telefone</th>
 	          <th class="th-sm">CPF/CNPJ</th>
 			  <th class="th-sm">Cadastrado em</th>
+			  <th class="th-sm">Ativo</th>
 			  <th class="th-sm">Ação</th>
 		  </tr>
 		</thead>
@@ -66,6 +67,7 @@
           <td><%= contato.getTel() %></td>
           <td><%= contato.getCpfCnpj() %></td>
           <td><%= contato.getDataInclusao() %></td>
+          <td><%= contato.getAtivo() %></td>
           <td>
             <a href="/gct/contato?acao=exibir&id=<%= contato.getId() %>"><span>Visualiar</span></a>
           </td>
