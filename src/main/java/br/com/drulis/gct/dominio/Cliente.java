@@ -23,7 +23,16 @@ public class Cliente extends Entidade {
     private int duracaoContrato;
     private TipoContrato tipoContrato;
     
-    public Cliente() {}
+    /**
+     * Listas para montar as views
+     */
+    private List<Contato> listaContatosView;
+    private List<Produto> listaProdutosView;
+    
+    public Cliente() {
+        this.listaContatosView = new ArrayList<Contato>();
+        this.listaProdutosView = new ArrayList<Produto>();
+    }
     
     /**
      * @param sla
@@ -40,6 +49,8 @@ public class Cliente extends Entidade {
         this.tipoContrato = tipoContrato;
         this.status = ClienteStatus.CADASTRADO;
         this.listaProdutos = new ArrayList<Produto>();
+        this.listaContatosView = new ArrayList<Contato>();
+        this.listaProdutosView = new ArrayList<Produto>();
     }
     
     /**
@@ -138,6 +149,48 @@ public class Cliente extends Entidade {
      */
     public void setTipoContrato(TipoContrato tipoContrato) {
         this.tipoContrato = tipoContrato;
+    }
+
+    /**
+     * @return the status
+     */
+    public int getStatus() {
+        return status.getId();
+    }
+
+    /**
+     * @param status the status to set
+     */
+    public void setStatus(ClienteStatus status) {
+        this.status = status;
+    }
+
+    /**
+     * @return the listaContatosView
+     */
+    public List<Contato> getListaContatosView() {
+        return listaContatosView;
+    }
+
+    /**
+     * @param listaContatosView the listaContatosView to set
+     */
+    public void setListaContatosView(List<Contato> listaContatosView) {
+        this.listaContatosView = listaContatosView;
+    }
+
+    /**
+     * @return the listaProdutosView
+     */
+    public List<Produto> getListaProdutosView() {
+        return listaProdutosView;
+    }
+
+    /**
+     * @param listaProdutosView the listaProdutosView to set
+     */
+    public void setListaProdutosView(List<Produto> listaProdutosView) {
+        this.listaProdutosView = listaProdutosView;
     }
     
 }

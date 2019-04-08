@@ -44,27 +44,19 @@
 	        </div>
 	        
 	        <div class="row">
-                <div class="form-group col-md-4">
-	                <label for="email">Email</label> 
-	                <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" value="<%= contato.getEmail() %>">
-	                <small id="emailHelp" class="form-text text-muted">Receberá link de confirmação</small>
-                </div>
-                
-                <div class="form-group col-md-4">
-                    <label for="telefone">Telefone</label> 
-                    <input type="text" class="form-control" id="telefone" name="telefone" value="<%= contato.getTel() %>">
-                </div>
 	        </div>
 				<div class="form-check">
-					<input type="checkbox" class="form-check-input" id="ativo" name="ativo" <%= contato.getAtivo() == 1 ? "checked" : null%>>
+					<input type="checkbox" class="form-check-input" id="ativo" name="ativo" <%= cliente.getAtivo() == 1 ? "checked" : null%>>
 					<label class="form-check-label" for="ativo">Ativo</label>
 				</div>
 				<div class="row">
 				     <button type="submit" class="btn btn-primary col-md-1">Salvar</button>
-				     <button type="submit" class="btn btn-secundary col-md-1">Cancelar</button>
 				</div>
 			
 		</form>
+	     <a href="/gct/cliente">
+	       <button type="button" class="btn btn-secundary col-md-1">Cancelar</button>
+         </a>
 
 	</div>
 	</main>

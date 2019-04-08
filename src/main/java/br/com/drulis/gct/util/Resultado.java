@@ -25,22 +25,22 @@ public class Resultado {
     }
 
     public List<Entidade> getEntidades() {
-        System.out.println("RESULTADO | getEntidades");
+        System.out.println(this.getClass().getSimpleName() + ": getEntidades");
         return entidades;
     }
 
     public void setEntidades(List<Entidade> entidades) {
-        System.out.println("RESULTADO | setEntidades " + entidades.size());
+        System.out.println(this.getClass().getSimpleName() + ": setEntidades " + entidades.size());
         this.entidades = entidades;
     }
 
     public void setEntidade(Entidade entidade) {
-        System.out.println("RESULTADO | setEntidade " + entidade.getClass());
+        System.out.println(this.getClass().getSimpleName() + ": setEntidade " + entidade.getClass().getSimpleName());
         this.entidade = entidade;
     }
 
     public Entidade getEntidade() {
-        System.out.println("RESULTADO | getEntidade");
+        System.out.println(this.getClass().getSimpleName() + ": getEntidade");
         return entidade;
     }
 }

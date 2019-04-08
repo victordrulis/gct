@@ -74,7 +74,13 @@ public class ClienteDao extends DaoEntidade {
         PreparedStatement ps = null;
         Cliente cliente = (Cliente) entidade;
         List<Entidade> listaClientes = new ArrayList<Entidade>();
+        List<Entidade> listaContatos = new ArrayList<Entidade>();
+        Contato contato = new Contato();
+        ContatoDao contatoDao = new ContatoDao();
+        
         StringBuilder sql = new StringBuilder();
+        
+        listaContatos = contatoDao.consultar(contato);
 
         sql.append("SELECT cli.*, c.* FROM cliente cli LEFT JOIN contato c ON c.contato_id = cli.contato_id WHERE 1 = 1 ");
         
@@ -102,6 +108,7 @@ public class ClienteDao extends DaoEntidade {
                 cli.setDataInclusao(resultado.getDate("cli.data_inclusao"));
                 cli.setDataAlteracao(resultado.getDate("cli.data_alteracao"));
                 cli.setDataInativacao(resultado.getDate("cli.data_inativacao"));
+                cli.setListaContatosView((List<Contato>)(Object)listaContatos);
                 System.out.println("Id: " + cli.getId() + ", Nome: " + cli.getContato().getNome() + ", SLA: " + cli.getSla());
                 listaClientes.add(cli);
             }

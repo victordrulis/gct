@@ -1,5 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@page import="br.com.drulis.gct.dominio.Cliente"%>
+<%@page import="br.com.drulis.gct.dominio.Contato"%>
+<%@page import="br.com.drulis.gct.dominio.Produto"%>
+<%@page import="java.util.List"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,6 +16,10 @@
 </head>
 <body>
 	<%@include file="../fragmentos/nav.jsp"%>
+	<%
+	   List<Contato> listaContato = (List<Contato>) request.getAttribute("listaContato");
+	
+	%>
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 	<div class="row conteudo-topo">
 		<div class="container">
@@ -24,7 +31,7 @@
 	<div class="container">
 		<!-- Example row of columns -->
 
-		<form action="../../jsp/cliente/list.jsp">
+		<form action="/gct/cliente?acao=salvar" method="post">
 			<div class="row">
                 <div class="form-group col-md-3">
                     <label for="contato"><strong>Contato</strong></label>
