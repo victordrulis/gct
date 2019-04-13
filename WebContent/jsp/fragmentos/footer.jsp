@@ -29,6 +29,7 @@
         }
     </script>
 	<script>
+	function gerarGrafico() {
 		var ctx = document.getElementById("myChart");
 		var myChart = new Chart(ctx, {
 			type : 'line',
@@ -57,4 +58,13 @@
 				}
 			}
 		});
+	}
+	
+	function novaLinha(idPai, idLinha) {
+	    var linha = document.getElementById(idLinha);
+	    var elementoPai = document.getElementById(idPai);
+	    var clone = linha.cloneNode(true);
+	    clone.id = "linhaClonada";
+	    elementoPai.appendChild(clone);
+	}
 	</script>

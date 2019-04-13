@@ -9,9 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.drulis.gct.core.Entidade;
-import br.com.drulis.gct.dominio.Cliente;
-import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.Mensagem;
+import br.com.drulis.gct.dominio.Produto;
 
 /**
  * @author Victor Drulis Oliveira
@@ -19,39 +18,37 @@ import br.com.drulis.gct.dominio.Mensagem;
  * @contact victordrulis@gmail.com
  *
  */
-public class ClienteDao extends DaoEntidade {
+public class ProdutoDao extends DaoEntidade {
 
     @Override
     public Entidade inserir(Entidade entidade) throws SQLException {
         System.out.println(this.getClass().getSimpleName() + ": Inserir");
         PreparedStatement ps = null;
-        Cliente cliente = (Cliente) entidade;
+        Produto produto = (Produto) entidade;
         StringBuilder sql = new StringBuilder();
         Timestamp dataInclusao = new Timestamp(System.currentTimeMillis());
         
         try {
             this.conectar();
             conexao.setAutoCommit(false);
-            sql.append("INSERT INTO cliente (contato_id, sla, status,ativo, usuario_inclusao_id, data_inclusao)");
+            sql.append("INSERT INTO produto (status,ativo, usuario_inclusao_id, data_inclusao)");
             sql.append(" VALUES (?,?,?,?,?,?)");
             ps = conexao.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, cliente.getContato().getId());
-            ps.setInt(2, cliente.getSla());
-            ps.setInt(3, cliente.getStatus());
-            ps.setInt(4, cliente.getAtivo());
-            ps.setInt(5, 1);
-            ps.setTimestamp(6, dataInclusao);
+            ps.setInt(1, produto.getStatus());
+            ps.setInt(2, produto.getAtivo());
+            ps.setInt(3, 1);
+            ps.setTimestamp(4, dataInclusao);
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             System.out.println(this.getClass().getSimpleName() + "ResultSet: " + rs.getFetchSize());
             while(rs.next()) {
-                cliente.setId(rs.getInt(1));
+                produto.setId(rs.getInt(1));
             }
             conexao.commit();
             ps.close();
             rs.close();
-            System.out.println(this.getClass().getSimpleName() + Mensagem.OK_INSERIR.getDescricao() +" id: " + cliente.getId());
-            return cliente;
+            System.out.println(this.getClass().getSimpleName() + Mensagem.OK_INSERIR.getDescricao() +" id: " + produto.getId());
+            return produto;
         } catch (SQLException e) {
             System.out.println(this.getClass().getSimpleName() + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e.getMessage());
             e.printStackTrace();
@@ -72,45 +69,42 @@ public class ClienteDao extends DaoEntidade {
     @Override
     public List<Entidade> consultar(Entidade entidade) throws SQLException {
         PreparedStatement ps = null;
-        Cliente cliente = (Cliente) entidade;
-        List<Entidade> listaClientes = new ArrayList<Entidade>();
+        Produto produto = (Produto) entidade;
+        List<Entidade> listaProdutos = new ArrayList<Entidade>();
         StringBuilder sql = new StringBuilder();
         
-        sql.append("SELECT cli.*, c.* FROM cliente cli LEFT JOIN contato c ON c.contato_id = cli.contato_id WHERE 1 = 1 ");
+        sql.append("SELECT p.*, ps.* FROM produto p LEFT JOIN produto_status ps ON ps.id = p.produto_status_id WHERE 1 = 1 ");
         
         try {
             this.conectar();
 
-            if (cliente.getId() > 0) {
-                sql.append(" AND cli.cliente_id = " + cliente.getId());
+            if (produto.getId() > 0) {
+                sql.append(" AND p.id = " + produto.getId());
             }
 
             ps = conexao.prepareStatement(sql.toString());
             ResultSet resultado = ps.executeQuery();
 
             while (resultado.next()) {
-                Cliente cli = new Cliente();
-                Contato con = new Contato();
+                Produto prod = new Produto();
                 
-                con.setId(resultado.getInt("c.contato_id"));
-                con.setNome(resultado.getString(("c.nome")));
-                con.setEmail(resultado.getString(("c.Email")));
+                prod.setId(resultado.getInt("p.id"));
+                prod.setTitulo(resultado.getString("p.titulo"));
+                prod.setDescricao(resultado.getString("p.descricao"));
+                prod.setStatus(resultado.getInt("p.produto_status_id"));
+                prod.setVersao(resultado.getString("p.versao"));
+                prod.setDataInclusao(resultado.getDate("p.data_inclusao"));
+                prod.setDataAlteracao(resultado.getDate("p.data_alteracao"));
+                prod.setDataInativacao(resultado.getDate("p.data_inativacao"));
                 
-                cli.setContato(con);
-                cli.setId(resultado.getInt("cli.cliente_id"));
-                cli.setSla(resultado.getInt("cli.sla"));
-                cli.setDataInclusao(resultado.getDate("cli.data_inclusao"));
-                cli.setDataAlteracao(resultado.getDate("cli.data_alteracao"));
-                cli.setDataInativacao(resultado.getDate("cli.data_inativacao"));
+                System.out.println("Id: " + prod.getId());
                 
-                System.out.println("Id: " + cli.getId() + ", Nome: " + cli.getContato().getNome() + ", SLA: " + cli.getSla());
-                
-                listaClientes.add(cli);
+                listaProdutos.add(prod);
             }
             
             ps.close();
             this.encerrar();
-            System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.OK_CONSULTAR.getDescricao() + "\n   -- Elementos encontrados = " + listaClientes.size());
+            System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.OK_CONSULTAR.getDescricao() + "\n   -- Elementos encontrados = " + listaProdutos.size());
         } catch (SQLException e) {
             System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.ERRO_NAO_ENCONTRADO.getDescricao()+ "\n" + e.getMessage());
             e.printStackTrace();
@@ -118,7 +112,7 @@ public class ClienteDao extends DaoEntidade {
             System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.ERRO_EXIBIR.getDescricao() + e.getMessage());
             e.printStackTrace();
         }
-        return listaClientes;
+        return listaProdutos;
     }
 
     @Override

@@ -3,6 +3,7 @@
  */
 package br.com.drulis.gct.core;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,7 +18,8 @@ import br.com.drulis.gct.dominio.Usuario;
  * @contact victordrulis@gmail.com
  *
  */
-public abstract class Entidade implements DominioInterface {
+public abstract class Entidade implements DominioInterface, Serializable  {
+    private static final long serialVersionUID = 1L;
     
     protected int id;
     public Usuario usuarioInclusao;
@@ -187,4 +189,27 @@ public abstract class Entidade implements DominioInterface {
         }
         return null;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + id;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Entidade other = (Entidade) obj;
+        if (id != other.id)
+            return false;
+        return true;
+    }
+    
 }

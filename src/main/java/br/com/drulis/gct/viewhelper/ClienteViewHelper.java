@@ -1,6 +1,7 @@
 package br.com.drulis.gct.viewhelper;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,10 +13,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import br.com.drulis.gct.core.Acao;
+import br.com.drulis.gct.core.Entidade;
+import br.com.drulis.gct.dao.ContatoDao;
+import br.com.drulis.gct.dao.ProdutoDao;
 import br.com.drulis.gct.dominio.Cliente;
 import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.DominioInterface;
 import br.com.drulis.gct.dominio.Mensagem;
+import br.com.drulis.gct.dominio.Produto;
 import br.com.drulis.gct.util.Resultado;
 
 /**
@@ -32,9 +37,11 @@ public class ClienteViewHelper implements ViewHelperInterface {
         String acao = request.getParameter("acao");
         Cliente cliente = new Cliente();
         Contato contato = new Contato();
+        Produto produto = new Produto();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         
         String contatoId = request.getParameter("contatoId");
+        String produtoId = request.getParameter("listaProdutoId");
         String sla = request.getParameter("sla");
         String dataInicioContrato = request.getParameter("dataInicioContrato");
         String duracaoContrato = request.getParameter("duracaoContrato");
@@ -56,8 +63,10 @@ public class ClienteViewHelper implements ViewHelperInterface {
             
             try {
                 contato.setId((contatoId != null) ? Integer.parseInt(contatoId) : 0);
+                produto.setId((produtoId != null) ? Integer.parseInt(produtoId) : 0);
                 
                 cliente.setContato(contato);
+                
                 cliente.setSla((sla != null) ? Integer.parseUnsignedInt(sla) : 0);
                 cliente.setInicioContrato((dataInicioContrato != null) ? dateFormat.parse(dataInicioContrato) : new Date());
                 cliente.setDuracaoContrato((duracaoContrato != null) ? Integer.parseInt(duracaoContrato) : 0);
@@ -88,7 +97,20 @@ public class ClienteViewHelper implements ViewHelperInterface {
     @SuppressWarnings("unchecked")
     @Override
     public void setView(Resultado resultado, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        List<Cliente> listCliente = new ArrayList<>();
+        ContatoDao contatoDao = new ContatoDao();
+        ProdutoDao produtoDao = new ProdutoDao();
+        List<Cliente> listCliente = new ArrayList<Cliente>();
+        List<Entidade> listContato = new ArrayList<Entidade>();
+        List<Entidade> listProduto = new ArrayList<Entidade>();
+        
+        try {
+            listContato = contatoDao.consultar(new Contato());
+            listProduto = produtoDao.consultar(new Produto());
+        } catch (SQLException e) {
+            System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.ERRO_CONVERTER_DADOS + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+        
         String mensagem = null;
         String uri = request.getRequestURI();
         String acao = request.getParameter("acao");
@@ -101,10 +123,14 @@ public class ClienteViewHelper implements ViewHelperInterface {
         }
         
         if(acao != null && acao.equals(Acao.NOVO.getAcao())) {
+            request.setAttribute("listaContato", listContato);
+            request.setAttribute("listaProduto", listProduto);
             request.getRequestDispatcher("/jsp/cliente/form.jsp").forward(request, response);
         } else {
             switch(listCliente.size()) {
             case 0:
+                request.setAttribute("listaContato", listContato);
+                request.setAttribute("listaProduto", listProduto);
                 request.getRequestDispatcher("/jsp/cliente/form.jsp").forward(request, response);
                 break;
             
@@ -129,11 +155,6 @@ public class ClienteViewHelper implements ViewHelperInterface {
                 if(mensagem != null && !mensagem.equals("")) {
                     request.setAttribute("mensagem", mensagem);
                     request.getRequestDispatcher("mensagem.jsp").forward(request, response);
-                    break;
-                }
-                
-                if(acao != null && acao.equals(Acao.NOVO.getAcao())) {
-                    request.getRequestDispatcher("/jsp/cliente/form.jsp").forward(request, response);
                     break;
                 }
                 
