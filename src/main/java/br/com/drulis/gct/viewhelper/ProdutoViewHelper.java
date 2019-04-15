@@ -1,22 +1,26 @@
 package br.com.drulis.gct.viewhelper;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import br.com.drulis.gct.dominio.Contato;
+import br.com.drulis.gct.core.Acao;
 import br.com.drulis.gct.dominio.DominioInterface;
 import br.com.drulis.gct.dominio.Mensagem;
+import br.com.drulis.gct.dominio.Produto;
 import br.com.drulis.gct.util.Resultado;
 
 /**
  * 
  * @author Victor Drulis
- * @since 2 de mar de 2019
+ * @since 23 de mar de 2019
  * @contact victordrulis@gmail.com
  *
  */
@@ -24,57 +28,118 @@ public class ProdutoViewHelper implements ViewHelperInterface {
 
     @Override
     public DominioInterface getData(HttpServletRequest request) {
-        System.out.println(this.getClass() + " --getData");
-        String acao = request.getParameter("operacao");
-        Contato contato = new Contato();
+        String acao = request.getParameter("acao");
+        Produto produto = new Produto();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         
+        String produtoId = request.getParameter("listaProdutoId");
+        String titulo = request.getParameter("titulo");
+        String statusProduto = request.getParameter("statusProduto");
+        String dataInicioContrato = request.getParameter("dataInicioContrato");
+        
+        System.out.println(this.getClass().getSimpleName() + ": --getData, ACAO: " + acao + ", URI: " + request.getRequestURI());
+
         if(acao == null) {
-            acao = "listar";
+            acao = Acao.LISTAR.getAcao();
         }
         
-        if(acao.equals("salvar") && request.getMethod().equals("POST")) {
-            contato.setNome(request.getParameter("nome"));
-            contato.setCpfCnpj(request.getParameter("cpfCnpj"));
-            contato.setEmail(request.getParameter("email"));
-            contato.setTel(request.getParameter("telefone"));
+        if(!acao.equals(Acao.SALVAR.getAcao()) && !acao.equals(Acao.NOVO.getAcao())) {
+            String id = request.getParameter("id");
+            
+            if(id != null && id != "")
+                produto.setId(Integer.parseInt(id));
         }
         
-        return contato;
+        if(!acao.equals(Acao.EXCLUIR.getAcao()) || acao.equals(Acao.SALVAR.getAcao()) && request.getMethod().equals("GET")) {
+            
+            try {
+                produto.setId((produtoId != null) ? Integer.parseInt(produtoId) : 0);
+                
+                produto.setTitulo((titulo != null) ? titulo : "Erro");
+                produto.setStatus((statusProduto != null) ? Integer.parseUnsignedInt(statusProduto) : 0);
+                produto.setDataInativacao((dataInicioContrato != null) ? dateFormat.parse(dataInicioContrato) : new Date());
+            } catch (ParseException e) {
+                System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.ERRO_CONVERTER_DADOS.getDescricao() + "; \n" + e.getMessage());
+                e.printStackTrace();
+            }
+            
+            if(request.getParameter("ativo") != null)
+                produto.setAtivo(1);
+        }
+        
+        if(acao.equals(Acao.SALVAR.getAcao()) || acao.equals(Acao.ALTERAR.getAcao()) || acao.equals(Acao.EDITAR.getAcao()) && request.getMethod().equals("POST")) {
+            
+//            produto.setDuracaoContrato(duracaoContrato);
+            
+            if(request.getParameter("ativo") != null)
+                produto.setAtivo(1);
+        }
+        
+        return produto;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public void setView(Resultado resultado, HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
-        System.out.println(this.getClass() + " --setView");
-        List<Contato> listContato = new ArrayList<>();
+    public void setView(Resultado resultado, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        List<Produto> listProduto = new ArrayList<Produto>();
+        
         String mensagem = null;
+        String uri = request.getRequestURI();
+        String acao = request.getParameter("acao");
+        
+        System.out.println(this.getClass().getSimpleName() + " -- setView: Acao = " + acao + ", URI: " + uri);
         
         if(resultado != null) {
             mensagem = resultado.getMensagem();
-            listContato = (List<Contato>) (Object) resultado.getEntidades();
+            listProduto = (List<Produto>) (Object) resultado.getEntidades();
         }
         
-        if(mensagem !=null && !mensagem.equals("")) {
-            request.setAttribute("mensagem", mensagem);
-            request.getRequestDispatcher("mensagem.jsp").forward(request, response);
+        if(acao != null && acao.equals(Acao.NOVO.getAcao())) {
+            request.setAttribute("listaProduto", listProduto);
+            request.getRequestDispatcher("/jsp/produto/form.jsp").forward(request, response);
+        } else {
+            switch(listProduto.size()) {
+            case 0:
+                request.setAttribute("listaProduto", listProduto);
+                request.getRequestDispatcher("/jsp/produto/form.jsp").forward(request, response);
+                break;
+            
+            case 1:
+                request.setAttribute("resultado", listProduto.get(0));
+                
+                if(acao != null && acao.equals(Acao.EDITAR.getAcao())) {
+                    request.getRequestDispatcher("/jsp/produto/edit.jsp").forward(request, response);
+                    break;
+                }
+                
+                if(acao != null && acao.equals(Acao.EXIBIR.getAcao())) {
+                    request.getRequestDispatcher("/jsp/produto/show.jsp").forward(request, response);
+                    break;
+                }
+                
+                request.setAttribute("resultado", listProduto);
+                request.getRequestDispatcher("/jsp/produto/index.jsp").forward(request, response);
+                break;
+            
+            default:
+                if(mensagem != null && !mensagem.equals("")) {
+                    request.setAttribute("mensagem", mensagem);
+                    request.getRequestDispatcher("mensagem.jsp").forward(request, response);
+                    break;
+                }
+                
+                if(listProduto == null || listProduto.size() < 1) {
+                    request.setAttribute("mensagem", Mensagem.ERRO_NAO_ENCONTRADO.getDescricao());
+                    request.getRequestDispatcher("mensagem.jsp").forward(request, response);
+                    break;
+                }
+                
+                request.setAttribute("resultado", listProduto);
+                request.getRequestDispatcher("/jsp/produto/index.jsp").forward(request, response);
+                break;
+            }
         }
         
-        if(listContato == null || listContato.size() < 1) {
-            request.setAttribute("mensagem", Mensagem.ERRO_NAO_ENCONTRADO.getDescricao());
-            request.getRequestDispatcher("mensagem.jsp").forward(request, response);
-        }
-        
-        if(listContato != null && listContato.size() > 1) {
-            request.setAttribute("listContato", listContato);
-            request.getRequestDispatcher("list.jsp").forward(request, response);
-        }
-        
-        if(listContato != null && listContato.size() == 1) {
-            request.setAttribute("contato", listContato.get(0));
-            request.getRequestDispatcher("show.jsp").forward(request, response);
-        }
-
     }
 
 }

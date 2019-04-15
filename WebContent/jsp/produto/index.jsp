@@ -1,10 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@page import="br.com.drulis.gct.dominio.Produto"%>
+<%@page import="java.util.List"%>
 <%@include file="../fragmentos/header.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>GCT - Contatos</title>
+<title>GCT - Produtos</title>
 <style type="text/css">
 .conteudo-topo {
     padding-top: 40px;
@@ -19,8 +21,9 @@
         <div class="container">
             <h2>Produtos</h2>
             <p>Lista de produtos</p>
-            <a href="../../jsp/produto/form.jsp">Novo Produto</a>
+            <a href="/gct/produto?acao=novo">Novo Produto</a>
         </div>
+
     </div>
     <hr>
 <div class="container">
@@ -40,66 +43,35 @@
     <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
 		<thead>
 		  <tr>
-		      <th class="th-sm">ID</th>
-		      <th class="th-sm">Título</th>
-			  <th class="th-sm">Mantenedor</th>
+		      <th class="th-sm">Id</th>
+		      <th class="th-sm">Titulo</th>
+		      <th class="th-sm">Descricao</th>
 			  <th class="th-sm">Cadastrado em</th>
-	          <th class="th-sm">Ativo</th>
+			  <th class="th-sm">Ativo</th>
 			  <th class="th-sm">Ação</th>
 		  </tr>
 		</thead>
   <tbody>
-    <tr>
-      <td>01</td>
-      <td>Título do produto</td>
-      <td>Tiger Nixon</td>
-      <td>2011/04/25</td>
-      <td>Sim</td>
-      <td>
-            <a href="../../jsp/produto/show.jsp"><span>Visualizar</span></a>
-      </td>
-    </tr>
-    <tr>
-      <td>02</td>
-      <td>Título do produto</td>
-      <td>Tiger Nixon</td>
-      <td>2011/04/25</td>
-      <td>Sim</td>
-      <td>
-            <a href="../../jsp/produto/show.jsp"><span>Visualizar</span></a>
-      </td>
-    </tr>
-    <tr>
-      <td>03</td>
-      <td>Título do produto</td>
-      <td>Tiger Nixon</td>
-      <td>2011/04/25</td>
-      <td>Sim</td>
-      <td>
-            <a href="../../jsp/produto/show.jsp"><span>Visualizar</span></a>
-      </td>
-    </tr>
-    <tr>
-      <td>04</td>
-      <td>Título do produto</td>
-      <td>Tiger Nixon</td>
-      <td>2011/04/25</td>
-      <td>Sim</td>
-      <td>
-            <a href="../../jsp/produto/show.jsp"><span>Visualizar</span></a>
-      </td>
-    </tr>
-    <tr>
-      <td>05</td>
-      <td>Título do produto</td>
-      <td>Tiger Nixon</td>
-      <td>2011/04/25</td>
-      <td>Sim</td>
-      <td>
-            <a href="../../jsp/produto/show.jsp"><span>Visualizar</span></a>
-      </td>
-    </tr>
-    
+   <%
+       List<Produto> resultado = (List<Produto>) request.getAttribute("resultado");
+   
+       if(resultado != null) {
+           for(Produto produto : resultado) {
+   %>
+      <tr>
+          <td><%= produto.getId() %></td>
+          <td><%= produto.getTitulo() %></td>
+          <td><%= produto.getDescricao() %></td>
+          <td><%= produto.getDataInclusao() %></td>
+          <td><%= produto.getAtivo() %></td>
+          <td>
+            <a href="/gct/produto?acao=exibir&id=<%= produto.getId() %>"><span>Visualiar</span></a>
+          </td>
+      </tr>
+      <%
+              }
+          }
+      %>  
   </tbody>
 </table>
 </div>

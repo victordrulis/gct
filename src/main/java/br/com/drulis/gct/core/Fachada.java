@@ -12,9 +12,11 @@ import java.util.Map;
 import br.com.drulis.gct.dao.ClienteDao;
 import br.com.drulis.gct.dao.ContatoDao;
 import br.com.drulis.gct.dao.DaoInterface;
+import br.com.drulis.gct.dao.ProdutoDao;
 import br.com.drulis.gct.dominio.Cliente;
 import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.Mensagem;
+import br.com.drulis.gct.dominio.Produto;
 import br.com.drulis.gct.util.Resultado;
 
 /**
@@ -30,17 +32,21 @@ public class Fachada implements FachadaInterface {
     private Map<String, Map<String, List<StrategyInterface>>> mapRegrasNegocio;
     private Map<String, List<StrategyInterface>> mapRegrasContato;
     private Map<String, List<StrategyInterface>> mapRegrasCliente;
+    private Map<String, List<StrategyInterface>> mapRegrasProduto;
 
     public Fachada() {
         this.mapDao = new HashMap<String, DaoInterface>();
         this.mapRegrasNegocio = new HashMap<String, Map<String, List<StrategyInterface>>>();
         this.mapRegrasContato = new HashMap<String, List<StrategyInterface>>();
         this.mapRegrasCliente = new HashMap<String, List<StrategyInterface>>();
+        this.mapRegrasProduto = new HashMap<String, List<StrategyInterface>>();
 
         ContatoDao contatoDao = new ContatoDao();
         ClienteDao clienteDao = new ClienteDao();
+        ProdutoDao produtoDao = new ProdutoDao();
         this.mapDao.put(Contato.class.getName(), contatoDao);
         this.mapDao.put(Cliente.class.getName(), clienteDao);
+        this.mapDao.put(Produto.class.getName(), produtoDao);
 
         List<StrategyInterface> listRegrasSalvar = new ArrayList<StrategyInterface>();
         List<StrategyInterface> listRegrasAlterar = new ArrayList<StrategyInterface>();
@@ -56,9 +62,15 @@ public class Fachada implements FachadaInterface {
         this.mapRegrasCliente.put("ALTERAR", listRegrasAlterar);
         this.mapRegrasCliente.put("CONSULTAR", listRegrasConsultar);
         this.mapRegrasCliente.put("EXCLUIR", listRegrasExcluir);
+        
+        this.mapRegrasProduto.put("SALVAR", listRegrasSalvar);
+        this.mapRegrasProduto.put("ALTERAR", listRegrasAlterar);
+        this.mapRegrasProduto.put("CONSULTAR", listRegrasConsultar);
+        this.mapRegrasProduto.put("EXCLUIR", listRegrasExcluir);
 
         this.mapRegrasNegocio.put(Contato.class.getName(), mapRegrasContato);
         this.mapRegrasNegocio.put(Cliente.class.getName(), mapRegrasCliente);
+        this.mapRegrasNegocio.put(Produto.class.getName(), mapRegrasProduto);
     }
 
     @Override
