@@ -78,6 +78,9 @@ public class Servlet extends HttpServlet {
         String uri = request.getRequestURI();
         String acao = request.getParameter("acao");
         
+        // TODO adicionar metodos para capturar o usuario e colocar na sessao
+        session.setAttribute("usuario", "admin");
+        
         if (acao == null) {
             acao = Acao.LISTAR.getAcao();
             request.setAttribute("acao", acao);

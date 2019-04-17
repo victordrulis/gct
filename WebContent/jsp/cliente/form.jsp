@@ -41,7 +41,7 @@
                         <%
                            }
                         %>
-                    </select>
+                    </select><a href="/gct/contato?acao=novo"><button type="button">+ Contato</button></a>
                 </div>
             </div>
 	        <hr>

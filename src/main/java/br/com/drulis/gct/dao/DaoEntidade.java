@@ -16,33 +16,34 @@ import br.com.drulis.gct.infra.Conexao;
  */
 public abstract class DaoEntidade implements DaoInterface {
   
-    protected Connection conexao;
+    protected Connection sessaoBD;
+    protected Conexao conexao;
     
-    /**
-     * 
-     */
     protected void conectar() 
     {
+        conexao = Conexao.getInstance();
         try {
-
-            if(this.conexao == null || this.conexao.isClosed()) {
-                this.conexao = Conexao.getConnection();
+            if(this.sessaoBD == null || this.sessaoBD.isClosed()) {
+                this.sessaoBD = Conexao.getSessao();
                 System.out.println(this.getClass().getSimpleName() + ": Conexão iniciada");
             }
         } catch (SQLException e) {
+            System.out.println(this.getClass().getSimpleName() + ": Erro de SQL >> " + e.getMessage());
             e.printStackTrace();
         }
     }
     
+    /*
     protected void encerrar() 
     {
         try {
-            if(this.conexao != null) {
-                this.conexao.close();
+            if(this.sessaoBD != null) {
+                this.sessaoBD.close();
                 System.out.println(this.getClass().getSimpleName() + ": Conexão encerrada");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+    */
 }

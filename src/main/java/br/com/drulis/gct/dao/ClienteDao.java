@@ -31,10 +31,10 @@ public class ClienteDao extends DaoEntidade {
         
         try {
             this.conectar();
-            conexao.setAutoCommit(false);
+            sessaoBD.setAutoCommit(false);
             sql.append("INSERT INTO cliente (contato_id, sla, status,ativo, usuario_inclusao_id, data_inclusao)");
             sql.append(" VALUES (?,?,?,?,?,?)");
-            ps = conexao.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
+            ps = sessaoBD.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, cliente.getContato().getId());
             ps.setInt(2, cliente.getSla());
             ps.setInt(3, cliente.getStatus());
@@ -47,9 +47,7 @@ public class ClienteDao extends DaoEntidade {
             while(rs.next()) {
                 cliente.setId(rs.getInt(1));
             }
-            conexao.commit();
-            ps.close();
-            rs.close();
+            sessaoBD.commit();
             System.out.println(this.getClass().getSimpleName() + Mensagem.OK_INSERIR.getDescricao() +" id: " + cliente.getId());
             return cliente;
         } catch (SQLException e) {
@@ -85,7 +83,7 @@ public class ClienteDao extends DaoEntidade {
                 sql.append(" AND cli.cliente_id = " + cliente.getId());
             }
 
-            ps = conexao.prepareStatement(sql.toString());
+            ps = sessaoBD.prepareStatement(sql.toString());
             ResultSet resultado = ps.executeQuery();
 
             while (resultado.next()) {
@@ -108,8 +106,6 @@ public class ClienteDao extends DaoEntidade {
                 listaClientes.add(cli);
             }
             
-            ps.close();
-            this.encerrar();
             System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.OK_CONSULTAR.getDescricao() + "\n   -- Elementos encontrados = " + listaClientes.size());
         } catch (SQLException e) {
             System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.ERRO_NAO_ENCONTRADO.getDescricao()+ "\n" + e.getMessage());

@@ -30,10 +30,10 @@ public class ProdutoDao extends DaoEntidade {
         
         try {
             this.conectar();
-            conexao.setAutoCommit(false);
+            sessaoBD.setAutoCommit(false);
             sql.append("INSERT INTO produto (status,ativo, usuario_inclusao_id, data_inclusao)");
             sql.append(" VALUES (?,?,?,?,?,?)");
-            ps = conexao.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
+            ps = sessaoBD.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, produto.getStatus());
             ps.setInt(2, produto.getAtivo());
             ps.setInt(3, 1);
@@ -44,9 +44,7 @@ public class ProdutoDao extends DaoEntidade {
             while(rs.next()) {
                 produto.setId(rs.getInt(1));
             }
-            conexao.commit();
-            ps.close();
-            rs.close();
+            sessaoBD.commit();
             System.out.println(this.getClass().getSimpleName() + Mensagem.OK_INSERIR.getDescricao() +" id: " + produto.getId());
             return produto;
         } catch (SQLException e) {
@@ -82,7 +80,7 @@ public class ProdutoDao extends DaoEntidade {
                 sql.append(" AND p.id = " + produto.getId());
             }
 
-            ps = conexao.prepareStatement(sql.toString());
+            ps = sessaoBD.prepareStatement(sql.toString());
             ResultSet resultado = ps.executeQuery();
 
             while (resultado.next()) {
@@ -102,8 +100,6 @@ public class ProdutoDao extends DaoEntidade {
                 listaProdutos.add(prod);
             }
             
-            ps.close();
-            this.encerrar();
             System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.OK_CONSULTAR.getDescricao() + "\n   -- Elementos encontrados = " + listaProdutos.size());
         } catch (SQLException e) {
             System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.ERRO_NAO_ENCONTRADO.getDescricao()+ "\n" + e.getMessage());

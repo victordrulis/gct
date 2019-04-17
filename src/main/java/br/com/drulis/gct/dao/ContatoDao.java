@@ -34,10 +34,10 @@ public class ContatoDao extends DaoEntidade {
         
         try {
             this.conectar();
-            conexao.setAutoCommit(false);
+            sessaoBD.setAutoCommit(false);
             sql.append("INSERT INTO contato (nome, cpf_cnpj, telefone, email, ativo, usuario_inclusao_id, data_inclusao)");
             sql.append(" VALUES (?,?,?,?,?,?,?)");
-            ps = conexao.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
+            ps = sessaoBD.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, contato.getNome());
             ps.setString(2, contato.getCpfCnpj());
             ps.setString(3, contato.getTel());
@@ -52,9 +52,7 @@ public class ContatoDao extends DaoEntidade {
             while(rs.next()) {
                 contato.setId(rs.getInt(1));
             }
-            conexao.commit();
-            ps.close();
-            rs.close();
+            sessaoBD.commit();
             System.out.println(this.getClass().getSimpleName() + Mensagem.OK_INSERIR.getDescricao() +" id: " + contato.getId());
             return contato;
         } catch (SQLException e) {
@@ -80,14 +78,14 @@ public class ContatoDao extends DaoEntidade {
 
         try {
             this.conectar();
-            conexao.setAutoCommit(false);
+            sessaoBD.setAutoCommit(false);
             sql.append("UPDATE contato SET ");
             sql.append("telefone = ?, ");
             sql.append("email = ?, ");
             sql.append("ativo = ?, ");
             sql.append("usuario_alteracao_id = ? ");
             sql.append("WHERE contato_id = ?");
-            ps = conexao.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
+            ps = sessaoBD.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, alterado.getTel());
             ps.setString(2, alterado.getEmail());
             ps.setInt(3, alterado.getAtivo());
@@ -99,9 +97,7 @@ public class ContatoDao extends DaoEntidade {
             while(rs.next()) {
                 alterado.setId(rs.getInt(1));
             }
-            conexao.commit();
-            ps.close();
-//            rs.close();
+            sessaoBD.commit();
             System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.OK_ATUALIZAR.getDescricao() + "id: " + contato.getId());
             return alterado;
         } catch (SQLException e) {
@@ -136,7 +132,7 @@ public class ContatoDao extends DaoEntidade {
                 sql.append(" AND c.contato_id = " + contato.getId());
             }
 
-            ps = conexao.prepareStatement(sql.toString());
+            ps = sessaoBD.prepareStatement(sql.toString());
             ResultSet resultado = ps.executeQuery();
 
             while (resultado.next()) {
@@ -161,7 +157,6 @@ public class ContatoDao extends DaoEntidade {
                 System.out.println("Id: " + con.getId() + ", Nome: " + con.getNome() + ", cpf/cnpj: " + con.getCpfCnpj());
                 listaContatos.add(con);
             }
-            ps.close();
             System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.OK_CONSULTAR.getDescricao() + "\n   -- Elementos encontrados = " + listaContatos.size());
         } catch (SQLException e) {
             System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.ERRO_NAO_ENCONTRADO.getDescricao()+ "\n" + e.getMessage());
@@ -183,13 +178,12 @@ public class ContatoDao extends DaoEntidade {
         
         try {
             this.conectar();
-            this.conexao.setAutoCommit(false);
+            this.sessaoBD.setAutoCommit(false);
             sql.append("UPDATE contato SET ativo = 0 WHERE contato_id = ?");
-            ps = this.conexao.prepareStatement(sql.toString());
+            ps = this.sessaoBD.prepareStatement(sql.toString());
             ps.setInt(1,  contato.getId());
             ps.executeUpdate();
-            this.conexao.commit();
-            ps.close();
+            this.sessaoBD.commit();
             return true;
         } catch(SQLException e) {
             System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.ERRO_EXCLUIR.getDescricao()+ " --- id: " + contato.getId() + e.getMessage());
