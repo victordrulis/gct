@@ -17,6 +17,12 @@ import br.com.drulis.gct.dominio.Cliente;
 import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.dominio.Produto;
+import br.com.drulis.gct.dominio.validacao.ValidadorContatoCpfCnpj;
+import br.com.drulis.gct.dominio.validacao.ValidadorContatoEmail;
+import br.com.drulis.gct.dominio.validacao.ValidadorContatoExiste;
+import br.com.drulis.gct.dominio.validacao.ValidadorContatoNaoExiste;
+import br.com.drulis.gct.dominio.validacao.ValidadorContatoNome;
+import br.com.drulis.gct.dominio.validacao.ValidadorContatoTelefone;
 import br.com.drulis.gct.util.Resultado;
 
 /**
@@ -52,11 +58,26 @@ public class Fachada implements FachadaInterface {
         List<StrategyInterface> listRegrasAlterar = new ArrayList<StrategyInterface>();
         List<StrategyInterface> listRegrasConsultar = new ArrayList<StrategyInterface>();
         List<StrategyInterface> listRegrasExcluir = new ArrayList<StrategyInterface>();
+        List<StrategyInterface> contatoRegrasSalvar = new ArrayList<StrategyInterface>();
+        List<StrategyInterface> contatoRegrasAlterar = new ArrayList<StrategyInterface>();
+        List<StrategyInterface> contatoRegrasConsultar = new ArrayList<StrategyInterface>();
+        List<StrategyInterface> contatoRegrasExcluir = new ArrayList<StrategyInterface>();
 
-        this.mapRegrasContato.put("SALVAR", listRegrasSalvar);
-        this.mapRegrasContato.put("ALTERAR", listRegrasAlterar);
-        this.mapRegrasContato.put("CONSULTAR", listRegrasConsultar);
-        this.mapRegrasContato.put("EXCLUIR", listRegrasExcluir);
+        contatoRegrasConsultar.add(new ValidadorContatoCpfCnpj());
+        contatoRegrasConsultar.add(new ValidadorContatoEmail());
+        contatoRegrasSalvar.add(new ValidadorContatoExiste());
+        contatoRegrasSalvar.add(new ValidadorContatoCpfCnpj());
+        contatoRegrasSalvar.add(new ValidadorContatoNome());
+        contatoRegrasSalvar.add(new ValidadorContatoEmail());
+        contatoRegrasSalvar.add(new ValidadorContatoTelefone());
+        contatoRegrasAlterar.add(new ValidadorContatoNaoExiste());
+        contatoRegrasAlterar.add(new ValidadorContatoEmail());
+        contatoRegrasAlterar.add(new ValidadorContatoTelefone());
+        contatoRegrasExcluir.add(new ValidadorContatoNaoExiste());
+        this.mapRegrasContato.put("SALVAR", contatoRegrasSalvar);
+        this.mapRegrasContato.put("ALTERAR", contatoRegrasAlterar);
+        this.mapRegrasContato.put("CONSULTAR", contatoRegrasConsultar);
+        this.mapRegrasContato.put("EXCLUIR", contatoRegrasExcluir);
         
         this.mapRegrasCliente.put("SALVAR", listRegrasSalvar);
         this.mapRegrasCliente.put("ALTERAR", listRegrasAlterar);
