@@ -25,6 +25,7 @@ import br.com.drulis.gct.viewhelper.ConfigViewHelper;
 import br.com.drulis.gct.viewhelper.ContatoViewHelper;
 import br.com.drulis.gct.viewhelper.DashboardViewHelper;
 import br.com.drulis.gct.viewhelper.ItemViewHelper;
+import br.com.drulis.gct.viewhelper.LoginViewHelper;
 import br.com.drulis.gct.viewhelper.ProdutoViewHelper;
 import br.com.drulis.gct.viewhelper.UsuarioViewHelper;
 import br.com.drulis.gct.viewhelper.ViewHelperInterface;
@@ -57,6 +58,7 @@ public class Servlet extends HttpServlet {
         listaViewHelper.put("/gct/item", new ItemViewHelper());
         listaViewHelper.put("/gct/produto", new ProdutoViewHelper());
         listaViewHelper.put("/gct/usuario", new UsuarioViewHelper());
+        listaViewHelper.put("/gct/login", new LoginViewHelper());
         
         listaCommand.put(Acao.ALTERAR.getAcao(), new AlterarCommand());
         listaCommand.put(Acao.CONSULTAR.getAcao(), new ConsultarCommand());
@@ -79,14 +81,14 @@ public class Servlet extends HttpServlet {
         String acao = request.getParameter("acao");
         
         // TODO adicionar metodos para capturar o usuario e colocar na sessao
-        session.setAttribute("usuario", "admin");
+        session.setAttribute("idUsuario", "1");
         
         if (acao == null) {
             acao = Acao.LISTAR.getAcao();
             request.setAttribute("acao", acao);
         }
         
-        System.out.println(this.getClass().getSimpleName() + ": doGet, URI: " + uri + ", Acao: " + acao);
+        System.out.println("[" + this.getClass().getSimpleName() + "] doGet, URI: " + uri + ", Acao: " + acao);
         
         ViewHelperInterface viewHelper = listaViewHelper.get(uri);
         CommandInterface command = listaCommand.get(acao);
@@ -99,7 +101,7 @@ public class Servlet extends HttpServlet {
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println(this.getClass() + ": doPost");
+        System.out.println("[" + this.getClass().getSimpleName() + "] doPost");
         this.doGet(request, response);
     }
 

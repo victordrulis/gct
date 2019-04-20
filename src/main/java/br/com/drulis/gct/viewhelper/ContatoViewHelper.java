@@ -29,7 +29,7 @@ public class ContatoViewHelper implements ViewHelperInterface {
         Contato contato = new Contato();
         contato.setAtivo(0);
         
-        System.out.println(this.getClass().getSimpleName() + ": --getData, ACAO = " + acao + ", URI: " + request.getRequestURI());
+        System.out.println("[" + this.getClass().getSimpleName() + "] getData, ACAO = " + acao + ", URI: " + request.getRequestURI());
 
         if(acao == null) {
             acao = Acao.LISTAR.getAcao();
@@ -74,7 +74,7 @@ public class ContatoViewHelper implements ViewHelperInterface {
         String uri = request.getRequestURI();
         String acao = request.getParameter("acao");
         
-        System.out.println(this.getClass().getSimpleName() + ": -- setView: Acao = " + acao + ", URI: " + uri);
+        System.out.println("[" + this.getClass().getSimpleName() + "] setView: Acao = " + acao + ", URI: " + uri);
         
         if(resultado != null) {
             mensagem = resultado.getMensagem();

@@ -108,7 +108,7 @@ public class Fachada implements FachadaInterface {
                 List<Entidade> entidades = new ArrayList<Entidade>();
                 entidades.add(entidade);
                 resultado.setEntidades(entidades);
-                System.out.println(this.getClass().getSimpleName() + ": obj gravado!");
+                System.out.println("[" + this.getClass().getSimpleName() + "] " + entidade.getClass().getSimpleName() + " salvo. ID: " + resultado.getEntidades().get(0).getId());
             } catch (SQLException e) {
                 e.printStackTrace();
                 System.out.println(this.getClass().getSimpleName() + Mensagem.ERRO_INSERIR.getDescricao() + "-- Entidade: " + entidade.getClass() + "\n" + e.getMessage());
@@ -127,14 +127,15 @@ public class Fachada implements FachadaInterface {
         String nomeEntidade = entidade.getClass().getName();
         DaoInterface dao = this.mapDao.get(nomeEntidade);
 
-        System.out.println(this.getClass().getSimpleName() + ": " + nomeEntidade);
+        System.out.println("[" + this.getClass().getSimpleName() + "] Consultando registros de " + entidade.getClass().getSimpleName());
 
         try {
             listaEntidade = dao.consultar(entidade);
             this.resultado.setEntidades(listaEntidade);
+            System.out.println("[" + this.getClass().getSimpleName() + "] Registro encontrados do tipo " + entidade.getClass().getSimpleName() + ": " + listaEntidade.size());
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println(this.getClass().getSimpleName() + entidade.getClass() + Mensagem.ERRO_EXIBIR.getDescricao() + "\n" + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_EXIBIR.getDescricao() + "\n" + e.getMessage());
             this.resultado.setMensagem(Mensagem.ERRO_EXIBIR.getDescricao());
         }
 
@@ -146,6 +147,7 @@ public class Fachada implements FachadaInterface {
         resultado = new Resultado();
         String nomeEntidade = entidade.getClass().getName();
         String mensagem = executarRegras(entidade, Acao.ALTERAR);
+        System.out.println("[" + this.getClass().getSimpleName() + "] Alterando registros de " + entidade.getClass().getSimpleName());
 
         if (mensagem == null) {
             DaoInterface dao = this.mapDao.get(nomeEntidade);
@@ -155,10 +157,10 @@ public class Fachada implements FachadaInterface {
                 List<Entidade> entidades = new ArrayList<Entidade>();
                 entidades.add(entidade);
                 resultado.setEntidades(entidades);
-                System.out.println(this.getClass().getSimpleName() + " -- Entidade alterada! --");
+                System.out.println("[" + this.getClass().getSimpleName() + "] Registro alterado: " + entidade.getClass().getSimpleName() + ", Id: " + entidade.getId());
             } catch (SQLException e) {
                 e.printStackTrace();
-                System.out.println(this.getClass().getSimpleName() + entidade.getClass() + Mensagem.ERRO_ATUALIZAR.getDescricao() + ":\n" + e.getMessage());
+                System.out.println("[" + this.getClass().getName() + entidade.getClass() + "] " + Mensagem.ERRO_ATUALIZAR.getDescricao() + ":\n" + e.getMessage());
                 resultado.setMensagem(Mensagem.ERRO_ATUALIZAR.getDescricao());
             }
         }
@@ -172,6 +174,7 @@ public class Fachada implements FachadaInterface {
         resultado = new Resultado();
         String nomeEntidade = entidade.getClass().getName();
         String mensagem = executarRegras(entidade, Acao.EXCLUIR);
+        System.out.println("[" + this.getClass().getSimpleName() + "] Excluindo registros de " + entidade.getClass().getSimpleName());
 
         if (mensagem == null) {
             DaoInterface dao = this.mapDao.get(nomeEntidade);
@@ -181,14 +184,15 @@ public class Fachada implements FachadaInterface {
                 List<Entidade> entidades = new ArrayList<Entidade>();
                 entidades.add(entidade);
                 resultado.setEntidades(entidades);
-                System.out.println(this.getClass().getSimpleName() + ": obj excluído!");
+                System.out.println("[" + this.getClass().getSimpleName() + "] Registro excluído: " + entidade.getClass().getSimpleName() + ", Id: " + entidade.getId());
             } catch (SQLException e) {
                 e.printStackTrace();
-                System.out.println(this.getClass().getName() + entidade.getClass() + Mensagem.ERRO_EXCLUIR.getDescricao() + ":\n" + e.getMessage());
+                System.out.println("[" + this.getClass().getName() + entidade.getClass() + "] " + Mensagem.ERRO_EXCLUIR.getDescricao() + ":\n" + e.getMessage());
                 resultado.setMensagem(Mensagem.ERRO_EXCLUIR.getDescricao());
             }
         }
 
+        System.out.println("[" + this.getClass().getSimpleName() + "] Registro excluído: " + entidade.getClass().getSimpleName() + ", Id: " + entidade.getId() + " - " + mensagem);
         resultado.setMensagem(mensagem);
         return resultado;
     }
@@ -206,6 +210,8 @@ public class Fachada implements FachadaInterface {
 
         Map<String, List<StrategyInterface>> mapRegrasDaAcao = this.mapRegrasNegocio.get(nomeEntidade);
 
+        System.out.println("[" + this.getClass().getSimpleName() + "] " + mapRegrasDaAcao.getClass().getSimpleName());
+        
         if (mapRegrasDaAcao != null) {
             List<StrategyInterface> listRegrasDaAcao = mapRegrasDaAcao.get(acao.getAcao());
 

@@ -22,7 +22,7 @@ public class ProdutoDao extends DaoEntidade {
 
     @Override
     public Entidade inserir(Entidade entidade) throws SQLException {
-        System.out.println(this.getClass().getSimpleName() + ": Inserir");
+        System.out.println("[" + this.getClass().getSimpleName() + "] Inserir");
         PreparedStatement ps = null;
         Produto produto = (Produto) entidade;
         StringBuilder sql = new StringBuilder();
@@ -40,19 +40,18 @@ public class ProdutoDao extends DaoEntidade {
             ps.setTimestamp(4, dataInclusao);
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
-            System.out.println(this.getClass().getSimpleName() + "ResultSet: " + rs.getFetchSize());
             while(rs.next()) {
                 produto.setId(rs.getInt(1));
             }
             sessaoBD.commit();
-            System.out.println(this.getClass().getSimpleName() + Mensagem.OK_INSERIR.getDescricao() +" id: " + produto.getId());
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_INSERIR.getDescricao() +" id: " + produto.getId());
             return produto;
         } catch (SQLException e) {
-            System.out.println(this.getClass().getSimpleName() + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e.getMessage());
             e.printStackTrace();
             return null;
         } catch (Exception e) {
-            System.out.println(this.getClass().getSimpleName() + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e.getMessage());
             e.printStackTrace();
             return null;
         }
@@ -60,12 +59,13 @@ public class ProdutoDao extends DaoEntidade {
 
     @Override
     public Entidade alterar(Entidade entidade) throws SQLException {
-        // TODO Auto-generated method stub
+        System.out.println("[" + this.getClass().getSimpleName() + "] Alterar");
         return null;
     }
 
     @Override
     public List<Entidade> consultar(Entidade entidade) throws SQLException {
+        System.out.println("[" + this.getClass().getSimpleName() + "] Consultar");
         PreparedStatement ps = null;
         Produto produto = (Produto) entidade;
         List<Entidade> listaProdutos = new ArrayList<Entidade>();
@@ -95,17 +95,15 @@ public class ProdutoDao extends DaoEntidade {
                 prod.setDataAlteracao(resultado.getDate("p.data_alteracao"));
                 prod.setDataInativacao(resultado.getDate("p.data_inativacao"));
                 
-                System.out.println("Id: " + prod.getId());
-                
                 listaProdutos.add(prod);
             }
             
-            System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.OK_CONSULTAR.getDescricao() + "\n   -- Elementos encontrados = " + listaProdutos.size());
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_CONSULTAR.getDescricao());
         } catch (SQLException e) {
-            System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.ERRO_NAO_ENCONTRADO.getDescricao()+ "\n" + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_NAO_ENCONTRADO.getDescricao()+ "\n" + e.getMessage());
             e.printStackTrace();
         } catch (Exception e) {
-            System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.ERRO_EXIBIR.getDescricao() + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_EXIBIR.getDescricao() + e.getMessage());
             e.printStackTrace();
         }
         return listaProdutos;
@@ -113,7 +111,7 @@ public class ProdutoDao extends DaoEntidade {
 
     @Override
     public Boolean excluir(Entidade entidade) throws SQLException {
-        // TODO Auto-generated method stub
+        System.out.println("[" + this.getClass().getSimpleName() + "] Excluir");
         return null;
     }
 

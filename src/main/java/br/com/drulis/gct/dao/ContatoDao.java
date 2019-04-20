@@ -26,7 +26,7 @@ public class ContatoDao extends DaoEntidade {
 
     @Override
     public Entidade inserir(Entidade entidade) {
-        System.out.println(this.getClass().getSimpleName() + ": Inserir");
+        System.out.println("[" + this.getClass().getSimpleName() + "] Inserir");
         PreparedStatement ps = null;
         Contato contato = (Contato) entidade;
         StringBuilder sql = new StringBuilder();
@@ -48,19 +48,20 @@ public class ContatoDao extends DaoEntidade {
             ps.setTimestamp(7, dataInclusao);
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
-            System.out.println(this.getClass().getSimpleName() + " Inserir -> ResultSet: " + rs.getFetchSize());
+            
             while(rs.next()) {
                 contato.setId(rs.getInt(1));
             }
+            
             sessaoBD.commit();
-            System.out.println(this.getClass().getSimpleName() + Mensagem.OK_INSERIR.getDescricao() +" id: " + contato.getId());
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_INSERIR.getDescricao() +" id: " + contato.getId());
             return contato;
         } catch (SQLException e) {
-            System.out.println(this.getClass().getSimpleName() + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e);
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e);
             e.printStackTrace();
             return null;
         } catch (Exception e) {
-            System.out.println(this.getClass().getSimpleName() + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e);
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e);
             e.printStackTrace();
             return null;
         }
@@ -68,7 +69,7 @@ public class ContatoDao extends DaoEntidade {
 
     @Override
     public Entidade alterar(Entidade entidade) {
-        System.out.println(this.getClass().getSimpleName() + ": Alterando Contato");
+        System.out.println("[" + this.getClass().getSimpleName() + "] Alterar");
         Contato contato = new Contato();
         Contato alterado = new Contato();
         StringBuilder sql = new StringBuilder();
@@ -84,7 +85,7 @@ public class ContatoDao extends DaoEntidade {
             sql.append("email = ?, ");
             sql.append("ativo = ?, ");
             sql.append("usuario_alteracao_id = ? ");
-            sql.append("WHERE contato_id = ?");
+            sql.append("WHERE id = ?");
             ps = sessaoBD.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, alterado.getTel());
             ps.setString(2, alterado.getEmail());
@@ -93,19 +94,18 @@ public class ContatoDao extends DaoEntidade {
             ps.setInt(5, alterado.getId());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
-            System.out.println(this.getClass().getSimpleName() + "   -- Alterando -> ResultSet: " + rs.getFetchSize());
             while(rs.next()) {
                 alterado.setId(rs.getInt(1));
             }
             sessaoBD.commit();
-            System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.OK_ATUALIZAR.getDescricao() + "id: " + contato.getId());
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_ATUALIZAR.getDescricao() + ", id: " + contato.getId());
             return alterado;
         } catch (SQLException e) {
-            System.out.println(this.getClass().getSimpleName() + Mensagem.ERRO_ATUALIZAR + ": " + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_ATUALIZAR + ": " + e.getMessage());
             e.printStackTrace();
             return null;
         } catch (Exception e) {
-            System.out.println(this.getClass().getSimpleName() + Mensagem.ERRO_ATUALIZAR + ": " + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_ATUALIZAR + ": " + e.getMessage());
             e.printStackTrace();
             return null;
         }
@@ -113,13 +113,16 @@ public class ContatoDao extends DaoEntidade {
 
     @Override
     public List<Entidade> consultar(Entidade entidade) {
+        System.out.println("[" + this.getClass().getSimpleName() + "] Consultar");
         PreparedStatement ps = null;
         Contato contato = (Contato) entidade;
+        
         if(contato.getUsuarioInclusao() == null) {
             contato.setUsuarioInclusao(new Usuario());
             contato.setUsuarioUpdate(new Usuario());
             contato.setUsuarioInativacao(new Usuario());
         }
+        
         List<Entidade> listaContatos = new ArrayList<Entidade>();
         StringBuilder sql = new StringBuilder();
 
@@ -129,7 +132,7 @@ public class ContatoDao extends DaoEntidade {
             this.conectar();
 
             if (contato.getId() > 0) {
-                sql.append(" AND c.contato_id = " + contato.getId());
+                sql.append(" AND c.id = " + contato.getId());
             }
 
             ps = sessaoBD.prepareStatement(sql.toString());
@@ -137,7 +140,7 @@ public class ContatoDao extends DaoEntidade {
 
             while (resultado.next()) {
                 Contato con = new Contato();
-                con.setId(resultado.getInt("c.contato_id"));
+                con.setId(resultado.getInt("c.id"));
                 con.setNome(resultado.getString("c.nome"));
                 con.setEmail(resultado.getString("c.email"));
                 con.setCpfCnpj(resultado.getString("c.cpf_cnpj"));
@@ -154,15 +157,14 @@ public class ContatoDao extends DaoEntidade {
                 con.getUsuarioInativacao().setId(resultado.getInt("c.usuario_inativacao_id"));
                 */
                 
-                System.out.println("Id: " + con.getId() + ", Nome: " + con.getNome() + ", cpf/cnpj: " + con.getCpfCnpj());
                 listaContatos.add(con);
             }
-            System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.OK_CONSULTAR.getDescricao() + "\n   -- Elementos encontrados = " + listaContatos.size());
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_CONSULTAR.getDescricao());
         } catch (SQLException e) {
-            System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.ERRO_NAO_ENCONTRADO.getDescricao()+ "\n" + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_NAO_ENCONTRADO.getDescricao()+ "\n" + e.getMessage());
             e.printStackTrace();
         } catch (Exception e) {
-            System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.ERRO_EXIBIR.getDescricao() + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_EXIBIR.getDescricao() + e.getMessage());
             e.printStackTrace();
         }
         return listaContatos;
@@ -174,19 +176,19 @@ public class ContatoDao extends DaoEntidade {
         Contato contato = (Contato) entidade;
         StringBuilder sql = new StringBuilder();
         
-        System.out.println(this.getClass().getSimpleName() + ": -- Excluir id: " + contato.getId());
+        System.out.println("[" + this.getClass().getSimpleName() + "] Excluir id: " + contato.getId());
         
         try {
             this.conectar();
             this.sessaoBD.setAutoCommit(false);
-            sql.append("UPDATE contato SET ativo = 0 WHERE contato_id = ?");
+            sql.append("UPDATE contato SET ativo = 0 WHERE id = ?");
             ps = this.sessaoBD.prepareStatement(sql.toString());
             ps.setInt(1,  contato.getId());
             ps.executeUpdate();
             this.sessaoBD.commit();
             return true;
         } catch(SQLException e) {
-            System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.ERRO_EXCLUIR.getDescricao()+ " --- id: " + contato.getId() + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_EXCLUIR.getDescricao()+ " --- id: " + contato.getId() + e.getMessage());
             return false;
         }
     }

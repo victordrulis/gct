@@ -1,5 +1,6 @@
 package br.com.drulis.gct.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.drulis.gct.core.Entidade;
@@ -15,6 +16,10 @@ public class Resultado {
     public String mensagem;
     public List<Entidade> entidades;
     public Entidade entidade;
+    
+    public Resultado() {
+        this.entidades = new ArrayList<Entidade>();
+    }
 
     public String getMensagem() {
         return mensagem;
@@ -25,22 +30,26 @@ public class Resultado {
     }
 
     public List<Entidade> getEntidades() {
-        System.out.println(this.getClass().getSimpleName() + ": getEntidades");
         return entidades;
     }
 
     public void setEntidades(List<Entidade> entidades) {
-        System.out.println(this.getClass().getSimpleName() + ": setEntidades " + entidades.size());
         this.entidades = entidades;
     }
 
     public void setEntidade(Entidade entidade) {
-        System.out.println(this.getClass().getSimpleName() + ": setEntidade " + entidade.getClass().getSimpleName());
         this.entidade = entidade;
     }
 
     public Entidade getEntidade() {
-        System.out.println(this.getClass().getSimpleName() + ": getEntidade");
         return entidade;
+    }
+    
+    public void addEntidade(Entidade entidade) {
+        this.entidades.add(entidade);
+    }
+    
+    public void removeEntidade(Entidade entidade) {
+        this.entidades.remove(entidade);
     }
 }

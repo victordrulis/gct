@@ -11,10 +11,10 @@ package br.com.drulis.gct.dominio;
 public enum Mensagem {
     
     ERRO_NAO_ENCONTRADO("Resultado não encontrado."),
-    OK_CONSULTAR("Resultado não encontrado."),
-    OK_INSERIR("Resultado não encontrado."),
-    OK_ATUALIZAR("Resultado não encontrado."),
-    OK_EXCLUIR("Resultado não encontrado."),
+    OK_CONSULTAR("Consulta realizada."),
+    OK_INSERIR("Inserido com sucesso."),
+    OK_ATUALIZAR("Atualizado com sucesso."),
+    OK_EXCLUIR("Excluido com sucesso."),
     ERRO_EXIBIR("Erro ao exibir registro."),
     ERRO_INSERIR("Erro ao inserir registro."),
     ERRO_ATUALIZAR("Erro ao atualizar registro."),

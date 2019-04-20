@@ -25,25 +25,23 @@ import br.com.drulis.gct.util.Resultado;
  * @contact victordrulis@gmail.com
  *
  */
-public class ClienteViewHelper implements ViewHelperInterface {
+public class LoginViewHelper implements ViewHelperInterface {
 
     @Override
     public DominioInterface getData(HttpServletRequest request) {
         String acao = request.getParameter("acao");
-        ConsultarCommand consultar = new ConsultarCommand();
         Cliente cliente = new Cliente();
         Contato contato = new Contato();
+        Produto produto = new Produto();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         
         String contatoId = request.getParameter("contatoId");
-        String[] listaProdutoId = request.getParameterValues("produto");
+        String produtoId = request.getParameter("listaProdutoId");
         String sla = request.getParameter("sla");
-        String status = request.getParameter("status");
-        String contratoDataInicio = request.getParameter("contratoDataInicio");
-        String contratoDataFim = request.getParameter("contratoDataFim");
-        String ativo = request.getParameter("ativo");
+        String dataInicioContrato = request.getParameter("dataInicioContrato");
+        String duracaoContrato = request.getParameter("duracaoContrato");
         
-        System.out.println("[" + this.getClass().getSimpleName() + "] --getData, ACAO: " + acao + ", URI: " + request.getRequestURI());
+        System.out.println(this.getClass().getSimpleName() + ": --getData, ACAO: " + acao + ", URI: " + request.getRequestURI());
 
         if(acao == null) {
             acao = Acao.LISTAR.getAcao();
@@ -56,51 +54,35 @@ public class ClienteViewHelper implements ViewHelperInterface {
                 cliente.setId(Integer.parseInt(id));
         }
         
-        if(acao.equals(Acao.SALVAR.getAcao()) || acao.equals(Acao.ALTERAR.getAcao()) || acao.equals(Acao.EDITAR.getAcao()) && request.getMethod().equals("POST")) {
-            Resultado resultado = new Resultado();
+        if(!acao.equals(Acao.EXCLUIR.getAcao()) || acao.equals(Acao.SALVAR.getAcao()) && request.getMethod().equals("GET")) {
             
-            contato.setId(Integer.parseInt(contatoId));
-            resultado = consultar.execute(contato);
-            
-            if (listaProdutoId != null){
-                for(String produtoId : listaProdutoId) {
-                    Produto p = new Produto();
-                    p.setId(Integer.parseInt(produtoId));
-                    cliente.getListaProdutos().add((Produto) consultar.execute(p).getEntidades().get(0));
-                }
-            }
-            
-            cliente.setContato((Contato) resultado.getEntidades().get(0));
-            cliente.setSla(Integer.parseUnsignedInt(sla));
-            cliente.setStatus(Integer.parseUnsignedInt(status));
-
-            if(ativo != null || ativo != "0")
-                cliente.setAtivo(1);
-        }
-        
-        if(!acao.equals(Acao.EXCLUIR.getAcao()) && request.getMethod().equals("GET")) {
             try {
                 contato.setId((contatoId != null) ? Integer.parseInt(contatoId) : 0);
-                
-                if (listaProdutoId != null){
-                    for(String produtoId : listaProdutoId) {
-                        Produto p = new Produto();
-                        p.setId(Integer.parseInt(produtoId));
-                        cliente.getListaProdutos().add((Produto) consultar.execute(p).getEntidades().get(0));
-                    }
-                }
+                produto.setId((produtoId != null) ? Integer.parseInt(produtoId) : 0);
                 
                 cliente.setContato(contato);
                 
                 cliente.setSla((sla != null) ? Integer.parseUnsignedInt(sla) : 0);
-                cliente.setStatus((status != null) ? Integer.parseUnsignedInt(status) : 0);
-                cliente.setInicioContrato((contratoDataInicio != null) ? dateFormat.parse(contratoDataInicio) : new Date());
+                cliente.setInicioContrato((dataInicioContrato != null) ? dateFormat.parse(dataInicioContrato) : new Date());
+                cliente.setDuracaoContrato((duracaoContrato != null) ? Integer.parseInt(duracaoContrato) : 0);
             } catch (ParseException e) {
-                System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_CONVERTER_DADOS.getDescricao() + "; \n" + e.getMessage());
+                System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.ERRO_CONVERTER_DADOS.getDescricao() + "; \n" + e.getMessage());
                 e.printStackTrace();
             }
             
-            if(ativo != null || ativo != "0")
+            if(request.getParameter("ativo") != null)
+                cliente.setAtivo(1);
+        }
+        
+        if(acao.equals(Acao.SALVAR.getAcao()) || acao.equals(Acao.ALTERAR.getAcao()) || acao.equals(Acao.EDITAR.getAcao()) && request.getMethod().equals("POST")) {
+            contato.setId(Integer.parseInt(contatoId));
+            
+            cliente.setContato(contato);
+            cliente.setSla(Integer.parseUnsignedInt(sla));
+//            cliente.setDuracaoContrato(duracaoContrato);
+            cliente.setDuracaoContrato(Integer.parseInt(duracaoContrato));
+            
+            if(request.getParameter("ativo") != null)
                 cliente.setAtivo(1);
         }
         
@@ -117,7 +99,7 @@ public class ClienteViewHelper implements ViewHelperInterface {
             resProduto = consultar.execute(new Produto());
             resContato = consultar.execute(new Contato());
         } catch (Exception e) {
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_CONVERTER_DADOS + ": " + e.getMessage());
+            System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.ERRO_CONVERTER_DADOS + ": " + e.getMessage());
             e.printStackTrace();
         }
         
@@ -125,7 +107,7 @@ public class ClienteViewHelper implements ViewHelperInterface {
         String uri = request.getRequestURI();
         String acao = request.getParameter("acao");
         
-        System.out.println("[" + this.getClass().getSimpleName() + "] setView: Acao = " + acao + ", URI: " + uri);
+        System.out.println(this.getClass().getSimpleName() + " -- setView: Acao = " + acao + ", URI: " + uri);
         
         if(resultado != null) {
             mensagem = resultado.getMensagem();

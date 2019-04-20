@@ -11,7 +11,9 @@ import java.util.List;
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.dominio.Cliente;
 import br.com.drulis.gct.dominio.Contato;
+import br.com.drulis.gct.dominio.Contrato;
 import br.com.drulis.gct.dominio.Mensagem;
+import br.com.drulis.gct.dominio.Produto;
 
 /**
  * @author Victor Drulis Oliveira
@@ -19,36 +21,39 @@ import br.com.drulis.gct.dominio.Mensagem;
  * @contact victordrulis@gmail.com
  *
  */
-public class ClienteDao extends DaoEntidade {
+public class ContratoDao extends DaoEntidade {
 
     @Override
     public Entidade inserir(Entidade entidade) throws SQLException {
         System.out.println("[" + this.getClass().getSimpleName() + "] Inserir");
         PreparedStatement ps = null;
-        Cliente cliente = (Cliente) entidade;
+        Contrato contrato = (Contrato) entidade;
         StringBuilder sql = new StringBuilder();
         Timestamp dataInclusao = new Timestamp(System.currentTimeMillis());
         
         try {
             this.conectar();
             sessaoBD.setAutoCommit(false);
-            sql.append("INSERT INTO cliente (contato_id, sla, status, ativo, usuario_inclusao_id, data_inclusao)");
+            sql.append("INSERT INTO contrato (cliente_id, produto_id, status, ativo, usuario_inclusao_id, data_inclusao)");
             sql.append(" VALUES (?,?,?,?,?,?)");
             ps = sessaoBD.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, cliente.getContato().getId());
-            ps.setInt(2, cliente.getSla());
-            ps.setInt(3, cliente.getStatus());
-            ps.setInt(4, cliente.getAtivo());
+            
+            ps.setInt(1, contrato.getCliente().getId());
+            ps.setInt(2, contrato.getProduto().getId());
+            ps.setInt(3, contrato.getStatus());
+            ps.setInt(4, contrato.getAtivo());
             ps.setInt(5, 1);
             ps.setTimestamp(6, dataInclusao);
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
+            
             while(rs.next()) {
-                cliente.setId(rs.getInt(1));
+                contrato.setId(rs.getInt(1));
             }
+            
             sessaoBD.commit();
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_INSERIR.getDescricao() +" id: " + cliente.getId());
-            return cliente;
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_INSERIR.getDescricao() +" id: " + contrato.getId());
+            return contrato;
         } catch (SQLException e) {
             System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e.getMessage());
             e.printStackTrace();
@@ -63,7 +68,7 @@ public class ClienteDao extends DaoEntidade {
     @Override
     public Entidade alterar(Entidade entidade) throws SQLException {
         System.out.println("[" + this.getClass().getSimpleName() + "] Alterar");
-        Cliente alterado = (Cliente) entidade;
+        Contrato alterado = (Contrato) entidade;
         StringBuilder sql = new StringBuilder();
         PreparedStatement ps = null;
 
@@ -71,9 +76,7 @@ public class ClienteDao extends DaoEntidade {
             this.conectar();
             sessaoBD.setAutoCommit(false);
             
-            sql.append("UPDATE cliente SET ");
-            sql.append("contato_id = ?, ");
-            sql.append("sla = ?, ");
+            sql.append("UPDATE contrato SET ");
             sql.append("status = ?, ");
             sql.append("ativo = ?, ");
             sql.append("usuario_alteracao_id = ?, ");
@@ -81,12 +84,10 @@ public class ClienteDao extends DaoEntidade {
             sql.append("WHERE id = ?");
             
             ps = sessaoBD.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, alterado.getContato().getId());
-            ps.setInt(2, alterado.getSla());
-            ps.setInt(3, alterado.getStatus());
-            ps.setInt(4, alterado.getAtivo());
-            ps.setInt(5, 1);
-            ps.setInt(6, alterado.getId());
+            ps.setInt(1, alterado.getStatus());
+            ps.setInt(2, alterado.getAtivo());
+            ps.setInt(3, 1);
+            ps.setInt(4, alterado.getId());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             
@@ -112,17 +113,21 @@ public class ClienteDao extends DaoEntidade {
     public List<Entidade> consultar(Entidade entidade) throws SQLException {
         System.out.println("[" + this.getClass().getSimpleName() + "] Consultar");
         PreparedStatement ps = null;
-        Cliente cliente = (Cliente) entidade;
-        List<Entidade> listaClientes = new ArrayList<Entidade>();
+        Contrato contrato = (Contrato) entidade;
+        List<Entidade> listaContratos = new ArrayList<Entidade>();
         StringBuilder sql = new StringBuilder();
         
-        sql.append("SELECT cli.*, c.* FROM cliente cli LEFT JOIN contato c ON c.id = cli.contato_id WHERE 1 = 1 ");
+        sql.append("SELECT ctt.*, cli.*, c.*, p.* FROM contrato ctt ");
+        sql.append("LEFT JOIN produto p ON p.id = ctt.produto_id ");
+        sql.append("LEFT JOIN cliente cli ON cli.id = ctt.cliente_id ");
+        sql.append("LEFT JOIN contato c ON c.id = cli.contato_id ");
+        sql.append("WHERE 1 = 1 ");
         
         try {
             this.conectar();
 
-            if (cliente.getId() > 0) {
-                sql.append(" AND cli.id = " + cliente.getId());
+            if (contrato.getId() > 0) {
+                sql.append(" AND ctt.id = " + contrato.getId());
             }
 
             ps = sessaoBD.prepareStatement(sql.toString());
@@ -130,20 +135,32 @@ public class ClienteDao extends DaoEntidade {
 
             while (resultado.next()) {
                 Cliente cli = new Cliente();
+                Produto prod = new Produto();
                 Contato con = new Contato();
                 
-                con.setId(resultado.getInt("c.id"));
-                con.setNome(resultado.getString(("c.nome")));
-                con.setEmail(resultado.getString(("c.Email")));
+                prod.setId(resultado.getInt("p.id"));
+                prod.setTitulo(resultado.getString(("p.titulo")));
+                prod.setDescricao(resultado.getString(("p.descricao")));
+                prod.setVersao(resultado.getString(("p.versao")));
+                
+                con.setId(Integer.parseInt("c.id"));
+                con.setNome("c.nome");
+                con.setCpfCnpj("c.cpf_cnpj");
                 
                 cli.setContato(con);
                 cli.setId(resultado.getInt("cli.id"));
-                cli.setSla(resultado.getInt("cli.sla"));
-                cli.setDataInclusao(resultado.getDate("cli.data_inclusao"));
-                cli.setDataAlteracao(resultado.getDate("cli.data_alteracao"));
-                cli.setDataInativacao(resultado.getDate("cli.data_inativacao"));
+                cli.setSla(Integer.parseInt("cli.sla"));
                 
-                listaClientes.add(cli);
+                contrato.setCliente(cli);
+                contrato.setProduto(prod);
+                contrato.setDataInclusao(resultado.getDate("ctt.usuario_inclusao_id"));
+                contrato.setDataAlteracao(resultado.getDate("ctt.usuario_alteracao_id"));
+                contrato.setDataInativacao(resultado.getDate("ctt.usuario_inativacao_id"));
+                contrato.setDataInclusao(resultado.getDate("ctt.data_inclusao"));
+                contrato.setDataAlteracao(resultado.getDate("ctt.data_alteracao"));
+                contrato.setDataInativacao(resultado.getDate("ctt.data_inativacao"));
+                
+                listaContratos.add(contrato);
             }
             
             System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_CONSULTAR.getDescricao());
@@ -154,27 +171,27 @@ public class ClienteDao extends DaoEntidade {
             System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_EXIBIR.getDescricao() + e.getMessage());
             e.printStackTrace();
         }
-        return listaClientes;
+        return listaContratos;
     }
 
     @Override
     public Boolean excluir(Entidade entidade) throws SQLException {
         System.out.println("[" + this.getClass().getSimpleName() + "] Excluir id: " + entidade.getId());
         PreparedStatement ps = null;
-        Cliente cliente = (Cliente) entidade;
+        Contrato contrato = (Contrato) entidade;
         StringBuilder sql = new StringBuilder();
         
         try {
             this.conectar();
             this.sessaoBD.setAutoCommit(false);
-            sql.append("UPDATE cliente SET ativo = 0 WHERE id = ?");
+            sql.append("UPDATE contrato SET ativo = 0 WHERE id = ?");
             ps = this.sessaoBD.prepareStatement(sql.toString());
-            ps.setInt(1,  cliente.getId());
+            ps.setInt(1,  contrato.getId());
             ps.executeUpdate();
             this.sessaoBD.commit();
             return true;
         } catch(SQLException e) {
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_EXCLUIR.getDescricao()+ " - Cliente id: " + cliente.getId() + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_EXCLUIR.getDescricao()+ " - Contrato id: " + contrato.getId() + e.getMessage());
             return false;
         }
     }

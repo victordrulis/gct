@@ -44,15 +44,38 @@
                     </select><a href="/gct/contato?acao=novo"><button type="button">+ Contato</button></a>
                 </div>
             </div>
-	        <hr>
-	        <h5><strong>Produtos contratados</strong></h5>
 	        
+	        <div class="row">
+                <div class="form-group col-md-2">
+                    <label for="sla">SLA:</label>
+                    <input type="text" class="form-control" id="sla" name="sla">
+                </div>
+                
+                <div class="form-group col-md-5">
+                    <label for="status">Status:</label>
+                    <select class="form-control" name="status" id="status">
+                        <%
+                           // Abrir options
+                        %>
+                                <option value="1">Valor 1</option>
+                                <option value="2">Valor 2</option>
+                                <option value="3">Valor 3</option>
+                        <%
+                           // Fechar options
+                        %>
+                    </select>
+                </div>
+                
+            </div>
+	        
+        <hr>
+        <h5><strong>Produtos contratados</strong></h5>
         <div class="listaProduto" id="listaProduto">
 	        
 	        <div class="row" id="addProduto">
                 <div class="form-group col-md">
                     <label for="produto">Produto</label>
-                    <select class="form-control" id="produto">
+                    <select class="form-control" id="produto" name="produto">
                         <%
                            List<Produto> listaProduto = (List<Produto>) request.getAttribute("listaProduto");
                            for(Produto produto : listaProduto) {

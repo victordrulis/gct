@@ -14,24 +14,17 @@ import br.com.drulis.gct.dominio.core.TipoContrato;
  *
  */
 public class Cliente extends Entidade {
-    
+    private static final long serialVersionUID = 1L;
+
     private Contato contato;
-    private ClienteStatus status;
     private List<Produto> listaProdutos;
     private int sla;
     private Date inicioContrato;
     private int duracaoContrato;
     private TipoContrato tipoContrato;
     
-    /**
-     * Listas para montar as views
-     */
-    private List<Contato> listaContatosView;
-    private List<Produto> listaProdutosView;
-    
     public Cliente() {
-        this.listaContatosView = new ArrayList<Contato>();
-        this.listaProdutosView = new ArrayList<Produto>();
+        this.listaProdutos = new ArrayList<Produto>();
     }
     
     /**
@@ -40,17 +33,14 @@ public class Cliente extends Entidade {
      * @param duracaoContrato
      * @param tipoContrato
      */
-    public Cliente(Contato contato, int sla, Date inicioContrato, int duracaoContrato, TipoContrato tipoContrato) {
+    public Cliente(Contato contato, int sla, Date inicioContrato, int duracaoContrato, TipoContrato tipoContrato, List<Produto> listaProdutos) {
         super();
         this.contato = contato;
         this.sla = sla;
         this.inicioContrato = inicioContrato;
         this.duracaoContrato = duracaoContrato;
         this.tipoContrato = tipoContrato;
-        this.status = ClienteStatus.CADASTRADO;
-        this.listaProdutos = new ArrayList<Produto>();
-        this.listaContatosView = new ArrayList<Contato>();
-        this.listaProdutosView = new ArrayList<Produto>();
+        this.listaProdutos = listaProdutos;
     }
     
     /**
@@ -65,20 +55,6 @@ public class Cliente extends Entidade {
      */
     public void setContato(Contato contato) {
         this.contato = contato;
-    }
-
-    /**
-     * @return the status
-     */
-    public ClienteStatus getStatusCliente() {
-        return status;
-    }
-
-    /**
-     * @param status the status to set
-     */
-    public void setStatusCliente(ClienteStatus status) {
-        this.status = status;
     }
 
     /**
@@ -151,46 +127,4 @@ public class Cliente extends Entidade {
         this.tipoContrato = tipoContrato;
     }
 
-    /**
-     * @return the status
-     */
-    public int getStatus() {
-        return status.getId();
-    }
-
-    /**
-     * @param status the status to set
-     */
-    public void setStatus(ClienteStatus status) {
-        this.status = status;
-    }
-
-    /**
-     * @return the listaContatosView
-     */
-    public List<Contato> getListaContatosView() {
-        return listaContatosView;
-    }
-
-    /**
-     * @param listaContatosView the listaContatosView to set
-     */
-    public void setListaContatosView(List<Contato> listaContatosView) {
-        this.listaContatosView = listaContatosView;
-    }
-
-    /**
-     * @return the listaProdutosView
-     */
-    public List<Produto> getListaProdutosView() {
-        return listaProdutosView;
-    }
-
-    /**
-     * @param listaProdutosView the listaProdutosView to set
-     */
-    public void setListaProdutosView(List<Produto> listaProdutosView) {
-        this.listaProdutosView = listaProdutosView;
-    }
-    
 }

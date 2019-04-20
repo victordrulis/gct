@@ -25,25 +25,11 @@ public abstract class DaoEntidade implements DaoInterface {
         try {
             if(this.sessaoBD == null || this.sessaoBD.isClosed()) {
                 this.sessaoBD = Conexao.getSessao();
-                System.out.println(this.getClass().getSimpleName() + ": Conexão iniciada");
+                System.out.println("[" + this.getClass().getSimpleName() + "] Conexão iniciada");
             }
         } catch (SQLException e) {
-            System.out.println(this.getClass().getSimpleName() + ": Erro de SQL >> " + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] Erro ao conectar: \n" + e.getMessage());
             e.printStackTrace();
         }
     }
-    
-    /*
-    protected void encerrar() 
-    {
-        try {
-            if(this.sessaoBD != null) {
-                this.sessaoBD.close();
-                System.out.println(this.getClass().getSimpleName() + ": Conexão encerrada");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    */
 }
