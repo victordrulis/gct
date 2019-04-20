@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import br.com.drulis.gct.core.Entidade;
-import br.com.drulis.gct.dominio.core.TipoContrato;
 
 /**
  * @author Victor Drulis Oliveira
@@ -21,7 +20,7 @@ public class Cliente extends Entidade {
     private int sla;
     private Date inicioContrato;
     private int duracaoContrato;
-    private TipoContrato tipoContrato;
+    private ContratoTipo tipoContrato;
     
     public Cliente() {
         this.listaProdutos = new ArrayList<Produto>();
@@ -33,7 +32,7 @@ public class Cliente extends Entidade {
      * @param duracaoContrato
      * @param tipoContrato
      */
-    public Cliente(Contato contato, int sla, Date inicioContrato, int duracaoContrato, TipoContrato tipoContrato, List<Produto> listaProdutos) {
+    public Cliente(Contato contato, int sla, Date inicioContrato, int duracaoContrato, ContratoTipo tipoContrato, List<Produto> listaProdutos) {
         super();
         this.contato = contato;
         this.sla = sla;
@@ -116,14 +115,14 @@ public class Cliente extends Entidade {
     /**
      * @return the tipoContrato
      */
-    public TipoContrato getTipoContrato() {
+    public ContratoTipo getTipoContrato() {
         return tipoContrato;
     }
     
     /**
      * @param tipoContrato the tipoContrato to set
      */
-    public void setTipoContrato(TipoContrato tipoContrato) {
+    public void setTipoContrato(ContratoTipo tipoContrato) {
         this.tipoContrato = tipoContrato;
     }
 

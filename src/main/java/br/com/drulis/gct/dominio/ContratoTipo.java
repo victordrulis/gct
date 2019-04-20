@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.drulis.gct.dominio.core;
+package br.com.drulis.gct.dominio;
 
 /**
  * @author Victor Drulis Oliveira
@@ -9,7 +9,7 @@ package br.com.drulis.gct.dominio.core;
  * @contact victordrulis@gmail.com
  *
  */
-public enum TipoContrato {
+public enum ContratoTipo {
 
     ALUGUEL("aluguel"),
     COMODATO("comodato"),
@@ -22,7 +22,7 @@ public enum TipoContrato {
     /**
      * @param descricao
      */
-    private TipoContrato(String descricao) {
+    private ContratoTipo(String descricao) {
         this.descricao = descricao;
     }
 
