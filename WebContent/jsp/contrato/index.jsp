@@ -65,7 +65,7 @@
       <td><%= contrato.getCliente().getSla() %></td>
       <td><%= contrato.getProduto().getTitulo() %></td>
       <td><%= contrato.getDataInicio() %></td>
-      <td><%= contrato.getDuracaoContrato() %></td>
+      <td><%= contrato.getDataFim() %></td>
       <td><%= contrato.getAtivo() %></td>
       <td>
             <ul>

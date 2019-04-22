@@ -31,10 +31,10 @@
 		<form action="/gct/contrato?acao=salvar" method="post">
 			<div class="row">
                 <div class="form-group col-md-5">
-                    <label for="contato"><strong>Cliente</strong></label>
-                    <select class="form-control" name="contatoId" id="contatoId">
+                    <label for="cliente"><strong>Cliente</strong></label>
+                    <select class="form-control" name="clienteId" id="clienteId">
 						<%
-						   List<Cliente> listaCliente = (List<Cliente>) request.getAttribute("listaCliente");
+						   List<Cliente> listaCliente = (List<Cliente>) request.getAttribute("resultadoCliente");
                            for(Cliente cliente : listaCliente) {
 						%>
                                 <option value="<%= cliente.getId() %>"><%= cliente.getContato().getNome() %> (CPF/CNPJ: <%= cliente.getContato().getCpfCnpj() %>)</option>
@@ -70,9 +70,9 @@
 	        <div class="row" id="addProduto">
                 <div class="form-group col-md">
                     <label for="produto">Produto</label>
-                    <select class="form-control" id="produto" name="produto">
+                    <select class="form-control" id="produtoId" name="produtoId">
                         <%
-                           List<Produto> listaProduto = (List<Produto>) request.getAttribute("listaProduto");
+                           List<Produto> listaProduto = (List<Produto>) request.getAttribute("resultadoProduto");
                            for(Produto produto : listaProduto) {
                         %>
                                 <option value="<%= produto.getId() %>"><%= produto.getTitulo() %> (Versão atual: <%= produto.getVersao() %>)</option>
@@ -97,16 +97,11 @@
                     <input type="text" class="form-control" id="duracaoContrato" placeholder="XX (meses)">
                 </div>
                 <div class="form-check">
-                    <label class="form-check-label" for="stivo">Contrato ativo</label>
-                    <input type="checkbox" class="form-check-input form-control" id="ativo" checked="checked">
+                    <label class="form-check-label" for="ativo">Ativo:</label>
+                    <input type="checkbox" class="form-check-input form-control" id="ativo" name="ativo" checked="checked">
                 </div>
             </div>
             
-            </div>
-            <div class="form-group col-md-3">
-                <div class="form-group col-md-3">
-                    <button type="button" class="btn btn-primary" onclick="novaLinha('listaProduto', 'addProduto')">+ Produto</button>
-                </div>
             </div>
                 <hr>
 				<div class="row">

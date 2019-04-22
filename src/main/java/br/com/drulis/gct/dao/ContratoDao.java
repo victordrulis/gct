@@ -29,21 +29,24 @@ public class ContratoDao extends DaoEntidade {
         PreparedStatement ps = null;
         Contrato contrato = (Contrato) entidade;
         StringBuilder sql = new StringBuilder();
-        Timestamp dataInclusao = new Timestamp(System.currentTimeMillis());
+        Timestamp dataInicio = new Timestamp(contrato.getDataInicio().getTime());
+        Timestamp dataFim = new Timestamp(contrato.getDataFim().getTime());
         
         try {
             this.conectar();
             sessaoBD.setAutoCommit(false);
-            sql.append("INSERT INTO contrato (cliente_id, produto_id, status, ativo, usuario_inclusao_id, data_inclusao)");
-            sql.append(" VALUES (?,?,?,?,?,?)");
+            sql.append("INSERT INTO contrato (cliente_id, produto_id, status, ativo, data_inicio, data_fim, usuario_inclusao_id, data_inclusao)");
+            sql.append(" VALUES (?,?,?,?,?,?,?, now())");
             ps = sessaoBD.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
             
             ps.setInt(1, contrato.getCliente().getId());
             ps.setInt(2, contrato.getProduto().getId());
             ps.setInt(3, contrato.getStatus());
             ps.setInt(4, contrato.getAtivo());
-            ps.setInt(5, 1);
-            ps.setTimestamp(6, dataInclusao);
+            ps.setDate(5, dataInicio.);
+            ps.setTimestamp(6, dataFim);
+            ps.setInt(7, 1);
+//            ps.setTimestamp(6, dataInclusao);
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             

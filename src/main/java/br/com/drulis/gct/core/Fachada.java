@@ -11,10 +11,12 @@ import java.util.Map;
 
 import br.com.drulis.gct.dao.ClienteDao;
 import br.com.drulis.gct.dao.ContatoDao;
+import br.com.drulis.gct.dao.ContratoDao;
 import br.com.drulis.gct.dao.DaoInterface;
 import br.com.drulis.gct.dao.ProdutoDao;
 import br.com.drulis.gct.dominio.Cliente;
 import br.com.drulis.gct.dominio.Contato;
+import br.com.drulis.gct.dominio.Contrato;
 import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.dominio.Produto;
 import br.com.drulis.gct.dominio.validacao.ValidadorContatoCpfCnpj;
@@ -37,6 +39,7 @@ public class Fachada implements FachadaInterface {
     private Map<String, DaoInterface> mapDao;
     private Map<String, Map<String, List<StrategyInterface>>> mapRegrasNegocio;
     private Map<String, List<StrategyInterface>> mapRegrasContato;
+    private Map<String, List<StrategyInterface>> mapRegrasContrato;
     private Map<String, List<StrategyInterface>> mapRegrasCliente;
     private Map<String, List<StrategyInterface>> mapRegrasProduto;
 
@@ -44,13 +47,16 @@ public class Fachada implements FachadaInterface {
         this.mapDao = new HashMap<String, DaoInterface>();
         this.mapRegrasNegocio = new HashMap<String, Map<String, List<StrategyInterface>>>();
         this.mapRegrasContato = new HashMap<String, List<StrategyInterface>>();
+        this.mapRegrasContrato = new HashMap<String, List<StrategyInterface>>();
         this.mapRegrasCliente = new HashMap<String, List<StrategyInterface>>();
         this.mapRegrasProduto = new HashMap<String, List<StrategyInterface>>();
 
         ContatoDao contatoDao = new ContatoDao();
+        ContratoDao contratoDao = new ContratoDao();
         ClienteDao clienteDao = new ClienteDao();
         ProdutoDao produtoDao = new ProdutoDao();
         this.mapDao.put(Contato.class.getName(), contatoDao);
+        this.mapDao.put(Contrato.class.getName(), contratoDao);
         this.mapDao.put(Cliente.class.getName(), clienteDao);
         this.mapDao.put(Produto.class.getName(), produtoDao);
 
@@ -89,7 +95,13 @@ public class Fachada implements FachadaInterface {
         this.mapRegrasProduto.put("CONSULTAR", listRegrasConsultar);
         this.mapRegrasProduto.put("EXCLUIR", listRegrasExcluir);
 
+        this.mapRegrasContrato.put("SALVAR", listRegrasSalvar);
+        this.mapRegrasContrato.put("ALTERAR", listRegrasAlterar);
+        this.mapRegrasContrato.put("CONSULTAR", listRegrasConsultar);
+        this.mapRegrasContrato.put("EXCLUIR", listRegrasExcluir);
+        
         this.mapRegrasNegocio.put(Contato.class.getName(), mapRegrasContato);
+        this.mapRegrasNegocio.put(Contrato.class.getName(), mapRegrasContrato);
         this.mapRegrasNegocio.put(Cliente.class.getName(), mapRegrasCliente);
         this.mapRegrasNegocio.put(Produto.class.getName(), mapRegrasProduto);
     }

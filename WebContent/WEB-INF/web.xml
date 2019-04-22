@@ -21,6 +21,7 @@
     <url-pattern>/usuario</url-pattern>
     <url-pattern>/chamado/*</url-pattern>
     <url-pattern>/contato/*</url-pattern>
+    <url-pattern>/contrato/*</url-pattern>
     <url-pattern>/produto/*</url-pattern>
     <url-pattern>/atividade</url-pattern>
     <url-pattern>/item</url-pattern>

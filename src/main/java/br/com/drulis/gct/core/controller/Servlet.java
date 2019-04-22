@@ -23,6 +23,7 @@ import br.com.drulis.gct.viewhelper.ChamadoViewHelper;
 import br.com.drulis.gct.viewhelper.ClienteViewHelper;
 import br.com.drulis.gct.viewhelper.ConfigViewHelper;
 import br.com.drulis.gct.viewhelper.ContatoViewHelper;
+import br.com.drulis.gct.viewhelper.ContratoViewHelper;
 import br.com.drulis.gct.viewhelper.DashboardViewHelper;
 import br.com.drulis.gct.viewhelper.ItemViewHelper;
 import br.com.drulis.gct.viewhelper.LoginViewHelper;
@@ -52,6 +53,7 @@ public class Servlet extends HttpServlet {
         listaViewHelper.put("/gct/home", new ChamadoViewHelper());
         listaViewHelper.put("/gct/config", new ConfigViewHelper());
         listaViewHelper.put("/gct/contato", new ContatoViewHelper());
+        listaViewHelper.put("/gct/contrato", new ContratoViewHelper());
         listaViewHelper.put("/gct/chamado", new ChamadoViewHelper());
         listaViewHelper.put("/gct/cliente", new ClienteViewHelper());
         listaViewHelper.put("/gct/dashboard", new DashboardViewHelper());
