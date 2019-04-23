@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.drulis.gct.core.negocio.RegrasFactory;
 import br.com.drulis.gct.dao.ClienteDao;
 import br.com.drulis.gct.dao.ContatoDao;
 import br.com.drulis.gct.dao.ContratoDao;
@@ -19,12 +20,6 @@ import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.Contrato;
 import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.dominio.Produto;
-import br.com.drulis.gct.dominio.validacao.ValidadorContatoCpfCnpj;
-import br.com.drulis.gct.dominio.validacao.ValidadorContatoEmail;
-import br.com.drulis.gct.dominio.validacao.ValidadorContatoExiste;
-import br.com.drulis.gct.dominio.validacao.ValidadorContatoNaoExiste;
-import br.com.drulis.gct.dominio.validacao.ValidadorContatoNome;
-import br.com.drulis.gct.dominio.validacao.ValidadorContatoTelefone;
 import br.com.drulis.gct.util.Resultado;
 
 /**
@@ -36,6 +31,7 @@ import br.com.drulis.gct.util.Resultado;
 public class Fachada implements FachadaInterface {
 
     private Resultado resultado;
+    private RegrasFactory regrasFactory;
     private Map<String, DaoInterface> mapDao;
     private Map<String, Map<String, List<StrategyInterface>>> mapRegrasNegocio;
     private Map<String, List<StrategyInterface>> mapRegrasContato;
@@ -51,6 +47,8 @@ public class Fachada implements FachadaInterface {
         this.mapRegrasCliente = new HashMap<String, List<StrategyInterface>>();
         this.mapRegrasProduto = new HashMap<String, List<StrategyInterface>>();
 
+        this.regrasFactory = new RegrasFactory();
+        
         ContatoDao contatoDao = new ContatoDao();
         ContratoDao contratoDao = new ContratoDao();
         ClienteDao clienteDao = new ClienteDao();
@@ -69,17 +67,15 @@ public class Fachada implements FachadaInterface {
         List<StrategyInterface> contatoRegrasConsultar = new ArrayList<StrategyInterface>();
         List<StrategyInterface> contatoRegrasExcluir = new ArrayList<StrategyInterface>();
 
-        contatoRegrasConsultar.add(new ValidadorContatoCpfCnpj());
-        contatoRegrasConsultar.add(new ValidadorContatoEmail());
-        contatoRegrasSalvar.add(new ValidadorContatoExiste());
-        contatoRegrasSalvar.add(new ValidadorContatoCpfCnpj());
-        contatoRegrasSalvar.add(new ValidadorContatoNome());
-        contatoRegrasSalvar.add(new ValidadorContatoEmail());
-        contatoRegrasSalvar.add(new ValidadorContatoTelefone());
-        contatoRegrasAlterar.add(new ValidadorContatoNaoExiste());
-        contatoRegrasAlterar.add(new ValidadorContatoEmail());
-        contatoRegrasAlterar.add(new ValidadorContatoTelefone());
-        contatoRegrasExcluir.add(new ValidadorContatoNaoExiste());
+        contatoRegrasConsultar.add(this.regrasFactory.getValidarFormatoData());
+        contatoRegrasConsultar.add(this.regrasFactory.getValidarNãoVazio());
+        contatoRegrasSalvar.add(this.regrasFactory.getValidarCpfCnpj());
+        contatoRegrasSalvar.add(this.regrasFactory.getValidarEmail());
+        contatoRegrasSalvar.add(this.regrasFactory.getValidarNaoExistencia());
+        contatoRegrasAlterar.add(this.regrasFactory.getValidarExistencia());
+        contatoRegrasAlterar.add(this.regrasFactory.getValidarAtivo());
+        contatoRegrasAlterar.add(this.regrasFactory.getValidarTelefoneComDDD());
+        contatoRegrasExcluir.add(this.regrasFactory.getValidarAtivo());
         this.mapRegrasContato.put("SALVAR", contatoRegrasSalvar);
         this.mapRegrasContato.put("ALTERAR", contatoRegrasAlterar);
         this.mapRegrasContato.put("CONSULTAR", contatoRegrasConsultar);

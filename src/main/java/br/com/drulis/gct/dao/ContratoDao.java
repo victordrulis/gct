@@ -4,7 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +29,7 @@ public class ContratoDao extends DaoEntidade {
         PreparedStatement ps = null;
         Contrato contrato = (Contrato) entidade;
         StringBuilder sql = new StringBuilder();
-        Timestamp dataInicio = new Timestamp(contrato.getDataInicio().getTime());
-        Timestamp dataFim = new Timestamp(contrato.getDataFim().getTime());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         
         try {
             this.conectar();
@@ -43,8 +42,8 @@ public class ContratoDao extends DaoEntidade {
             ps.setInt(2, contrato.getProduto().getId());
             ps.setInt(3, contrato.getStatus());
             ps.setInt(4, contrato.getAtivo());
-            ps.setDate(5, dataInicio.);
-            ps.setTimestamp(6, dataFim);
+            ps.setString(5, dateFormat.format(contrato.getDataInicio()));
+            ps.setString(6, dateFormat.format(contrato.getDataFim()));
             ps.setInt(7, 1);
 //            ps.setTimestamp(6, dataInclusao);
             ps.executeUpdate();
@@ -146,22 +145,24 @@ public class ContratoDao extends DaoEntidade {
                 prod.setDescricao(resultado.getString(("p.descricao")));
                 prod.setVersao(resultado.getString(("p.versao")));
                 
-                con.setId(Integer.parseInt("c.id"));
-                con.setNome("c.nome");
-                con.setCpfCnpj("c.cpf_cnpj");
+                con.setId(resultado.getInt("c.id"));
+                con.setNome(resultado.getString("c.nome"));
+                con.setCpfCnpj(resultado.getString("c.cpf_cnpj"));
                 
                 cli.setContato(con);
                 cli.setId(resultado.getInt("cli.id"));
-                cli.setSla(Integer.parseInt("cli.sla"));
+                cli.setSla(resultado.getInt("cli.sla"));
                 
                 contrato.setCliente(cli);
                 contrato.setProduto(prod);
+                contrato.setDataInicio(resultado.getDate("ctt.data_inicio"));
+                contrato.setDataFim(resultado.getDate("ctt.data_fim"));
                 contrato.setDataInclusao(resultado.getDate("ctt.usuario_inclusao_id"));
                 contrato.setDataAlteracao(resultado.getDate("ctt.usuario_alteracao_id"));
-                contrato.setDataInativacao(resultado.getDate("ctt.usuario_inativacao_id"));
+                contrato.setDataInativacao(resultado.getDate("ctt.usuario_exclusao_id"));
                 contrato.setDataInclusao(resultado.getDate("ctt.data_inclusao"));
                 contrato.setDataAlteracao(resultado.getDate("ctt.data_alteracao"));
-                contrato.setDataInativacao(resultado.getDate("ctt.data_inativacao"));
+                contrato.setDataInativacao(resultado.getDate("ctt.data_exclusao"));
                 
                 listaContratos.add(contrato);
             }

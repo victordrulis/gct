@@ -33,14 +33,14 @@ public class ContratoViewHelper implements ViewHelperInterface {
         Contrato contrato = new Contrato();
         Cliente cliente = new Cliente();
         Produto produto = new Produto();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         
         String acao = request.getParameter("acao");
         String produtoId = request.getParameter("produtoId");
         String clienteId = request.getParameter("clienteId");
         String status = request.getParameter("status");
-        String contratoDataInicio = request.getParameter("contratoDataInicio");
-        String contratoDataFim = request.getParameter("contratoDataFim");
+        String contratoDataInicio = request.getParameter("dataInicio");
+        String contratoDataFim = request.getParameter("dataFim");
         String ativo = request.getParameter("ativo");
         
         System.out.println("[" + this.getClass().getSimpleName() + "] --getData, ACAO: " + acao + ", URI: " + request.getRequestURI());

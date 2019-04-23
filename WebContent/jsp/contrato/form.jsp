@@ -89,7 +89,7 @@
                 
                 <div class="form-group col-md-2">
                     <label for="dataFim">Fim do contrato</label> 
-                    <input type="text" class="form-control" id="fimInicio" name="fimInicio" placeholder="22/02/2020">
+                    <input type="text" class="form-control" id="dataFim" name="dataFim" placeholder="22/02/2020">
                 </div>
                 
                 <div class="form-group col-md-2">
