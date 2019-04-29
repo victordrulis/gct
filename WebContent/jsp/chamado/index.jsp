@@ -62,12 +62,9 @@
     <tr>
       <td><%= chamado.getId() %></td>
       <td><%= chamado.getTitulo() %></td>
-<%--       <td><%= chamado.getCliente().getContato().getId() %></td> --%>
-<%--       <td><%= chamado.getProduto().getTitulo() %></td> --%>
-<%--       <td><%= chamado.getUsuarioAtribuido().getContato().getNome() %></td> --%>
-      <td>Cliente nome</td>
-      <td>Produto nome</td>
-      <td>Usuario 123</td>
+      <td><%= chamado.getCliente().getContato().getId() %></td>
+      <td><%= chamado.getProduto().getTitulo() %></td>
+      <td><%= chamado.getUsuarioAtribuido().getContato().getNome() %></td>
       <td>Tipo chamado</td>
       <td><%= chamado.getAtivo() %></td>
       <td>

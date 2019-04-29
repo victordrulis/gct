@@ -10,7 +10,10 @@ import java.util.List;
 
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.dominio.Chamado;
+import br.com.drulis.gct.dominio.Cliente;
 import br.com.drulis.gct.dominio.Mensagem;
+import br.com.drulis.gct.dominio.Produto;
+import br.com.drulis.gct.dominio.Usuario;
 
 /**
  * @author Victor Drulis Oliveira
@@ -31,8 +34,8 @@ public class ChamadoDao extends DaoEntidade {
         try {
             this.conectar();
             sessaoBD.setAutoCommit(false);
-            sql.append("INSERT INTO chamado (titulo, descricao, status, ativo, usuario_atribuido_id, usuario_inclusao_id, data_inclusao)");
-            sql.append(" VALUES (?,?,?,?,?,?,?)");
+            sql.append("INSERT INTO chamado (titulo, descricao, status, ativo, usuario_atribuido_id, usuario_inclusao_id, data_inclusao, produto_id, cliente_id)");
+            sql.append(" VALUES (?,?,?,?,?,?,?,?,?)");
             ps = sessaoBD.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, chamado.getTitulo());
             ps.setString(2, chamado.getDescricao());
@@ -40,7 +43,9 @@ public class ChamadoDao extends DaoEntidade {
             ps.setInt(4, chamado.getAtivo());
             ps.setInt(5, chamado.getUsuarioAtribuido().getId());
             ps.setInt(6, 1);
-            ps.setTimestamp(6, dataInclusao);
+            ps.setTimestamp(7, dataInclusao);
+            ps.setInt(8, chamado.getProduto().getId());
+            ps.setInt(9, chamado.getCliente().getId());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             while(rs.next()) {
@@ -78,7 +83,9 @@ public class ChamadoDao extends DaoEntidade {
             sql.append("status = ?, ");
             sql.append("ativo = ?, ");
             sql.append("usuario_alteracao_id = ?, ");
-            sql.append("data_alteracao = now() ");
+            sql.append("data_alteracao = now(), ");
+            sql.append("produto_id = ?, ");
+            sql.append("cliente_id = ? ");
             sql.append("WHERE id = ?");
             
             ps = sessaoBD.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
@@ -88,7 +95,9 @@ public class ChamadoDao extends DaoEntidade {
             ps.setInt(5, alterado.getStatus());
             ps.setInt(5, alterado.getAtivo());
             ps.setInt(6, 1);
-            ps.setInt(7, alterado.getId());
+            ps.setInt(7, alterado.getProduto().getId());
+            ps.setInt(8, alterado.getCliente().getId());
+            ps.setInt(9, alterado.getId());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             
@@ -124,7 +133,19 @@ public class ChamadoDao extends DaoEntidade {
             this.conectar();
 
             if (chamado.getId() > 0) {
-                sql.append(" AND c.id = " + chamado.getId());
+                sql.append(" OR c.id = " + chamado.getId());
+            }
+            
+            if (chamado.getProduto().getId() > 0) {
+                sql.append(" OR c.produto_id = " + chamado.getProduto().getId());
+            }
+            
+            if (chamado.getCliente().getId() > 0) {
+                sql.append(" OR c.cliente_id = " + chamado.getCliente().getId());
+            }
+            
+            if (chamado.getUsuarioAtribuido().getId() > 0) {
+                sql.append(" OR c.usuario_atribuido_id = " + chamado.getUsuarioAtribuido().getId());
             }
 
             ps = sessaoBD.prepareStatement(sql.toString());
@@ -132,7 +153,17 @@ public class ChamadoDao extends DaoEntidade {
 
             while (resultado.next()) {
                 Chamado cham = new Chamado();
+                Usuario usuarioAtribuido = new Usuario();
+                Cliente cliente = new Cliente();
+                Produto produto = new Produto();
                 
+                usuarioAtribuido.setId(resultado.getInt("c.usuario_atribuido_id"));
+                cliente.setId(resultado.getInt("c.cliente_id"));
+                produto.setId(resultado.getInt("c.produto_id"));
+                
+                cham.setUsuarioAtribuido(usuarioAtribuido);
+                cham.setCliente(cliente);
+                cham.setProduto(produto);
                 cham.setId(resultado.getInt("c.id"));
                 cham.setTitulo(resultado.getString("c.titulo"));
                 cham.setDescricao(resultado.getString("c.descricao"));

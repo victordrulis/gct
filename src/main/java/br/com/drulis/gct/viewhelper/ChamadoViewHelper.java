@@ -13,10 +13,12 @@ import br.com.drulis.gct.command.ConsultarCommand;
 import br.com.drulis.gct.core.Acao;
 import br.com.drulis.gct.dominio.Atividade;
 import br.com.drulis.gct.dominio.Chamado;
+import br.com.drulis.gct.dominio.Cliente;
 import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.DominioInterface;
 import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.dominio.OcorrenciaTipo;
+import br.com.drulis.gct.dominio.Produto;
 import br.com.drulis.gct.dominio.Usuario;
 import br.com.drulis.gct.util.Resultado;
 
@@ -37,6 +39,8 @@ public class ChamadoViewHelper implements ViewHelperInterface {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         
         String[] listaAtividades = request.getParameterValues("listaAtividades");
+        String produtoId = request.getParameter("produto_id");
+        String clienteId = request.getParameter("cliente_id");
         String titulo = request.getParameter("titulo");
         String descricao = request.getParameter("descricao");
         String status = request.getParameter("status");
@@ -60,7 +64,13 @@ public class ChamadoViewHelper implements ViewHelperInterface {
         }
         
         if(acao.equals(Acao.SALVAR.getAcao()) || acao.equals(Acao.ALTERAR.getAcao()) || acao.equals(Acao.EDITAR.getAcao()) && request.getMethod().equals("POST")) {
+        	Resultado resultado = new Resultado();
             Usuario usuarioAtribuido = new Usuario();
+            usuarioAtribuido.setId(Integer.parseInt(usrAtribuido));
+            Cliente cliente = new Cliente();
+            cliente.setId(Integer.parseInt(clienteId));
+            Produto produto = new Produto();
+            produto.setId(Integer.parseInt(produtoId));
             
             if (listaAtividades != null){
                 for(String atividadeId : listaAtividades) {
@@ -69,11 +79,17 @@ public class ChamadoViewHelper implements ViewHelperInterface {
                     chamado.getListaAtividades().add((Atividade) consultar.execute(p).getEntidades().get(0));
                 }
             }
-            
+
             try {
-                usuarioAtribuido.setId(Integer.parseInt(usrAtribuido));
-                
-                chamado.setUsuarioAtribuido(usuarioAtribuido);
+            	resultado = consultar.execute(usuarioAtribuido);
+            	chamado.setUsuarioAtribuido((Usuario) resultado.getEntidades().get(0));
+            	
+            	resultado = consultar.execute(cliente);
+            	chamado.setCliente((Cliente) resultado.getEntidades().get(0));
+            	
+            	resultado = consultar.execute(produto);
+            	chamado.setProduto((Produto) resultado.getEntidades().get(0));
+            	
                 chamado.setTitulo(titulo);
                 chamado.setDescricao(descricao);
                 chamado.setTipo(OcorrenciaTipo.valueOf(tipo));
@@ -118,14 +134,16 @@ public class ChamadoViewHelper implements ViewHelperInterface {
     @Override
     public void setView(Resultado resultado, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         ConsultarCommand consultar = new ConsultarCommand();
-        Resultado resContato = new Resultado();
-        Resultado resAtividade = new Resultado();
+        Resultado resCliente = new Resultado();
+        Resultado resProduto = new Resultado();
+        Resultado resUsuario = new Resultado();
         
         try {
-            resAtividade = consultar.execute(new Atividade());
-            resContato = consultar.execute(new Contato());
+            resProduto = consultar.execute(new Produto());
+            resCliente = consultar.execute(new Cliente());
+            resUsuario = consultar.execute(new Usuario());
         } catch (Exception e) {
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_CONVERTER_DADOS + ": " + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_CONVERTER_DADOS.getDescricao() + ": " + e.getMessage());
             e.printStackTrace();
         }
         
@@ -140,14 +158,16 @@ public class ChamadoViewHelper implements ViewHelperInterface {
         }
         
         if(acao != null && acao.equals(Acao.NOVO.getAcao())) {
-            request.setAttribute("listaContato", resContato.getEntidades());
-            request.setAttribute("listaAtividade", resAtividade.getEntidades());
+            request.setAttribute("listaCliente", resCliente.getEntidades());
+            request.setAttribute("listaProduto", resProduto.getEntidades());
+            request.setAttribute("listaUsuario", resUsuario.getEntidades());
             request.getRequestDispatcher("/jsp/chamado/form.jsp").forward(request, response);
         } else {
             switch(resultado.getEntidades().size()) {
             case 0:
-                request.setAttribute("listaContato", resContato.getEntidades());
-                request.setAttribute("listaAtividade", resAtividade.getEntidades());
+                request.setAttribute("listaCliente", resCliente.getEntidades());
+                request.setAttribute("listaProduto", resProduto.getEntidades());
+                request.setAttribute("listaUsuario", resUsuario.getEntidades());
                 request.getRequestDispatcher("/jsp/chamado/form.jsp").forward(request, response);
                 break;
             

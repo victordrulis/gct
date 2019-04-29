@@ -1,5 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@page import="br.com.drulis.gct.dominio.Cliente"%>
+<%@page import="br.com.drulis.gct.dominio.Produto"%>
+<%@page import="br.com.drulis.gct.dominio.Usuario"%>
+<%@page import="java.util.List"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,13 +30,31 @@
 		<form>
 		  <div class="row">
                 <div class="form-group col-md-6">
-                    <label for="cliente">Cliente</label>
-                    <select class="form-control" id="cliente">
-                        <option>Cliente 1</option>
-                        <option>Cliente 2</option>
-                        <option>Cliente 3</option>
-                        <option>Cliente 4</option>
-                        <option>Cliente 5</option>
+                    <label for="clienteId">Cliente</label>
+                    <select class="form-control" id="clienteId" name="clienteId">
+                        <%
+                           List<Cliente> listaCliente = (List<Cliente>) request.getAttribute("listaCliente");
+                           for(Cliente cliente : listaCliente) {
+                        %>
+                                <option value="<%= cliente.getId() %>"><%= cliente.getContato().getNome() %>  (CPF/CNPJ: <%= cliente.getContato().getCpfCnpj() %>)</option>
+                        <%
+                           }
+                        %>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="produtoId">Produto</label>
+                    <select class="form-control" id="produtoId" name="produtoId">
+                        <%
+                           List<Produto> listaProduto = (List<Produto>) request.getAttribute("listaProduto");
+                           for(Produto produto : listaProduto) {
+                        %>
+                                <option value="<%= produto.getId() %>"><%= produto.getTitulo() %></option>
+                        <%
+                           }
+                        %>
                     </select>
                 </div>
             </div>
@@ -67,13 +88,23 @@
 	        
 	        <div class="row">
                <div class="form-group col-md-4">
-                    <label for="contato">Atribuido</label>
-                    <select class="form-control" id="contato">
-                        <option>Contato 1</option>
-                        <option>Contato 2</option>
-                        <option>Contato 3</option>
-                        <option>Contato 4</option>
-                        <option>Contato 5</option>
+                    <label for="usuarioAtribuidoId">Atribuido:</label>
+                    <select class="form-control" id="usuarioAtribuidoId" name="usuarioAtribuidoId">
+                        <%
+                           List<Usuario> listaUsuario = (List<Usuario>) request.getAttribute("listaUsuario");
+                        if(listaUsuario != null) {
+                       	%>
+                       	
+                       	    <option value="0">Selecione um usuário...</option>
+                       	<%
+                        } else {
+                           for(Usuario usuario : listaUsuario) {
+                        %>
+                                <option value="<%= usuario.getId() %>"><%= usuario.getContato().getNome() %></option>
+                        <%
+                           }
+                        }
+                        %>
                     </select>
                 </div>
                 
