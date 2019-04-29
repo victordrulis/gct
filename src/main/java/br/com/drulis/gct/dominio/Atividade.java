@@ -20,20 +20,20 @@ public class Atividade extends Entidade {
     private Usuario usuarioAtribuido;
     private String titulo;
     private String descricao;
-    private Date dataInicioExecucao;
-    private Date dataFimExecucao;
-    private OcorrenciaTipo atividadeTipo;
+    private Date dataInicio;
+    private Date dataFim;
+    private OcorrenciaTipo tipo;
     
     public Atividade(Chamado chamado, Usuario usuarioAtribuido, String descricao, Date dataInicioExecucao, String titulo,
-            Date dataFimExecucao, OcorrenciaTipo atividadeTipo) {
+            Date dataFimExecucao, OcorrenciaTipo tipo) {
         super();
         this.chamado = chamado;
         this.usuarioAtribuido = usuarioAtribuido;
         this.titulo = titulo;
         this.descricao = descricao;
-        this.dataInicioExecucao = dataInicioExecucao;
-        this.dataFimExecucao = dataFimExecucao;
-        this.atividadeTipo = atividadeTipo;
+        this.dataInicio = dataInicioExecucao;
+        this.dataFim = dataFimExecucao;
+        this.tipo = tipo;
     }
     
     public Atividade() {}
@@ -70,28 +70,28 @@ public class Atividade extends Entidade {
         this.descricao = descricao;
     }
 
-    public Date getDataInicioExecucao() {
-        return dataInicioExecucao;
+    public Date getDataInicio() {
+        return dataInicio;
     }
 
-    public void setDataInicioExecucao(Date dataInicioExecucao) {
-        this.dataInicioExecucao = dataInicioExecucao;
+    public void setDataInicio(Date dataInicioExecucao) {
+        this.dataInicio = dataInicioExecucao;
     }
 
-    public Date getDataFimExecucao() {
-        return dataFimExecucao;
+    public Date getDataFim() {
+        return dataFim;
     }
 
-    public void setDataFimExecucao(Date dataFimExecucao) {
-        this.dataFimExecucao = dataFimExecucao;
+    public void setDataFim(Date dataFimExecucao) {
+        this.dataFim = dataFimExecucao;
     }
 
-    public OcorrenciaTipo getAtividadeTipo() {
-        return atividadeTipo;
+    public OcorrenciaTipo getTipo() {
+        return tipo;
     }
 
-    public void setAtividadeTipo(OcorrenciaTipo atividadeTipo) {
-        this.atividadeTipo = atividadeTipo;
+    public void setTipo(OcorrenciaTipo tipo) {
+        this.tipo = tipo;
     }
 
 }

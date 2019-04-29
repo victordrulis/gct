@@ -16,6 +16,8 @@ import br.com.drulis.gct.dominio.Chamado;
 import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.DominioInterface;
 import br.com.drulis.gct.dominio.Mensagem;
+import br.com.drulis.gct.dominio.OcorrenciaTipo;
+import br.com.drulis.gct.dominio.Usuario;
 import br.com.drulis.gct.util.Resultado;
 
 /**
@@ -34,11 +36,14 @@ public class ChamadoViewHelper implements ViewHelperInterface {
         Chamado chamado = new Chamado();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         
-        String[] listaAtividadeId = request.getParameterValues("atividade");
+        String[] listaAtividades = request.getParameterValues("listaAtividades");
         String titulo = request.getParameter("titulo");
+        String descricao = request.getParameter("descricao");
         String status = request.getParameter("status");
+        String tipo = request.getParameter("tipo");
         String dataAbertura = request.getParameter("dataAbertura");
         String dataFechamento = request.getParameter("dataFechamento");
+        String usrAtribuido = request.getParameter("usuarioAtribuido");
         String ativo = request.getParameter("ativo");
         
         System.out.println("[" + this.getClass().getSimpleName() + "] --getData, ACAO: " + acao + ", URI: " + request.getRequestURI());
@@ -55,17 +60,30 @@ public class ChamadoViewHelper implements ViewHelperInterface {
         }
         
         if(acao.equals(Acao.SALVAR.getAcao()) || acao.equals(Acao.ALTERAR.getAcao()) || acao.equals(Acao.EDITAR.getAcao()) && request.getMethod().equals("POST")) {
+            Usuario usuarioAtribuido = new Usuario();
             
-            if (listaAtividadeId != null){
-                for(String atividadeId : listaAtividadeId) {
+            if (listaAtividades != null){
+                for(String atividadeId : listaAtividades) {
                     Atividade p = new Atividade();
                     p.setId(Integer.parseInt(atividadeId));
                     chamado.getListaAtividades().add((Atividade) consultar.execute(p).getEntidades().get(0));
                 }
             }
             
-            chamado.setTitulo(titulo);
-            chamado.setStatus(Integer.parseUnsignedInt(status));
+            try {
+                usuarioAtribuido.setId(Integer.parseInt(usrAtribuido));
+                
+                chamado.setUsuarioAtribuido(usuarioAtribuido);
+                chamado.setTitulo(titulo);
+                chamado.setDescricao(descricao);
+                chamado.setTipo(OcorrenciaTipo.valueOf(tipo));
+                chamado.setStatus(Integer.parseUnsignedInt(status));
+                chamado.setDataAbertura(dateFormat.parse(dataAbertura));
+                chamado.setDataFechamento(dateFormat.parse(dataFechamento));
+            } catch (ParseException e) {
+                System.out.println("[" + this.getClass().getSimpleName() + "] Erro ao obter dados do formulário." + e.getMessage());
+                e.printStackTrace();
+            }
 
             if(ativo != null || ativo != "0")
                 chamado.setAtivo(1);
@@ -74,8 +92,8 @@ public class ChamadoViewHelper implements ViewHelperInterface {
         if(!acao.equals(Acao.EXCLUIR.getAcao()) && request.getMethod().equals("GET")) {
             try {
                 
-                if (listaAtividadeId != null){
-                    for(String atividadeId : listaAtividadeId) {
+                if (listaAtividades != null){
+                    for(String atividadeId : listaAtividades) {
                         Atividade p = new Atividade();
                         p.setId(Integer.parseInt(atividadeId));
                     }
