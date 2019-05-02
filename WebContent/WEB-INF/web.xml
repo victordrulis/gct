@@ -18,7 +18,7 @@
     <url-pattern>/inicio</url-pattern>
     <url-pattern>/login</url-pattern>
     <url-pattern>/registrar</url-pattern>
-    <url-pattern>/usuario</url-pattern>
+    <url-pattern>/usuario/*</url-pattern>
     <url-pattern>/chamado/*</url-pattern>
     <url-pattern>/contato/*</url-pattern>
     <url-pattern>/contrato/*</url-pattern>

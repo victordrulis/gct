@@ -2,6 +2,7 @@
 <%@page import="br.com.drulis.gct.dominio.Cliente"%>
 <%@page import="br.com.drulis.gct.dominio.Produto"%>
 <%@page import="br.com.drulis.gct.dominio.Usuario"%>
+<%@page import="br.com.drulis.gct.dominio.OcorrenciaTipo"%>
 <%@page import="java.util.List"%>
 <!DOCTYPE html>
 <html>
@@ -27,7 +28,7 @@
 	<div class="container">
 		<!-- Example row of columns -->
 
-		<form>
+		<form action="/gct/chamado?acao=salvar" method="post">
 		  <div class="row">
                 <div class="form-group col-md-6">
                     <label for="clienteId">Cliente</label>
@@ -61,19 +62,21 @@
 			<div class="row">
 	            <div class="form-group col-md-8">
 	                <label for="titulo">Título</label>
-	                <input type="text" class="form-control" id="titulo" placeholder="Titulo">
+	                <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Titulo">
 	            </div>
 	        </div>
 	        
 	        <div class="row">
 	           <div class="form-group col-md-3">
                     <label for="tipo">Tipo</label>
-                    <select class="form-control" id="tipo">
-                        <option>Manutenção</option>
-                        <option>Melhoria</option>
-                        <option>Alteração</option>
-                        <option>Configuração</option>
-                        <option>Adequação</option>
+                    <select class="form-control" id="tipo" name="tipo">
+                    <%
+                        for(OcorrenciaTipo tipo : OcorrenciaTipo.values()) {
+                    %>
+                        <option value="<%= tipo %>"><%= tipo.getDescricao() %></option>
+                   <%
+                        }                    
+                   %>
                     </select>
                 </div>
 	        </div>
@@ -81,7 +84,7 @@
 	        <div class="row">
                 <div class="form-group col-md-8">
 	                <label for="descricao">Descricao</label> 
-	                <textarea class="form-control" id="descricao" rows="3"></textarea>
+	                <textarea class="form-control" id="descricao" name="descricao" rows="3"></textarea>
                 </div>
                 
 	        </div>
@@ -92,7 +95,7 @@
                     <select class="form-control" id="usuarioAtribuidoId" name="usuarioAtribuidoId">
                         <%
                            List<Usuario> listaUsuario = (List<Usuario>) request.getAttribute("listaUsuario");
-                        if(listaUsuario != null) {
+                        if(listaUsuario == null || listaUsuario.size() < 1) {
                        	%>
                        	
                        	    <option value="0">Selecione um usuário...</option>
@@ -100,7 +103,7 @@
                         } else {
                            for(Usuario usuario : listaUsuario) {
                         %>
-                                <option value="<%= usuario.getId() %>"><%= usuario.getContato().getNome() %></option>
+                                <option value="<%= usuario.getId() %>"><%= usuario.getLogin() %></option>
                         <%
                            }
                         }
@@ -109,34 +112,34 @@
                 </div>
                 
                 <div class="form-group col-md-4">
-                    <label for="contato">Status</label>
-                    <select class="form-control" id="contato">
-                        <option>Atribuido</option>
-                        <option>Em execução</option>
-                        <option>Aguardando</option>
-                        <option>Finalizado</option>
-                        <option>Cancelado</option>
+                    <label for="status">Status</label>
+                    <select class="form-control" id="status" name="status">
+                        <option value="1">Atribuido</option>
+                        <option value="2">Em execução</option>
+                        <option value="3">Aguardando</option>
+                        <option value="4">Finalizado</option>
+                        <option value="5">Cancelado</option>
                     </select>
                 </div>
             </div>
             
             <div class="row">
                 <div class="form-group col-md-3">
-                    <label for="dataInicio">Início</label>
-                    <input type="text" class="form-control" id="dataInicio" placeholder="00/00/0000">
+                    <label for="dataAbertura">Início</label>
+                    <input type="date" class="form-control" id="dataAbertura" name="dataAbertura" placeholder="00/00/0000">
                 </div>
             </div>
 			
 			<div class="row">
 			     <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="ativo" checked="checked">
-                    <label class="form-check-label" for="stivo">Ativo</label>
+                    <input type="checkbox" class="form-check-input" id="ativo" name="ativo" checked="checked">
+                    <label class="form-check-label" for="ativo">Ativo</label>
                 </div>
 			</div>	
 				
 				<div class="row">
-				     <button type="submit" class="btn btn-primary col-md-1">Salvar</button>
-				     <button type="submit" class="btn btn-secundary col-md-1">Cancelar</button>
+				     <button type="submit" class="btn btn-primary col-md-1" id="acao" name="acao" value="salvar">Salvar</button>
+				     <a href="/gct/chamado"><button type="button" class="btn btn-secundary col-md-1">Cancelar</button></a>
 				</div>
 			
 		</form>

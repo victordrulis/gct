@@ -12,6 +12,7 @@ import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.dominio.Chamado;
 import br.com.drulis.gct.dominio.Cliente;
 import br.com.drulis.gct.dominio.Mensagem;
+import br.com.drulis.gct.dominio.OcorrenciaTipo;
 import br.com.drulis.gct.dominio.Produto;
 import br.com.drulis.gct.dominio.Usuario;
 
@@ -23,9 +24,12 @@ import br.com.drulis.gct.dominio.Usuario;
  */
 public class ChamadoDao extends DaoEntidade {
 
+    private ClienteDao clienteDao;
+    private ProdutoDao produtoDao;
+    
     @Override
     public Entidade inserir(Entidade entidade) throws SQLException {
-        System.out.println("[" + this.getClass().getSimpleName() + "] Inserir");
+        System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Inserindo chamado...");
         PreparedStatement ps = null;
         Chamado chamado = (Chamado) entidade;
         StringBuilder sql = new StringBuilder();
@@ -34,32 +38,36 @@ public class ChamadoDao extends DaoEntidade {
         try {
             this.conectar();
             sessaoBD.setAutoCommit(false);
-            sql.append("INSERT INTO chamado (titulo, descricao, status, ativo, usuario_atribuido_id, usuario_inclusao_id, data_inclusao, produto_id, cliente_id)");
-            sql.append(" VALUES (?,?,?,?,?,?,?,?,?)");
+            sql.append("INSERT INTO chamado (titulo, descricao, status, ativo, usuario_atribuido_id, usuario_inclusao_id, ");
+            sql.append("data_inclusao, produto_id, cliente_id, tipo, data_inicio, data_final)");
+            sql.append(" VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
             ps = sessaoBD.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, chamado.getTitulo());
             ps.setString(2, chamado.getDescricao());
             ps.setInt(3, chamado.getStatus());
             ps.setInt(4, chamado.getAtivo());
             ps.setInt(5, chamado.getUsuarioAtribuido().getId());
-            ps.setInt(6, 1);
+            ps.setInt(6, chamado.getUsuarioInclusao().getId());
             ps.setTimestamp(7, dataInclusao);
             ps.setInt(8, chamado.getProduto().getId());
             ps.setInt(9, chamado.getCliente().getId());
+            ps.setInt(10, chamado.getTipo().getId());
+            ps.setTimestamp(11, new Timestamp(chamado.getDataAbertura().getTime()));
+            ps.setTimestamp(12, new Timestamp(chamado.getDataFechamento().getTime()));
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             while(rs.next()) {
                 chamado.setId(rs.getInt(1));
             }
             sessaoBD.commit();
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_INSERIR.getDescricao() +" id: " + chamado.getId());
+            System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] " + Mensagem.OK_INSERIR.getDescricao() +" id: " + chamado.getId());
             return chamado;
         } catch (SQLException e) {
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e.getMessage());
             e.printStackTrace();
             return null;
         } catch (Exception e) {
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e.getMessage());
             e.printStackTrace();
             return null;
         }
@@ -67,7 +75,7 @@ public class ChamadoDao extends DaoEntidade {
 
     @Override
     public Entidade alterar(Entidade entidade) throws SQLException {
-        System.out.println("[" + this.getClass().getSimpleName() + "] Alterar");
+        System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Alterando chamado...");
         Chamado alterado = (Chamado) entidade;
         StringBuilder sql = new StringBuilder();
         PreparedStatement ps = null;
@@ -94,7 +102,7 @@ public class ChamadoDao extends DaoEntidade {
             ps.setString(3, alterado.getDescricao());
             ps.setInt(5, alterado.getStatus());
             ps.setInt(5, alterado.getAtivo());
-            ps.setInt(6, 1);
+            ps.setInt(6, alterado.getUsuarioInclusao().getId());
             ps.setInt(7, alterado.getProduto().getId());
             ps.setInt(8, alterado.getCliente().getId());
             ps.setInt(9, alterado.getId());
@@ -106,14 +114,14 @@ public class ChamadoDao extends DaoEntidade {
             }
             
             sessaoBD.commit();
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_ATUALIZAR.getDescricao() + ", id: " + alterado.getId());
+            System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] " + Mensagem.OK_ATUALIZAR.getDescricao() + ", id: " + alterado.getId());
             return alterado;
         } catch (SQLException e) {
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_ATUALIZAR + ": " + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + Mensagem.ERRO_ATUALIZAR + ": " + e.getMessage());
             e.printStackTrace();
             return null;
         } catch (Exception e) {
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_ATUALIZAR + ": " + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + Mensagem.ERRO_ATUALIZAR + ": " + e.getMessage());
             e.printStackTrace();
             return null;
         }
@@ -121,31 +129,37 @@ public class ChamadoDao extends DaoEntidade {
 
     @Override
     public List<Entidade> consultar(Entidade entidade) throws SQLException {
-        System.out.println("[" + this.getClass().getSimpleName() + "] Consultar");
+        System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Consultando chamado...");
         PreparedStatement ps = null;
         Chamado chamado = (Chamado) entidade;
+        
         List<Entidade> listaChamados = new ArrayList<Entidade>();
         StringBuilder sql = new StringBuilder();
         
-        sql.append("SELECT c.* FROM chamado c WHERE 1 = 1 ");
-        
+        sql.append("SELECT c.* FROM chamado c ");
+        sql.append("WHERE 1 = 1 ");
+
         try {
             this.conectar();
-
+            
+            if (chamado.getProduto() != null && chamado.getProduto().getId() > 0) {
+                sql.append(" AND c.produto_id = " + chamado.getProduto().getId());
+            }
+            
+            if (chamado.getCliente() != null && chamado.getCliente().getId() > 0) {
+                sql.append(" AND c.cliente_id = " + chamado.getCliente().getId());
+            }
+            
+            if (chamado.getUsuarioAtribuido() != null && chamado.getUsuarioAtribuido().getId() > 0) {
+                sql.append(" AND c.usuario_atribuido_id = " + chamado.getUsuarioAtribuido().getId());
+            }
+            
+            if (chamado.getUsuarioInclusao() != null && chamado.getUsuarioInclusao().getId() > 0) {
+                sql.append(" AND c.usuario_inclusao_id = " + chamado.getUsuarioInclusao().getId());
+            }
+            
             if (chamado.getId() > 0) {
-                sql.append(" OR c.id = " + chamado.getId());
-            }
-            
-            if (chamado.getProduto().getId() > 0) {
-                sql.append(" OR c.produto_id = " + chamado.getProduto().getId());
-            }
-            
-            if (chamado.getCliente().getId() > 0) {
-                sql.append(" OR c.cliente_id = " + chamado.getCliente().getId());
-            }
-            
-            if (chamado.getUsuarioAtribuido().getId() > 0) {
-                sql.append(" OR c.usuario_atribuido_id = " + chamado.getUsuarioAtribuido().getId());
+                sql.append(" AND c.id = " + chamado.getId());
             }
 
             ps = sessaoBD.prepareStatement(sql.toString());
@@ -154,19 +168,33 @@ public class ChamadoDao extends DaoEntidade {
             while (resultado.next()) {
                 Chamado cham = new Chamado();
                 Usuario usuarioAtribuido = new Usuario();
+                Usuario usuarioInclusao = new Usuario();
+                Usuario usuarioAlteracao = new Usuario();
+                Usuario usuarioInativacao = new Usuario();
                 Cliente cliente = new Cliente();
                 Produto produto = new Produto();
                 
                 usuarioAtribuido.setId(resultado.getInt("c.usuario_atribuido_id"));
+                usuarioInclusao.setId(resultado.getInt("c.usuario_inclusao_id"));
+                usuarioAlteracao.setId(resultado.getInt("c.usuario_alteracao_id"));
+                usuarioInativacao.setId(resultado.getInt("c.usuario_inativacao_id"));
+
                 cliente.setId(resultado.getInt("c.cliente_id"));
                 produto.setId(resultado.getInt("c.produto_id"));
                 
                 cham.setUsuarioAtribuido(usuarioAtribuido);
+                cham.setUsuarioInclusao(usuarioInclusao);
+                cham.setUsuarioUpdate(usuarioAlteracao);
+                cham.setUsuarioInativacao(usuarioInativacao);
                 cham.setCliente(cliente);
                 cham.setProduto(produto);
                 cham.setId(resultado.getInt("c.id"));
                 cham.setTitulo(resultado.getString("c.titulo"));
+                cham.setStatus(resultado.getInt("c.status"));
+                cham.setTipo(OcorrenciaTipo.getMapaTipo().get(resultado.getInt("c.tipo")));
                 cham.setDescricao(resultado.getString("c.descricao"));
+                cham.setDataAbertura(resultado.getDate("c.data_inicio"));
+                cham.setDataFechamento(resultado.getDate("c.data_final"));
                 cham.setDataInclusao(resultado.getDate("c.data_inclusao"));
                 cham.setDataAlteracao(resultado.getDate("c.data_alteracao"));
                 cham.setDataInativacao(resultado.getDate("c.data_inativacao"));
@@ -174,12 +202,12 @@ public class ChamadoDao extends DaoEntidade {
                 listaChamados.add(cham);
             }
             
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_CONSULTAR.getDescricao());
+            System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] " + Mensagem.OK_CONSULTAR.getDescricao());
         } catch (SQLException e) {
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_NAO_ENCONTRADO.getDescricao()+ "\n" + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + Mensagem.ERRO_NAO_ENCONTRADO.getDescricao()+ "\n" + e.getMessage());
             e.printStackTrace();
         } catch (Exception e) {
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_EXIBIR.getDescricao() + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + Mensagem.ERRO_EXIBIR.getDescricao() + e.getMessage());
             e.printStackTrace();
         }
         return listaChamados;
@@ -187,7 +215,7 @@ public class ChamadoDao extends DaoEntidade {
 
     @Override
     public Boolean excluir(Entidade entidade) throws SQLException {
-        System.out.println("[" + this.getClass().getSimpleName() + "] Excluir id: " + entidade.getId());
+        System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Excluindo id: " + entidade.getId());
         PreparedStatement ps = null;
         Chamado chamado = (Chamado) entidade;
         StringBuilder sql = new StringBuilder();
@@ -200,9 +228,10 @@ public class ChamadoDao extends DaoEntidade {
             ps.setInt(1,  chamado.getId());
             ps.executeUpdate();
             this.sessaoBD.commit();
+            System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] " + Mensagem.OK_EXCLUIR.getDescricao()+ " - Chamado id: " + chamado.getId());
             return true;
         } catch(SQLException e) {
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_EXCLUIR.getDescricao()+ " - Chamado id: " + chamado.getId() + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + Mensagem.ERRO_EXCLUIR.getDescricao()+ " - Chamado id: " + chamado.getId() + e.getMessage());
             return false;
         }
     }

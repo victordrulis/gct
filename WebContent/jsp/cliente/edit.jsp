@@ -15,7 +15,6 @@
 <body>
 	<%@include file="../fragmentos/nav.jsp"%>
     <%
-       System.out.println(this.getClass().getSimpleName() + "-- Formulário de edição");
        Cliente cliente = (Cliente) request.getAttribute("resultado");
     %>
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">

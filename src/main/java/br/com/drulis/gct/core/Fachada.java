@@ -17,6 +17,7 @@ import br.com.drulis.gct.dao.ContatoDao;
 import br.com.drulis.gct.dao.ContratoDao;
 import br.com.drulis.gct.dao.DaoInterface;
 import br.com.drulis.gct.dao.ProdutoDao;
+import br.com.drulis.gct.dao.UsuarioDao;
 import br.com.drulis.gct.dominio.Atividade;
 import br.com.drulis.gct.dominio.Chamado;
 import br.com.drulis.gct.dominio.Cliente;
@@ -24,6 +25,7 @@ import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.Contrato;
 import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.dominio.Produto;
+import br.com.drulis.gct.dominio.Usuario;
 import br.com.drulis.gct.util.Resultado;
 
 /**
@@ -39,6 +41,7 @@ public class Fachada implements FachadaInterface {
     private Map<String, DaoInterface> mapDao;
     private Map<String, Map<String, List<StrategyInterface>>> mapRegrasNegocio;
     private Map<String, List<StrategyInterface>> mapRegrasContato;
+    private Map<String, List<StrategyInterface>> mapRegrasUsuario;
     private Map<String, List<StrategyInterface>> mapRegrasContrato;
     private Map<String, List<StrategyInterface>> mapRegrasCliente;
     private Map<String, List<StrategyInterface>> mapRegrasProduto;
@@ -49,6 +52,7 @@ public class Fachada implements FachadaInterface {
         this.mapDao = new HashMap<String, DaoInterface>();
         this.mapRegrasNegocio = new HashMap<String, Map<String, List<StrategyInterface>>>();
         this.mapRegrasContato = new HashMap<String, List<StrategyInterface>>();
+        this.mapRegrasUsuario = new HashMap<String, List<StrategyInterface>>();
         this.mapRegrasContrato = new HashMap<String, List<StrategyInterface>>();
         this.mapRegrasCliente = new HashMap<String, List<StrategyInterface>>();
         this.mapRegrasProduto = new HashMap<String, List<StrategyInterface>>();
@@ -57,6 +61,7 @@ public class Fachada implements FachadaInterface {
 
         this.regrasFactory = new RegrasFactory();
         
+        UsuarioDao usuarioDao = new UsuarioDao();
         ContatoDao contatoDao = new ContatoDao();
         ContratoDao contratoDao = new ContratoDao();
         ClienteDao clienteDao = new ClienteDao();
@@ -64,6 +69,7 @@ public class Fachada implements FachadaInterface {
         AtividadeDao atividadeDao = new AtividadeDao();
         ChamadoDao chamadoDao = new ChamadoDao();
         this.mapDao.put(Contato.class.getName(), contatoDao);
+        this.mapDao.put(Usuario.class.getName(), usuarioDao);
         this.mapDao.put(Contrato.class.getName(), contratoDao);
         this.mapDao.put(Cliente.class.getName(), clienteDao);
         this.mapDao.put(Produto.class.getName(), produtoDao);
@@ -78,7 +84,7 @@ public class Fachada implements FachadaInterface {
         List<StrategyInterface> contatoRegrasAlterar = new ArrayList<StrategyInterface>();
         List<StrategyInterface> contatoRegrasConsultar = new ArrayList<StrategyInterface>();
         List<StrategyInterface> contatoRegrasExcluir = new ArrayList<StrategyInterface>();
-
+        
         contatoRegrasConsultar.add(this.regrasFactory.getValidarFormatoData());
         contatoRegrasConsultar.add(this.regrasFactory.getValidarNãoVazio());
         contatoRegrasSalvar.add(this.regrasFactory.getValidarCpfCnpj());
@@ -92,6 +98,11 @@ public class Fachada implements FachadaInterface {
         this.mapRegrasContato.put("ALTERAR", contatoRegrasAlterar);
         this.mapRegrasContato.put("CONSULTAR", contatoRegrasConsultar);
         this.mapRegrasContato.put("EXCLUIR", contatoRegrasExcluir);
+        
+        this.mapRegrasUsuario.put("SALVAR", listRegrasSalvar);
+        this.mapRegrasUsuario.put("ALTERAR", listRegrasAlterar);
+        this.mapRegrasUsuario.put("CONSULTAR", listRegrasConsultar);
+        this.mapRegrasUsuario.put("EXCLUIR", listRegrasExcluir);
         
         this.mapRegrasCliente.put("SALVAR", listRegrasSalvar);
         this.mapRegrasCliente.put("ALTERAR", listRegrasAlterar);
@@ -119,6 +130,7 @@ public class Fachada implements FachadaInterface {
         this.mapRegrasChamado.put("EXCLUIR", listRegrasExcluir);
         
         this.mapRegrasNegocio.put(Contato.class.getName(), mapRegrasContato);
+        this.mapRegrasNegocio.put(Usuario.class.getName(), mapRegrasUsuario);
         this.mapRegrasNegocio.put(Contrato.class.getName(), mapRegrasContrato);
         this.mapRegrasNegocio.put(Cliente.class.getName(), mapRegrasCliente);
         this.mapRegrasNegocio.put(Produto.class.getName(), mapRegrasProduto);

@@ -3,6 +3,7 @@ package br.com.drulis.gct.viewhelper;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.servlet.ServletException;
@@ -14,7 +15,6 @@ import br.com.drulis.gct.core.Acao;
 import br.com.drulis.gct.dominio.Atividade;
 import br.com.drulis.gct.dominio.Chamado;
 import br.com.drulis.gct.dominio.Cliente;
-import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.DominioInterface;
 import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.dominio.OcorrenciaTipo;
@@ -39,16 +39,17 @@ public class ChamadoViewHelper implements ViewHelperInterface {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         
         String[] listaAtividades = request.getParameterValues("listaAtividades");
-        String produtoId = request.getParameter("produto_id");
-        String clienteId = request.getParameter("cliente_id");
+        String produtoId = request.getParameter("produtoId");
+        String clienteId = request.getParameter("clienteId");
         String titulo = request.getParameter("titulo");
         String descricao = request.getParameter("descricao");
         String status = request.getParameter("status");
         String tipo = request.getParameter("tipo");
         String dataAbertura = request.getParameter("dataAbertura");
         String dataFechamento = request.getParameter("dataFechamento");
-        String usrAtribuido = request.getParameter("usuarioAtribuido");
+        String usrAtribuido = request.getParameter("usuarioAtribuidoId");
         String ativo = request.getParameter("ativo");
+        String usrInclusao = request.getParameter("usuarioInclusaoId");
         
         System.out.println("[" + this.getClass().getSimpleName() + "] --getData, ACAO: " + acao + ", URI: " + request.getRequestURI());
 
@@ -65,12 +66,16 @@ public class ChamadoViewHelper implements ViewHelperInterface {
         
         if(acao.equals(Acao.SALVAR.getAcao()) || acao.equals(Acao.ALTERAR.getAcao()) || acao.equals(Acao.EDITAR.getAcao()) && request.getMethod().equals("POST")) {
         	Resultado resultado = new Resultado();
+        	Usuario usuarioInclusao = new Usuario();
+        	usuarioInclusao.setId(Integer.parseInt(usrInclusao));
             Usuario usuarioAtribuido = new Usuario();
             usuarioAtribuido.setId(Integer.parseInt(usrAtribuido));
             Cliente cliente = new Cliente();
             cliente.setId(Integer.parseInt(clienteId));
             Produto produto = new Produto();
             produto.setId(Integer.parseInt(produtoId));
+            
+            Calendar calendar = Calendar.getInstance();
             
             if (listaAtividades != null){
                 for(String atividadeId : listaAtividades) {
@@ -81,6 +86,9 @@ public class ChamadoViewHelper implements ViewHelperInterface {
             }
 
             try {
+                resultado = consultar.execute(usuarioInclusao);
+                chamado.setUsuarioInclusao(usuarioInclusao);
+                
             	resultado = consultar.execute(usuarioAtribuido);
             	chamado.setUsuarioAtribuido((Usuario) resultado.getEntidades().get(0));
             	
@@ -94,8 +102,11 @@ public class ChamadoViewHelper implements ViewHelperInterface {
                 chamado.setDescricao(descricao);
                 chamado.setTipo(OcorrenciaTipo.valueOf(tipo));
                 chamado.setStatus(Integer.parseUnsignedInt(status));
+                chamado.setStatus(1);
                 chamado.setDataAbertura(dateFormat.parse(dataAbertura));
-                chamado.setDataFechamento(dateFormat.parse(dataFechamento));
+                calendar.setTime(dateFormat.parse(dataAbertura));
+                calendar.add(Calendar.DATE, 2);
+                chamado.setDataFechamento(calendar.getTime());
             } catch (ParseException e) {
                 System.out.println("[" + this.getClass().getSimpleName() + "] Erro ao obter dados do formulário." + e.getMessage());
                 e.printStackTrace();
@@ -106,6 +117,7 @@ public class ChamadoViewHelper implements ViewHelperInterface {
         }
         
         if(!acao.equals(Acao.EXCLUIR.getAcao()) && request.getMethod().equals("GET")) {
+            
             try {
                 
                 if (listaAtividades != null){
@@ -138,14 +150,6 @@ public class ChamadoViewHelper implements ViewHelperInterface {
         Resultado resProduto = new Resultado();
         Resultado resUsuario = new Resultado();
         
-        try {
-            resProduto = consultar.execute(new Produto());
-            resCliente = consultar.execute(new Cliente());
-            resUsuario = consultar.execute(new Usuario());
-        } catch (Exception e) {
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_CONVERTER_DADOS.getDescricao() + ": " + e.getMessage());
-            e.printStackTrace();
-        }
         
         String mensagem = null;
         String uri = request.getRequestURI();
@@ -157,7 +161,17 @@ public class ChamadoViewHelper implements ViewHelperInterface {
             mensagem = resultado.getMensagem();
         }
         
-        if(acao != null && acao.equals(Acao.NOVO.getAcao())) {
+        if(acao != null && (acao.equals(Acao.NOVO.getAcao()) || acao.equals(Acao.EDITAR.getAcao()))) {
+            
+            try {
+                resProduto = consultar.execute(new Produto());
+                resCliente = consultar.execute(new Cliente());
+                resUsuario = consultar.execute(new Usuario());
+            } catch (Exception e) {
+                System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_CONVERTER_DADOS.getDescricao() + ": " + e.getMessage());
+                e.printStackTrace();
+            }
+            
             request.setAttribute("listaCliente", resCliente.getEntidades());
             request.setAttribute("listaProduto", resProduto.getEntidades());
             request.setAttribute("listaUsuario", resUsuario.getEntidades());
@@ -165,6 +179,16 @@ public class ChamadoViewHelper implements ViewHelperInterface {
         } else {
             switch(resultado.getEntidades().size()) {
             case 0:
+                
+                try {
+                    resProduto = consultar.execute(new Produto());
+                    resCliente = consultar.execute(new Cliente());
+                    resUsuario = consultar.execute(new Usuario());
+                } catch (Exception e) {
+                    System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_CONVERTER_DADOS.getDescricao() + ": " + e.getMessage());
+                    e.printStackTrace();
+                }
+                
                 request.setAttribute("listaCliente", resCliente.getEntidades());
                 request.setAttribute("listaProduto", resProduto.getEntidades());
                 request.setAttribute("listaUsuario", resUsuario.getEntidades());

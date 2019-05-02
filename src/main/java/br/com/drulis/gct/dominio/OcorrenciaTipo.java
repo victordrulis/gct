@@ -3,6 +3,9 @@
  */
 package br.com.drulis.gct.dominio;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Victor Drulis Oliveira
  * @since 28 de abr de 2019
@@ -17,6 +20,7 @@ public enum OcorrenciaTipo {
     ALTERACAO(4, "Alteração")
     ;
     
+    private static Map<Integer, OcorrenciaTipo> mapOcorrenciaTipo;
     private Integer id;
     private String descricao;
     
@@ -31,6 +35,15 @@ public enum OcorrenciaTipo {
 
     public String getDescricao() {
         return descricao;
+    }
+    
+    public static Map<Integer, OcorrenciaTipo> getMapaTipo() {
+        mapOcorrenciaTipo = new HashMap<Integer, OcorrenciaTipo>();
+        
+        for(OcorrenciaTipo tipo : OcorrenciaTipo.values())
+            mapOcorrenciaTipo.put(tipo.getId(), tipo);
+        
+        return mapOcorrenciaTipo;
     }
     
 }
