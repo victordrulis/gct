@@ -11,6 +11,7 @@ import java.util.List;
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.dominio.Chamado;
 import br.com.drulis.gct.dominio.Cliente;
+import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.dominio.OcorrenciaTipo;
 import br.com.drulis.gct.dominio.Produto;
@@ -136,7 +137,10 @@ public class ChamadoDao extends DaoEntidade {
         List<Entidade> listaChamados = new ArrayList<Entidade>();
         StringBuilder sql = new StringBuilder();
         
-        sql.append("SELECT c.* FROM chamado c ");
+        sql.append("SELECT c.*, p.*, cli.*, con.* FROM chamado c ");
+        sql.append("LEFT JOIN produto p ON p.id = c.produto_id ");
+        sql.append("LEFT JOIN cliente cli ON cli.id = c.cliente_id ");
+        sql.append("LEFT JOIN contato con ON con.id = cli.contato_id ");
         sql.append("WHERE 1 = 1 ");
 
         try {
@@ -171,6 +175,7 @@ public class ChamadoDao extends DaoEntidade {
                 Usuario usuarioInclusao = new Usuario();
                 Usuario usuarioAlteracao = new Usuario();
                 Usuario usuarioInativacao = new Usuario();
+                Contato contato = new Contato();
                 Cliente cliente = new Cliente();
                 Produto produto = new Produto();
                 
@@ -179,8 +184,20 @@ public class ChamadoDao extends DaoEntidade {
                 usuarioAlteracao.setId(resultado.getInt("c.usuario_alteracao_id"));
                 usuarioInativacao.setId(resultado.getInt("c.usuario_inativacao_id"));
 
+                contato.setId(resultado.getInt("con.id"));
+                contato.setNome(resultado.getString("con.nome"));
+                contato.setCpfCnpj(resultado.getString("con.cpf_cnpj"));
+                contato.setAtivo(resultado.getInt("con.ativo"));
+                
+                cliente.setContato(contato);
                 cliente.setId(resultado.getInt("c.cliente_id"));
+                cliente.setSla(resultado.getInt("cli.sla"));
+                cliente.setAtivo(resultado.getInt("cli.ativo"));
+                
                 produto.setId(resultado.getInt("c.produto_id"));
+                produto.setTitulo(resultado.getString("p.titulo"));
+                produto.setStatus(resultado.getInt("p.produto_status_id"));
+                produto.setAtivo(resultado.getInt("p.ativo"));
                 
                 cham.setUsuarioAtribuido(usuarioAtribuido);
                 cham.setUsuarioInclusao(usuarioInclusao);

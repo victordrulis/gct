@@ -25,45 +25,59 @@
 
 	</div>
 	<div class="container">
+			<hr>
+           <div class="row">
+           		<h5>Produto</h5>
+           	</div>
+           	<div class="row">
+           		<div class="form-group col-md-fluid">
+                    <span>ID: </span><p><%= chamado.getProduto().getId() %></p>
+                </div>     
+                <div class="form-group col-md-fluid">
+                    <span>Título: </span> <p><%= chamado.getProduto().getTitulo() %></p>
+                </div>
+	        </div>
+			<hr>
 	        <div class="row">
-	                <span>Cliente</span> 
-	                <p><%= chamado.getCliente().getContato().getNome() %></p>
+	        	<h5>Cliente</h5>
+        	</div>
+        	<div class="row">
+	        	<div class="col-md-fluid">
+	                <p><span>Nome: </span><%= chamado.getCliente().getContato().getNome() %></p>
+                </div>
+                <div class="col-md-fluid">
+	                <p><span>SLA: </span><%= chamado.getCliente().getSla() %></p>
+                </div>
             </div>
-
+	        <hr>
 			<div class="row">
+				<h5>Informações</h5>
+			</div>
+			<div class="row">
+				<div class="form-group col-md-fluid">
 	                <p><span>Título: </span> <%= chamado.getTitulo() %></p>
-            </div>	            
+                </div>
+            </div>
 			<div class="row">
+				<div class="form-group col-md">
 	                <span>Descrição: </span>
 	                <p> <%= chamado.getDescricao() %></p>
-	        </div>
-	        
-                
-                <div class="form-group col-md-4">
-                    <span for="telefone">Telefone</span> 
-                    <p type="text" class="form-control" id="telefone" name="telefone" value="<%= chamado.getDataAbertura() %>">
                 </div>
 	        </div>
-	        
+	        <hr>
 	        <div class="row">
                 <div class="form-group col-md-4">
-                    <span for="dataInclusao">Data inclusão</span> 
-                    <p type="date" class="form-control" id="dataInclusao" name="dataInclusao" value="<%= chamado.getDataInclusao() %>">
+                    <span>Data inclusão</span> 
+                    <p><%= chamado.getDataInclusao() %></p>
                 </div>
                 
                 <div class="form-group col-md-4">
-                    <span for="dataAlteracao">Data alteração</span> 
-                    <p type="date" class="form-control" id="dataAlteracao" name="dataAlteracao" value="<%= chamado.getDataAlteracao() %>">
+                    <span>Data alteração</span> 
+                    <p><%= chamado.getDataAlteracao() %></p>
                 </div>
             </div>
             
-            <div class="row">
-				<div class="form-check">
-					<p type="checkbox" class="form-check-p" id="ativo" name="ativo" <%= chamado.getAtivo() == 1 ? "checked" : null %>>
-					<span>Ativo</span>
-				</div>
-			</div>
-				<div class="row">
+			<div class="row">
 				    <div class="form-group">
 					     <a href="/gct/chamado?acao=editar&id=<%= chamado.getId() %>"><button type="button" class="btn btn-primary">Editar</button></a>
 				     </div>
