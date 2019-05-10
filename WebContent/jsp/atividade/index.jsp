@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@page import="br.com.drulis.gct.dominio.Contato"%>
 <%@page import="br.com.drulis.gct.dominio.Atividade"%>
+<%@page import="br.com.drulis.gct.dominio.Chamado"%>
+<%@page import="br.com.drulis.gct.dominio.Usuario"%>
 <%@page import="java.util.List"%>
 <%@include file="../fragmentos/header.jsp" %>
 <!DOCTYPE html>
@@ -22,7 +24,7 @@
         <div class="container">
             <h2>Atividades</h2>
             <p>Todos os atividades cadastrados.</p>
-            <a href="/gct/atividade?acao=novo">Novo Atividade</a>
+            <a href="/gct/atividade?acao=novo">Nova Atividade</a>
         </div>
     </div>
     <hr>
@@ -44,8 +46,8 @@
 		  <tr>
 		      <th class="th-sm">ID</th>
 		      <th class="th-sm">Título</th>
-		      <th class="th-sm">Cliente</th>
-			  <th class="th-sm">Produto</th>
+		      <th class="th-sm">UsuarioAtribuido</th>
+			  <th class="th-sm">Chamado</th>
 	          <th class="th-sm">Atribuido</th>
 	          <th class="th-sm">Status</th>
 			  <th class="th-sm">Ativo</th>
@@ -62,12 +64,10 @@
     <tr>
       <td><%= atividade.getId() %></td>
       <td><%= atividade.getTitulo() %></td>
-<%--       <td><%= atividade.getCliente().getContato().getId() %></td> --%>
-<%--       <td><%= atividade.getProduto().getTitulo() %></td> --%>
+      <td><%= atividade.getChamado() %></td>
+      <td><%= atividade.getUsuarioAtribuido().getId() %></td>
+      <td>Usuario Atribuido 1</td>
 <%--       <td><%= atividade.getUsuarioAtribuido().getContato().getNome() %></td> --%>
-      <td>Cliente nome</td>
-      <td>Produto nome</td>
-      <td>Usuario 123</td>
       <td>Tipo atividade</td>
       <td><%= atividade.getAtivo() %></td>
       <td>
