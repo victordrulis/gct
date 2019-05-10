@@ -10,20 +10,26 @@ import java.util.List;
 
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.dominio.Atividade;
-import br.com.drulis.gct.dominio.Chamado;
+import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.Mensagem;
+import br.com.drulis.gct.dominio.OcorrenciaTipo;
+import br.com.drulis.gct.dominio.Chamado;
+import br.com.drulis.gct.dominio.Usuario;
 
 /**
  * @author Victor Drulis Oliveira
  * @since 31 de mar de 2019
- * @chamtact victordrulis@gmail.com
+ * @contact victordrulis@gmail.com
  *
  */
 public class AtividadeDao extends DaoEntidade {
 
+    private AtividadeDao usuarioAtribuidoDao;
+    private ChamadoDao chamadoDao;
+    
     @Override
     public Entidade inserir(Entidade entidade) throws SQLException {
-        System.out.println("[" + this.getClass().getSimpleName() + "] Inserir");
+        System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Inserindo atividade...");
         PreparedStatement ps = null;
         Atividade atividade = (Atividade) entidade;
         StringBuilder sql = new StringBuilder();
@@ -32,30 +38,36 @@ public class AtividadeDao extends DaoEntidade {
         try {
             this.conectar();
             sessaoBD.setAutoCommit(false);
-            sql.append("INSERT INTO atividade (chamado_id, titulo, descricao, status, ativo, usuario_inclusao_id, data_inclusao)");
-            sql.append(" VALUES (?,?,?,?,?,?,?)");
+            sql.append("INSERT INTO atividade (titulo, descricao, status, ativo, usuario_atribuido_id, usuario_inclusao_id, ");
+            sql.append("data_inclusao, chamado_id, usuarioAtribuido_id, tipo, data_inicio, data_final)");
+            sql.append(" VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
             ps = sessaoBD.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, atividade.getChamado().getId());
-            ps.setString(2, atividade.getTitulo());
-            ps.setString(3, atividade.getDescricao());
-            ps.setInt(4, atividade.getStatus());
-            ps.setInt(5, atividade.getAtivo());
-            ps.setInt(6, 1);
+            ps.setString(1, atividade.getTitulo());
+            ps.setString(2, atividade.getDescricao());
+            ps.setInt(3, atividade.getStatus());
+            ps.setInt(4, atividade.getAtivo());
+            ps.setInt(5, atividade.getUsuarioAtribuido().getId());
+            ps.setInt(6, atividade.getUsuarioInclusao().getId());
             ps.setTimestamp(7, dataInclusao);
+            ps.setInt(8, atividade.getChamado().getId());
+            ps.setInt(9, atividade.getUsuarioAtribuido().getId());
+            ps.setInt(10, atividade.getTipo().getId());
+//            ps.setTimestamp(11, new Timestamp(atividade.getDataAbertura().getTime()));
+//            ps.setTimestamp(12, new Timestamp(atividade.getDataFechamento().getTime()));
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             while(rs.next()) {
                 atividade.setId(rs.getInt(1));
             }
             sessaoBD.commit();
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_INSERIR.getDescricao() +" id: " + atividade.getId());
+            System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] " + Mensagem.OK_INSERIR.getDescricao() +" id: " + atividade.getId());
             return atividade;
         } catch (SQLException e) {
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e.getMessage());
             e.printStackTrace();
             return null;
         } catch (Exception e) {
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e.getMessage());
             e.printStackTrace();
             return null;
         }
@@ -63,7 +75,7 @@ public class AtividadeDao extends DaoEntidade {
 
     @Override
     public Entidade alterar(Entidade entidade) throws SQLException {
-        System.out.println("[" + this.getClass().getSimpleName() + "] Alterar");
+        System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Alterando atividade...");
         Atividade alterado = (Atividade) entidade;
         StringBuilder sql = new StringBuilder();
         PreparedStatement ps = null;
@@ -73,23 +85,27 @@ public class AtividadeDao extends DaoEntidade {
             sessaoBD.setAutoCommit(false);
             
             sql.append("UPDATE atividade SET ");
-            sql.append("chamado_id = ?, ");
+            sql.append("usuario_atribuido_id = ?, ");
             sql.append("titulo = ?, ");
             sql.append("descricao = ?, ");
             sql.append("status = ?, ");
             sql.append("ativo = ?, ");
             sql.append("usuario_alteracao_id = ?, ");
-            sql.append("data_alteracao = now() ");
+            sql.append("data_alteracao = now(), ");
+            sql.append("chamado_id = ?, ");
+            sql.append("usuarioAtribuido_id = ? ");
             sql.append("WHERE id = ?");
             
             ps = sessaoBD.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, alterado.getChamado().getId());
+            ps.setInt(1, alterado.getUsuarioAtribuido().getId());
             ps.setString(2, alterado.getTitulo());
             ps.setString(3, alterado.getDescricao());
-            ps.setInt(4, alterado.getStatus());
+            ps.setInt(5, alterado.getStatus());
             ps.setInt(5, alterado.getAtivo());
-            ps.setInt(6, 1);
-            ps.setInt(7, alterado.getId());
+            ps.setInt(6, alterado.getUsuarioInclusao().getId());
+            ps.setInt(7, alterado.getChamado().getId());
+            ps.setInt(8, alterado.getUsuarioAtribuido().getId());
+            ps.setInt(9, alterado.getId());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             
@@ -98,14 +114,14 @@ public class AtividadeDao extends DaoEntidade {
             }
             
             sessaoBD.commit();
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_ATUALIZAR.getDescricao() + ", id: " + alterado.getId());
+            System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] " + Mensagem.OK_ATUALIZAR.getDescricao() + ", id: " + alterado.getId());
             return alterado;
         } catch (SQLException e) {
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_ATUALIZAR + ": " + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + Mensagem.ERRO_ATUALIZAR + ": " + e.getMessage());
             e.printStackTrace();
             return null;
         } catch (Exception e) {
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_ATUALIZAR + ": " + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + Mensagem.ERRO_ATUALIZAR + ": " + e.getMessage());
             e.printStackTrace();
             return null;
         }
@@ -113,47 +129,99 @@ public class AtividadeDao extends DaoEntidade {
 
     @Override
     public List<Entidade> consultar(Entidade entidade) throws SQLException {
-        System.out.println("[" + this.getClass().getSimpleName() + "] Consultar");
+        System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Consultando atividade...");
         PreparedStatement ps = null;
         Atividade atividade = (Atividade) entidade;
+        
         List<Entidade> listaAtividades = new ArrayList<Entidade>();
         StringBuilder sql = new StringBuilder();
         
-        sql.append("SELECT ativ.*, c.* FROM atividade ativ LEFT JOIN chamado c ON c.id = ativ.chamado_id WHERE 1 = 1 ");
-        
+        sql.append("SELECT c.*, p.*, cli.*, con.* FROM atividade c ");
+        sql.append("LEFT JOIN chamado p ON p.id = c.chamado_id ");
+        sql.append("LEFT JOIN usuarioAtribuido cli ON cli.id = c.usuarioAtribuido_id ");
+        sql.append("LEFT JOIN contato con ON con.id = cli.contato_id ");
+        sql.append("WHERE 1 = 1 ");
+
         try {
             this.conectar();
-
+            
+            if (atividade.getChamado() != null && atividade.getChamado().getId() > 0) {
+                sql.append(" AND c.chamado_id = " + atividade.getChamado().getId());
+            }
+            
+            if (atividade.getUsuarioAtribuido() != null && atividade.getUsuarioAtribuido().getId() > 0) {
+                sql.append(" AND c.usuarioAtribuido_id = " + atividade.getUsuarioAtribuido().getId());
+            }
+            
+            if (atividade.getUsuarioAtribuido() != null && atividade.getUsuarioAtribuido().getId() > 0) {
+                sql.append(" AND c.usuario_atribuido_id = " + atividade.getUsuarioAtribuido().getId());
+            }
+            
+            if (atividade.getUsuarioInclusao() != null && atividade.getUsuarioInclusao().getId() > 0) {
+                sql.append(" AND c.usuario_inclusao_id = " + atividade.getUsuarioInclusao().getId());
+            }
+            
             if (atividade.getId() > 0) {
-                sql.append(" AND ativ.id = " + atividade.getId());
+                sql.append(" AND c.id = " + atividade.getId());
             }
 
             ps = sessaoBD.prepareStatement(sql.toString());
             ResultSet resultado = ps.executeQuery();
 
             while (resultado.next()) {
-                Atividade ativ = new Atividade();
-                Chamado cham = new Chamado();
+                Atividade cham = new Atividade();
+                Usuario usuarioAtribuido = new Usuario();
+                Usuario usuarioInclusao = new Usuario();
+                Usuario usuarioAlteracao = new Usuario();
+                Usuario usuarioInativacao = new Usuario();
+                Contato contato = new Contato();
+                Chamado chamado = new Chamado();
                 
+                usuarioAtribuido.setId(resultado.getInt("c.usuario_atribuido_id"));
+                usuarioInclusao.setId(resultado.getInt("c.usuario_inclusao_id"));
+                usuarioAlteracao.setId(resultado.getInt("c.usuario_alteracao_id"));
+                usuarioInativacao.setId(resultado.getInt("c.usuario_inativacao_id"));
+
+                contato.setId(resultado.getInt("con.id"));
+                contato.setNome(resultado.getString("con.nome"));
+                contato.setCpfCnpj(resultado.getString("con.cpf_cnpj"));
+                contato.setAtivo(resultado.getInt("con.ativo"));
+                
+                usuarioAtribuido.setContato(contato);
+                usuarioAtribuido.setId(resultado.getInt("c.usuarioAtribuido_id"));
+                usuarioAtribuido.setAtivo(resultado.getInt("cli.ativo"));
+                
+                chamado.setId(resultado.getInt("c.chamado_id"));
+                chamado.setTitulo(resultado.getString("p.titulo"));
+                chamado.setStatus(resultado.getInt("p.chamado_status_id"));
+                chamado.setAtivo(resultado.getInt("p.ativo"));
+                
+                cham.setUsuarioAtribuido(usuarioAtribuido);
+                cham.setUsuarioInclusao(usuarioInclusao);
+                cham.setUsuarioUpdate(usuarioAlteracao);
+                cham.setUsuarioInativacao(usuarioInativacao);
+                cham.setUsuarioAtribuido(usuarioAtribuido);
+                cham.setChamado(chamado);
                 cham.setId(resultado.getInt("c.id"));
-                cham.setTitulo(resultado.getString(("c.titulo")));
-                cham.setDescricao(resultado.getString(("c.descricao")));
+                cham.setTitulo(resultado.getString("c.titulo"));
+                cham.setStatus(resultado.getInt("c.status"));
+                cham.setTipo(OcorrenciaTipo.getMapaTipo().get(resultado.getInt("c.tipo")));
+                cham.setDescricao(resultado.getString("c.descricao"));
+//                cham.setDataAbertura(resultado.getDate("c.data_inicio"));
+//                cham.setDataFechamento(resultado.getDate("c.data_final"));
+                cham.setDataInclusao(resultado.getDate("c.data_inclusao"));
+                cham.setDataAlteracao(resultado.getDate("c.data_alteracao"));
+                cham.setDataInativacao(resultado.getDate("c.data_inativacao"));
                 
-                ativ.setChamado(cham);
-                ativ.setId(resultado.getInt("ativ.id"));
-                ativ.setDataInclusao(resultado.getDate("ativ.data_inclusao"));
-                ativ.setDataAlteracao(resultado.getDate("ativ.data_alteracao"));
-                ativ.setDataInativacao(resultado.getDate("ativ.data_inativacao"));
-                
-                listaAtividades.add(ativ);
+                listaAtividades.add(cham);
             }
             
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_CONSULTAR.getDescricao());
+            System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] " + Mensagem.OK_CONSULTAR.getDescricao());
         } catch (SQLException e) {
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_NAO_ENCONTRADO.getDescricao()+ "\n" + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + Mensagem.ERRO_NAO_ENCONTRADO.getDescricao()+ "\n" + e.getMessage());
             e.printStackTrace();
         } catch (Exception e) {
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_EXIBIR.getDescricao() + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + Mensagem.ERRO_EXIBIR.getDescricao() + e.getMessage());
             e.printStackTrace();
         }
         return listaAtividades;
@@ -161,7 +229,7 @@ public class AtividadeDao extends DaoEntidade {
 
     @Override
     public Boolean excluir(Entidade entidade) throws SQLException {
-        System.out.println("[" + this.getClass().getSimpleName() + "] Excluir id: " + entidade.getId());
+        System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Excluindo id: " + entidade.getId());
         PreparedStatement ps = null;
         Atividade atividade = (Atividade) entidade;
         StringBuilder sql = new StringBuilder();
@@ -174,9 +242,10 @@ public class AtividadeDao extends DaoEntidade {
             ps.setInt(1,  atividade.getId());
             ps.executeUpdate();
             this.sessaoBD.commit();
+            System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] " + Mensagem.OK_EXCLUIR.getDescricao()+ " - Atividade id: " + atividade.getId());
             return true;
         } catch(SQLException e) {
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_EXCLUIR.getDescricao()+ " - Atividade id: " + atividade.getId() + e.getMessage());
+            System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + Mensagem.ERRO_EXCLUIR.getDescricao()+ " - Atividade id: " + atividade.getId() + e.getMessage());
             return false;
         }
     }
