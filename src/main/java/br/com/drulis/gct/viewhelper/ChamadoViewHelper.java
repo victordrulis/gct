@@ -150,7 +150,6 @@ public class ChamadoViewHelper implements ViewHelperInterface {
         Resultado resProduto = new Resultado();
         Resultado resUsuario = new Resultado();
         
-        
         String mensagem = null;
         String uri = request.getRequestURI();
         String acao = request.getParameter("acao");
@@ -161,17 +160,16 @@ public class ChamadoViewHelper implements ViewHelperInterface {
             mensagem = resultado.getMensagem();
         }
         
-        if(acao != null && (acao.equals(Acao.NOVO.getAcao()) || acao.equals(Acao.EDITAR.getAcao()))) {
-            
-            try {
-                resProduto = consultar.execute(new Produto());
-                resCliente = consultar.execute(new Cliente());
-                resUsuario = consultar.execute(new Usuario());
-            } catch (Exception e) {
-                System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_CONVERTER_DADOS.getDescricao() + ": " + e.getMessage());
-                e.printStackTrace();
-            }
-            
+        try {
+        	resProduto = consultar.execute(new Produto());
+        	resCliente = consultar.execute(new Cliente());
+        	resUsuario = consultar.execute(new Usuario());
+        } catch (Exception e) {
+        	System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_CONVERTER_DADOS.getDescricao() + ": " + e.getMessage());
+        	e.printStackTrace();
+        }
+        
+        if(acao != null && (acao.equals(Acao.NOVO.getAcao()))) {
             request.setAttribute("listaCliente", resCliente.getEntidades());
             request.setAttribute("listaProduto", resProduto.getEntidades());
             request.setAttribute("listaUsuario", resUsuario.getEntidades());
@@ -179,7 +177,6 @@ public class ChamadoViewHelper implements ViewHelperInterface {
         } else {
             switch(resultado.getEntidades().size()) {
             case 0:
-                
                 try {
                     resProduto = consultar.execute(new Produto());
                     resCliente = consultar.execute(new Cliente());
@@ -188,14 +185,18 @@ public class ChamadoViewHelper implements ViewHelperInterface {
                     System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_CONVERTER_DADOS.getDescricao() + ": " + e.getMessage());
                     e.printStackTrace();
                 }
-                
+
                 request.setAttribute("listaCliente", resCliente.getEntidades());
                 request.setAttribute("listaProduto", resProduto.getEntidades());
                 request.setAttribute("listaUsuario", resUsuario.getEntidades());
+                
                 request.getRequestDispatcher("/jsp/chamado/form.jsp").forward(request, response);
                 break;
             
             case 1:
+            	request.setAttribute("listaCliente", resCliente.getEntidades());
+                request.setAttribute("listaProduto", resProduto.getEntidades());
+                request.setAttribute("listaUsuario", resUsuario.getEntidades());
                 request.setAttribute("resultado", resultado.getEntidades().get(0));
                 
                 if(acao != null && acao.equals(Acao.EDITAR.getAcao())) {

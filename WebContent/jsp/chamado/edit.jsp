@@ -18,23 +18,20 @@
 </head>
 <body>
 	<%@include file="../fragmentos/nav.jsp"%>
+	<%
+	  Chamado chamado = (Chamado) request.getAttribute("resultado");
+	%>
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 	<div class="row conteudo-topo">
 		<div class="container">
-			<h2>Novo chamado</h2>
-			<p>Inserir dados do chamado.</p>
+			<h2>Alterar chamado - ID: <%= chamado.getId() %></h2>
+			<p>Alterar ou atualizar dados do chamado.</p>
 		</div>
 
 	</div>
 	<div class="container">
 		<!-- Example row of columns -->
-		<%
-		  Chamado chamado = (Chamado) request.getAttribute("resultado");
-		
-		%>
-
 		<form action="/gct/chamado?acao=alterar" method="post">
-		
 		<input type="hidden" id="id" name="id" value="<%= chamado.getId()%>">
 		  <div class="row">
                 <div class="form-group col-md-6">

@@ -25,6 +25,18 @@
 
 	</div>
 	<div class="container">
+		<div class="row">
+	    <div class="form-group">
+		     <a href="/gct/chamado?acao=editar&id=<%= chamado.getId() %>"><button type="button" class="btn btn-primary">Editar</button></a>
+	     </div>
+	                <div class=" ">
+		     <a href="/gct/chamado?acao=excluir&id=<%= chamado.getId() %>"><button type="button" class="btn btn-warning">Excluir</button></a>
+	     </div>
+	     
+	     <div class=" ">
+              <a href="/gct/chamado"><button type="button" class="btn btn-secundary">Voltar</button></a>
+           </div>
+	    </div>
 			<hr>
            <div class="row">
            		<h5>Produto</h5>
