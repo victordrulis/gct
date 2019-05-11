@@ -10,10 +10,10 @@ import java.util.List;
 
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.dominio.Atividade;
+import br.com.drulis.gct.dominio.Chamado;
 import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.dominio.OcorrenciaTipo;
-import br.com.drulis.gct.dominio.Chamado;
 import br.com.drulis.gct.dominio.Usuario;
 
 /**
@@ -136,40 +136,36 @@ public class AtividadeDao extends DaoEntidade {
         List<Entidade> listaAtividades = new ArrayList<Entidade>();
         StringBuilder sql = new StringBuilder();
         
-        sql.append("SELECT c.*, p.*, cli.*, con.* FROM atividade c ");
-        sql.append("LEFT JOIN chamado p ON p.id = c.chamado_id ");
-        sql.append("LEFT JOIN usuarioAtribuido cli ON cli.id = c.usuarioAtribuido_id ");
-        sql.append("LEFT JOIN contato con ON con.id = cli.contato_id ");
+        sql.append("SELECT a.*, c.*, u.*, con.* FROM atividade a ");
+        sql.append("LEFT JOIN chamado c ON c.id = a.chamado_id ");
+        sql.append("LEFT JOIN usuario u ON u.usuario_id = a.usuario_atribuido_id ");
+        sql.append("LEFT JOIN contato con ON con.id = u.contato_id ");
         sql.append("WHERE 1 = 1 ");
 
         try {
             this.conectar();
             
             if (atividade.getChamado() != null && atividade.getChamado().getId() > 0) {
-                sql.append(" AND c.chamado_id = " + atividade.getChamado().getId());
+                sql.append(" AND a.chamado_id = " + atividade.getChamado().getId());
             }
             
             if (atividade.getUsuarioAtribuido() != null && atividade.getUsuarioAtribuido().getId() > 0) {
-                sql.append(" AND c.usuarioAtribuido_id = " + atividade.getUsuarioAtribuido().getId());
-            }
-            
-            if (atividade.getUsuarioAtribuido() != null && atividade.getUsuarioAtribuido().getId() > 0) {
-                sql.append(" AND c.usuario_atribuido_id = " + atividade.getUsuarioAtribuido().getId());
+                sql.append(" AND a.usuario_atribuido_id = " + atividade.getUsuarioAtribuido().getId());
             }
             
             if (atividade.getUsuarioInclusao() != null && atividade.getUsuarioInclusao().getId() > 0) {
-                sql.append(" AND c.usuario_inclusao_id = " + atividade.getUsuarioInclusao().getId());
+                sql.append(" AND a.usuario_inclusao_id = " + atividade.getUsuarioInclusao().getId());
             }
             
             if (atividade.getId() > 0) {
-                sql.append(" AND c.id = " + atividade.getId());
+                sql.append(" AND a.id = " + atividade.getId());
             }
 
             ps = sessaoBD.prepareStatement(sql.toString());
             ResultSet resultado = ps.executeQuery();
 
             while (resultado.next()) {
-                Atividade cham = new Atividade();
+                Atividade ativ = new Atividade();
                 Usuario usuarioAtribuido = new Usuario();
                 Usuario usuarioInclusao = new Usuario();
                 Usuario usuarioAlteracao = new Usuario();
@@ -177,43 +173,44 @@ public class AtividadeDao extends DaoEntidade {
                 Contato contato = new Contato();
                 Chamado chamado = new Chamado();
                 
-                usuarioAtribuido.setId(resultado.getInt("c.usuario_atribuido_id"));
-                usuarioInclusao.setId(resultado.getInt("c.usuario_inclusao_id"));
-                usuarioAlteracao.setId(resultado.getInt("c.usuario_alteracao_id"));
-                usuarioInativacao.setId(resultado.getInt("c.usuario_inativacao_id"));
+                usuarioAtribuido.setId(resultado.getInt("a.usuario_atribuido_id"));
+                usuarioInclusao.setId(resultado.getInt("a.usuario_inclusao_id"));
+                usuarioAlteracao.setId(resultado.getInt("a.usuario_alteracao_id"));
+                usuarioInativacao.setId(resultado.getInt("a.usuario_inativacao_id"));
 
                 contato.setId(resultado.getInt("con.id"));
                 contato.setNome(resultado.getString("con.nome"));
                 contato.setCpfCnpj(resultado.getString("con.cpf_cnpj"));
+                contato.setEmail(resultado.getString("con.email"));
                 contato.setAtivo(resultado.getInt("con.ativo"));
                 
                 usuarioAtribuido.setContato(contato);
-                usuarioAtribuido.setId(resultado.getInt("c.usuarioAtribuido_id"));
-                usuarioAtribuido.setAtivo(resultado.getInt("cli.ativo"));
+                usuarioAtribuido.setLogin(resultado.getString("u.login"));
+                usuarioAtribuido.setAtivo(resultado.getInt("u.ativo"));
                 
-                chamado.setId(resultado.getInt("c.chamado_id"));
-                chamado.setTitulo(resultado.getString("p.titulo"));
-                chamado.setStatus(resultado.getInt("p.chamado_status_id"));
-                chamado.setAtivo(resultado.getInt("p.ativo"));
+                chamado.setId(resultado.getInt("c.id"));
+                chamado.setTitulo(resultado.getString("c.titulo"));
+                chamado.setStatus(resultado.getInt("c.status"));
+                chamado.setAtivo(resultado.getInt("c.ativo"));
                 
-                cham.setUsuarioAtribuido(usuarioAtribuido);
-                cham.setUsuarioInclusao(usuarioInclusao);
-                cham.setUsuarioUpdate(usuarioAlteracao);
-                cham.setUsuarioInativacao(usuarioInativacao);
-                cham.setUsuarioAtribuido(usuarioAtribuido);
-                cham.setChamado(chamado);
-                cham.setId(resultado.getInt("c.id"));
-                cham.setTitulo(resultado.getString("c.titulo"));
-                cham.setStatus(resultado.getInt("c.status"));
-                cham.setTipo(OcorrenciaTipo.getMapaTipo().get(resultado.getInt("c.tipo")));
-                cham.setDescricao(resultado.getString("c.descricao"));
+                ativ.setUsuarioAtribuido(usuarioAtribuido);
+                ativ.setUsuarioInclusao(usuarioInclusao);
+                ativ.setUsuarioUpdate(usuarioAlteracao);
+                ativ.setUsuarioInativacao(usuarioInativacao);
+                ativ.setUsuarioAtribuido(usuarioAtribuido);
+                ativ.setChamado(chamado);
+                ativ.setId(resultado.getInt("a.id"));
+                ativ.setTitulo(resultado.getString("a.titulo"));
+                ativ.setStatus(resultado.getInt("a.status"));
+                ativ.setTipo(OcorrenciaTipo.getMapaTipo().get(resultado.getInt("a.tipo")));
+                ativ.setDescricao(resultado.getString("a.descricao"));
 //                cham.setDataAbertura(resultado.getDate("c.data_inicio"));
 //                cham.setDataFechamento(resultado.getDate("c.data_final"));
-                cham.setDataInclusao(resultado.getDate("c.data_inclusao"));
-                cham.setDataAlteracao(resultado.getDate("c.data_alteracao"));
-                cham.setDataInativacao(resultado.getDate("c.data_inativacao"));
+                ativ.setDataInclusao(resultado.getDate("a.data_inclusao"));
+                ativ.setDataAlteracao(resultado.getDate("a.data_alteracao"));
+                ativ.setDataInativacao(resultado.getDate("a.data_inativacao"));
                 
-                listaAtividades.add(cham);
+                listaAtividades.add(ativ);
             }
             
             System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] " + Mensagem.OK_CONSULTAR.getDescricao());

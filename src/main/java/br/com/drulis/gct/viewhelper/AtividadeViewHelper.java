@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -162,10 +161,11 @@ public class AtividadeViewHelper implements ViewHelperInterface {
         	e.printStackTrace();
         }
         
+        request.setAttribute("listaUsuarioAtribuido", resUsuarioAtribuido.getEntidades());
+        request.setAttribute("listaChamado", resChamado.getEntidades());
+        request.setAttribute("listaUsuario", resUsuario.getEntidades());
+        
         if(acao != null && (acao.equals(Acao.NOVO.getAcao()))) {
-            request.setAttribute("listaUsuarioAtribuido", resUsuarioAtribuido.getEntidades());
-            request.setAttribute("listaChamado", resChamado.getEntidades());
-            request.setAttribute("listaUsuario", resUsuario.getEntidades());
             request.getRequestDispatcher("/jsp/atividade/form.jsp").forward(request, response);
         } else {
             switch(resultado.getEntidades().size()) {
