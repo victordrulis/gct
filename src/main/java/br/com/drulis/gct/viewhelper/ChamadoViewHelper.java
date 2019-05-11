@@ -149,6 +149,7 @@ public class ChamadoViewHelper implements ViewHelperInterface {
         Resultado resCliente = new Resultado();
         Resultado resProduto = new Resultado();
         Resultado resUsuario = new Resultado();
+        Resultado resAtividade = new Resultado();
         
         String mensagem = null;
         String uri = request.getRequestURI();
@@ -205,6 +206,10 @@ public class ChamadoViewHelper implements ViewHelperInterface {
                 }
                 
                 if(acao != null && acao.equals(Acao.EXIBIR.getAcao())) {
+                	Atividade ativ = new Atividade();
+                	ativ.setChamado((Chamado) resultado.getEntidades().get(0));
+                	resAtividade = consultar.execute(ativ);
+                	request.setAttribute("listaAtividades", resAtividade.getEntidades());
                     request.getRequestDispatcher("/jsp/chamado/show.jsp").forward(request, response);
                     break;
                 }

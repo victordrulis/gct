@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@page import="br.com.drulis.gct.dominio.Chamado"%>
+<%@page import="br.com.drulis.gct.dominio.Atividade"%>
+<%@page import="java.util.List"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -38,30 +40,82 @@
            </div>
 	    </div>
 			<hr>
+			<div class="row">
+	        	<h5>Cliente</h5>
+        	</div>
+        	<div class="row">
+	        	<div class="col-md-fluid">
+	        	<table id="listaCliente" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+				<thead>
+				  <tr>
+				      <th class="th-sm">ID</th>
+				      <th class="th-sm">Nome</th>
+				      <th class="th-sm">SLA</th>
+					  <th class="th-sm">Início do Contrato</th>
+			          <th class="th-sm">Duração</th>
+					  <th class="th-sm">Ativo</th>
+					  <th class="th-sm">Produtos</th>
+					  <th class="th-sm">Ação</th>
+				  </tr>
+				</thead>
+		  		<tbody>
+		  			<tr>
+				      <td><%= chamado.getCliente().getId() %></td>
+				      <td><%= chamado.getCliente().getContato().getNome() %></td>
+				      <td><%= chamado.getCliente().getSla() %></td>
+				      <td><%= chamado.getCliente().getDataInclusao() %></td>
+				      <td><%= chamado.getCliente().getDuracaoContrato() %></td>
+				      <td><%= chamado.getCliente().getAtivo() %></td>
+				      <td>
+				            <ul>
+				                <li>Produto 1</li>
+				                <li>Produto 2</li>
+				            </ul>
+				      </td>
+				      <td>
+				            <a href="/gct/cliente?acao=exibir&id=<%= chamado.getCliente().getId() %>"><span>Visualizar</span></a>
+				      </td>
+				    </tr>
+		  		</tbody>
+	  			</table>
+	        	
+                </div>
+            </div>
+	        <hr>
+			
            <div class="row">
            		<h5>Produto</h5>
            	</div>
            	<div class="row">
            		<div class="form-group col-md-fluid">
-                    <span>ID: </span><p><%= chamado.getProduto().getId() %></p>
+           		 <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+					<thead>
+					  <tr>
+					      <th class="th-sm">ID</th>
+					      <th class="th-sm">Título</th>
+						  <th class="th-sm">Cadastrado em</th>
+						  <th class="th-sm">Status</th>
+						  <th class="th-sm">Ativo</th>
+						  <th class="th-sm">Ação</th>
+					  </tr>
+					</thead>
+  					<tbody>
+  					<tr>
+				          <td><%= chamado.getProduto().getId() %></td>
+				          <td><%= chamado.getProduto().getTitulo() %></td>
+				          <td><%= chamado.getProduto().getDataInclusao() %></td>
+				          <td><%= chamado.getProduto().getStatus() %></td>
+				          <td><%= chamado.getProduto().getAtivo() %></td>
+				          <td>
+				            <a href="/gct/produto?acao=exibir&id=<%= chamado.getProduto().getId() %>"><span>Visualiar</span></a>
+				          </td>
+				      </tr>
+			      </tbody>
+		      </table>
                 </div>     
-                <div class="form-group col-md-fluid">
-                    <span>Título: </span> <p><%= chamado.getProduto().getTitulo() %></p>
-                </div>
 	        </div>
 			<hr>
-	        <div class="row">
-	        	<h5>Cliente</h5>
-        	</div>
-        	<div class="row">
-	        	<div class="col-md-fluid">
-	                <p><span>Nome: </span><%= chamado.getCliente().getContato().getNome() %></p>
-                </div>
-                <div class="col-md-fluid">
-	                <p><span>SLA: </span><%= chamado.getCliente().getSla() %></p>
-                </div>
-            </div>
-	        <hr>
+	        
 			<div class="row">
 				<h5>Informações</h5>
 			</div>
@@ -76,7 +130,7 @@
 	                <p> <%= chamado.getDescricao() %></p>
                 </div>
 	        </div>
-	        <hr>
+
 	        <div class="row">
                 <div class="form-group col-md-4">
                     <span>Data inclusão</span> 
@@ -88,7 +142,57 @@
                     <p><%= chamado.getDataAlteracao() %></p>
                 </div>
             </div>
-            
+            <hr>
+           	<div class="row">
+	            <div class="form-group col-md-12">
+	                <h5><strong>Atividades</strong></h5>
+	                
+	                <a href="/gct/atividade?acao=novo"><button type="button" class="btn btn-primary">Nova</button></a>
+	                
+	             <table id="listaAtividade" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+					<thead>
+					  <tr>
+					      <th class="th-sm">ID</th>
+					      <th class="th-sm">Título</th>
+					      <th class="th-sm">UsuarioAtribuido</th>
+				          <th class="th-sm">Status</th>
+						  <th class="th-sm">Ativo</th>
+						  <th class="th-sm">Ação</th>
+					  </tr>
+					</thead>
+			  <tbody>   
+            <%
+            	List<Atividade> listaAtividade = (List<Atividade>) request.getAttribute("listaAtividades");
+            	if(listaAtividade == null || listaAtividade.isEmpty()) {
+          		%>
+	           		<tr>
+            			<td align="center" colspan="12"><span>Não há atividades.</span></td>
+           			</tr>
+        		<%
+            	} else {
+            		for(Atividade atividade : listaAtividade) {
+            %>
+            		<tr>
+	                    <td align="center"><span><%= atividade.getId() %></span></td>
+	                    <td><span><%= atividade.getTitulo() %></span></td>
+	                    <td><span><%= atividade.getTitulo() %></span></td>
+	                    <td><span><%= atividade.getTitulo() %></span></td>
+	                    <td><span><%= atividade.getTitulo() %></span></td>
+	                    <td>
+	                    	<a href="#"> Visualizar </a>
+	                    </td>
+                    </tr>
+           <% 
+           			}
+            	}
+       		%>
+     			</tr>
+  			</tbody>
+		</table>
+		            </div>
+	            </div>
+	            
+           <hr> 
 			<div class="row">
 				    <div class="form-group">
 					     <a href="/gct/chamado?acao=editar&id=<%= chamado.getId() %>"><button type="button" class="btn btn-primary">Editar</button></a>
