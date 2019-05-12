@@ -3,6 +3,7 @@ package br.com.drulis.gct.dominio;
 import java.io.Serializable;
 
 import br.com.drulis.gct.core.Entidade;
+import br.com.drulis.gct.dominio.classificacao.ProdutoStatus;
 
 /**
  * @author Victor Drulis Oliveira

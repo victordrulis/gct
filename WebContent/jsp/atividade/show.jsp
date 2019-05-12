@@ -52,6 +52,11 @@
                 </div>
                 
                 <div class="form-group col-md-4">
+                    <h6><strong>Tipo</strong></h6>
+                    <span><%= atividade.getTipo().getDescricao() %></span>
+                </div>
+                
+                <div class="form-group col-md-4">
                     <h6><strong>Status</strong></h6>
                     <span><%= atividade.getStatus() %></span>
                 </div>

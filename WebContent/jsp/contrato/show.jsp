@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@page import="br.com.drulis.gct.dominio.Contrato"%>
-<%@page import="br.com.drulis.gct.dominio.ContratoStatus"%>
+<%@page import="br.com.drulis.gct.dominio.classificacao.ContratoStatus"%>
 <%@page import="br.com.drulis.gct.dominio.Cliente"%>
 <%@page import="br.com.drulis.gct.dominio.Produto"%>
 <%@page import="java.util.List"%>

@@ -120,26 +120,42 @@
 				<h5>Informações</h5>
 			</div>
 			<div class="row">
-				<div class="form-group col-md-fluid">
-	                <p><span>Título: </span> <%= chamado.getTitulo() %></p>
+				<div class="form-group col-md-2">
+                    <h6><strong>Título</strong></h6><p> <%= chamado.getTitulo() %></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-2">
+                    <h6><strong>Tipo</strong></h6> 
+                    <span><%= chamado.getTipo().getDescricao() %></span>
+                </div>
+                
+                <div class="form-group col-md-2">
+                    <h6><strong>Status</strong></h6> 
+                    <span><%= chamado.getStatus() %></span>
                 </div>
             </div>
 			<div class="row">
 				<div class="form-group col-md">
-	                <span>Descrição: </span>
-	                <p> <%= chamado.getDescricao() %></p>
+	                <h6><strong>Descrição: </strong></h6>
+	                <p><%= chamado.getDescricao() %></p>
                 </div>
 	        </div>
 
 	        <div class="row">
-                <div class="form-group col-md-4">
-                    <span>Data inclusão</span> 
-                    <p><%= chamado.getDataInclusao() %></p>
+                <div class="form-group col-md-2">
+                    <h6><strong>Atribuido</strong></h6> 
+                    <span>Id = <%= chamado.getUsuarioAtribuido().getId() %></span>
                 </div>
                 
-                <div class="form-group col-md-4">
-                    <span>Data alteração</span> 
-                    <p><%= chamado.getDataAlteracao() %></p>
+                <div class="form-group col-md-2">
+                    <h6><strong>Data inclusão</strong></h6> 
+                    <span><%= chamado.getDataInclusao() %></span>
+                </div>
+                
+                <div class="form-group col-md-2">
+                    <h6><strong>Data alteração</strong></h6> 
+                    <span><%= chamado.getDataAlteracao() %></span>
                 </div>
             </div>
             <hr>
@@ -155,6 +171,7 @@
 					      <th class="th-sm">ID</th>
 					      <th class="th-sm">Título</th>
 					      <th class="th-sm">UsuarioAtribuido</th>
+					      <th class="th-sm">Tipo</th>
 				          <th class="th-sm">Status</th>
 						  <th class="th-sm">Ativo</th>
 						  <th class="th-sm">Ação</th>
@@ -175,11 +192,12 @@
             		<tr>
 	                    <td align="center"><span><%= atividade.getId() %></span></td>
 	                    <td><span><%= atividade.getTitulo() %></span></td>
-	                    <td><span><%= atividade.getTitulo() %></span></td>
-	                    <td><span><%= atividade.getTitulo() %></span></td>
-	                    <td><span><%= atividade.getTitulo() %></span></td>
+	                    <td><span><%= atividade.getUsuarioAtribuido().getContato().getNome() %></span></td>
+	                    <td><span><%= atividade.getTipo().getDescricao() %></span></td>
+	                    <td><span><%= atividade.getStatus() %></span></td>
+	                    <td><span><%= atividade.getAtivo() %></span></td>
 	                    <td>
-	                    	<a href="#"> Visualizar </a>
+	                    	<a href="/gct/atividade?acao=exibir&id=<%= atividade.getId() %>"> Visualizar </a>
 	                    </td>
                     </tr>
            <% 

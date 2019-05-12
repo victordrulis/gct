@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import br.com.drulis.gct.core.Entidade;
+import br.com.drulis.gct.dominio.classificacao.OcorrenciaTipo;
 
 public class Chamado extends Entidade {
     private static final long serialVersionUID = 1L;

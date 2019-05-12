@@ -13,8 +13,8 @@ import br.com.drulis.gct.dominio.Atividade;
 import br.com.drulis.gct.dominio.Chamado;
 import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.Mensagem;
-import br.com.drulis.gct.dominio.OcorrenciaTipo;
 import br.com.drulis.gct.dominio.Usuario;
+import br.com.drulis.gct.dominio.classificacao.OcorrenciaTipo;
 
 /**
  * @author Victor Drulis Oliveira
@@ -39,8 +39,8 @@ public class AtividadeDao extends DaoEntidade {
             this.conectar();
             sessaoBD.setAutoCommit(false);
             sql.append("INSERT INTO atividade (titulo, descricao, status, ativo, usuario_atribuido_id, usuario_inclusao_id, ");
-            sql.append("data_inclusao, chamado_id, usuarioAtribuido_id, tipo, data_inicio, data_final)");
-            sql.append(" VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
+            sql.append("data_inclusao, chamado_id, tipo, data_inicio, data_final)");
+            sql.append(" VALUES (?,?,?,?,?,?,?,?,?,?,?)");
             ps = sessaoBD.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, atividade.getTitulo());
             ps.setString(2, atividade.getDescricao());
@@ -50,10 +50,9 @@ public class AtividadeDao extends DaoEntidade {
             ps.setInt(6, atividade.getUsuarioInclusao().getId());
             ps.setTimestamp(7, dataInclusao);
             ps.setInt(8, atividade.getChamado().getId());
-            ps.setInt(9, atividade.getUsuarioAtribuido().getId());
-            ps.setInt(10, atividade.getTipo().getId());
-//            ps.setTimestamp(11, new Timestamp(atividade.getDataAbertura().getTime()));
-//            ps.setTimestamp(12, new Timestamp(atividade.getDataFechamento().getTime()));
+            ps.setInt(9, atividade.getTipo().getId());
+            ps.setTimestamp(10, new Timestamp(atividade.getDataInicio().getTime()));
+            ps.setTimestamp(11, new Timestamp(atividade.getDataFim().getTime()));
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             while(rs.next()) {
@@ -149,12 +148,20 @@ public class AtividadeDao extends DaoEntidade {
                 sql.append(" AND a.chamado_id = " + atividade.getChamado().getId());
             }
             
+            if (atividade.getUsuarioInclusao() != null && atividade.getChamado().getUsuarioInclusao().getId() > 0) {
+                sql.append(" AND a.usuario_inclusao_id = " + atividade.getChamado().getUsuarioInclusao().getId());
+            }
+            
             if (atividade.getUsuarioAtribuido() != null && atividade.getUsuarioAtribuido().getId() > 0) {
                 sql.append(" AND a.usuario_atribuido_id = " + atividade.getUsuarioAtribuido().getId());
             }
             
             if (atividade.getUsuarioInclusao() != null && atividade.getUsuarioInclusao().getId() > 0) {
                 sql.append(" AND a.usuario_inclusao_id = " + atividade.getUsuarioInclusao().getId());
+            }
+            
+            if (atividade.getAtivo() != 0) {
+                sql.append(" AND a.ativo = 1");
             }
             
             if (atividade.getId() > 0) {
@@ -188,6 +195,7 @@ public class AtividadeDao extends DaoEntidade {
                 usuarioAtribuido.setLogin(resultado.getString("u.login"));
                 usuarioAtribuido.setAtivo(resultado.getInt("u.ativo"));
                 
+                chamado.setUsuarioInclusao(new Usuario(resultado.getInt("c.usuario_inclusao_id"), null, null, null));
                 chamado.setId(resultado.getInt("c.id"));
                 chamado.setTitulo(resultado.getString("c.titulo"));
                 chamado.setStatus(resultado.getInt("c.status"));
@@ -202,10 +210,11 @@ public class AtividadeDao extends DaoEntidade {
                 ativ.setId(resultado.getInt("a.id"));
                 ativ.setTitulo(resultado.getString("a.titulo"));
                 ativ.setStatus(resultado.getInt("a.status"));
+                ativ.setAtivo(resultado.getInt("a.ativo"));
                 ativ.setTipo(OcorrenciaTipo.getMapaTipo().get(resultado.getInt("a.tipo")));
                 ativ.setDescricao(resultado.getString("a.descricao"));
-//                cham.setDataAbertura(resultado.getDate("c.data_inicio"));
-//                cham.setDataFechamento(resultado.getDate("c.data_final"));
+                ativ.setDataInicio(resultado.getDate("c.data_inicio"));
+                ativ.setDataFim(resultado.getDate("c.data_final"));
                 ativ.setDataInclusao(resultado.getDate("a.data_inclusao"));
                 ativ.setDataAlteracao(resultado.getDate("a.data_alteracao"));
                 ativ.setDataInativacao(resultado.getDate("a.data_inativacao"));

@@ -1,7 +1,9 @@
 /**
  * 
  */
-package br.com.drulis.gct.dominio;
+package br.com.drulis.gct.dominio.classificacao;
+
+import br.com.drulis.gct.core.Entidade;
 
 /**
  * @author Victor Drulis Oliveira
@@ -9,11 +11,13 @@ package br.com.drulis.gct.dominio;
  * @contact victordrulis@gmail.com
  *
  */
-public enum ProdutoStatus {
+public enum ClienteStatus {
     
-    TESTES(1, "Testes"),
-    HOMOLOGACAO(2, "Homologação"),
-    PRODUCAO(3, "Produção")
+    CADASTRADO(1, "Cadastrado"),
+    AVALICAO(2, "Avaliação"),
+    EM_PRODUCAO(3, "Em produção"),
+    CONTRATO_ATIVO(4, "Contrato ativo"),
+    CONTRATO_CANCELADO(5, "Contrato cancelado")
     ;
     
     private int id;
@@ -23,7 +27,7 @@ public enum ProdutoStatus {
      * @param id
      * @param descricao
      */
-    private ProdutoStatus(int id, String descricao) {
+    private ClienteStatus(int id, String descricao) {
         this.id = id;
         this.descricao = descricao;
     }

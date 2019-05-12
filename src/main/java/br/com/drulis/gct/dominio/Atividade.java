@@ -6,6 +6,7 @@ package br.com.drulis.gct.dominio;
 import java.util.Date;
 
 import br.com.drulis.gct.core.Entidade;
+import br.com.drulis.gct.dominio.classificacao.OcorrenciaTipo;
 
 /**
  * @author Victor Drulis Oliveira
@@ -25,7 +26,7 @@ public class Atividade extends Entidade {
     private OcorrenciaTipo tipo;
     
     public Atividade(Chamado chamado, Usuario usuarioAtribuido, String descricao, Date dataInicioExecucao, String titulo,
-            Date dataFimExecucao, OcorrenciaTipo tipo) {
+            Date dataFimExecucao, OcorrenciaTipo tipo, Integer ativo) {
         super();
         this.chamado = chamado;
         this.usuarioAtribuido = usuarioAtribuido;
@@ -34,6 +35,7 @@ public class Atividade extends Entidade {
         this.dataInicio = dataInicioExecucao;
         this.dataFim = dataFimExecucao;
         this.tipo = tipo;
+        this.ativo = ativo;
     }
     
     public Atividade() {}

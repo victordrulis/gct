@@ -17,9 +17,9 @@ import br.com.drulis.gct.dominio.Chamado;
 import br.com.drulis.gct.dominio.Cliente;
 import br.com.drulis.gct.dominio.DominioInterface;
 import br.com.drulis.gct.dominio.Mensagem;
-import br.com.drulis.gct.dominio.OcorrenciaTipo;
 import br.com.drulis.gct.dominio.Produto;
 import br.com.drulis.gct.dominio.Usuario;
+import br.com.drulis.gct.dominio.classificacao.OcorrenciaTipo;
 import br.com.drulis.gct.util.Resultado;
 
 /**

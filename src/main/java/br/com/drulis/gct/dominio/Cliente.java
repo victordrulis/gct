@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import br.com.drulis.gct.core.Entidade;
+import br.com.drulis.gct.dominio.classificacao.ContratoTipo;
 
 /**
  * @author Victor Drulis Oliveira

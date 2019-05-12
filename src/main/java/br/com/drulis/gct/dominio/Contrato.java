@@ -3,6 +3,8 @@ package br.com.drulis.gct.dominio;
 import java.util.Date;
 
 import br.com.drulis.gct.core.Entidade;
+import br.com.drulis.gct.dominio.classificacao.ContratoStatus;
+import br.com.drulis.gct.dominio.classificacao.ContratoTipo;
 
 /**
  * Relaciona Cliente com Produto contratado

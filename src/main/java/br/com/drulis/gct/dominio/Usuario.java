@@ -26,6 +26,14 @@ public class Usuario extends Entidade {
         this.login = login;
         this.senha = senha;
     }
+    
+    public Usuario(Integer id, Contato contato, String login, String senha) {
+        super();
+        this.id = id;
+        this.contato = contato;
+        this.login = login;
+        this.senha = senha;
+    }
 
     /**
      * @return the contato

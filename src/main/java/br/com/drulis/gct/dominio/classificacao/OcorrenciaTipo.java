@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.drulis.gct.dominio;
+package br.com.drulis.gct.dominio.classificacao;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +17,8 @@ public enum OcorrenciaTipo {
     MANUTENCAO(1, "Manutenção"),
     TAREFA(2, "Tarefa"),
     MELHORIA(3, "Melhoria"),
-    ALTERACAO(4, "Alteração")
+    ALTERACAO(4, "Alteração"),
+    Análise(5, "Análise")
     ;
     
     private static Map<Integer, OcorrenciaTipo> mapOcorrenciaTipo;

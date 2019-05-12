@@ -3,7 +3,7 @@
 <%@page import="br.com.drulis.gct.dominio.Cliente"%>
 <%@page import="br.com.drulis.gct.dominio.Produto"%>
 <%@page import="br.com.drulis.gct.dominio.Usuario"%>
-<%@page import="br.com.drulis.gct.dominio.OcorrenciaTipo"%>
+<%@page import="br.com.drulis.gct.dominio.classificacao.OcorrenciaTipo"%>
 <%@page import="java.util.List"%>
 <!DOCTYPE html>
 <html>

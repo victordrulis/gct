@@ -15,8 +15,8 @@ import br.com.drulis.gct.dominio.Atividade;
 import br.com.drulis.gct.dominio.Chamado;
 import br.com.drulis.gct.dominio.DominioInterface;
 import br.com.drulis.gct.dominio.Mensagem;
-import br.com.drulis.gct.dominio.OcorrenciaTipo;
 import br.com.drulis.gct.dominio.Usuario;
+import br.com.drulis.gct.dominio.classificacao.OcorrenciaTipo;
 import br.com.drulis.gct.util.Resultado;
 
 /**
@@ -37,13 +37,11 @@ public class AtividadeViewHelper implements ViewHelperInterface {
         
         String[] listaAtividades = request.getParameterValues("listaAtividades");
         String chamadoId = request.getParameter("chamadoId");
-        String usuarioAtribuidoId = request.getParameter("usuarioAtribuidoId");
         String titulo = request.getParameter("titulo");
         String descricao = request.getParameter("descricao");
         String status = request.getParameter("status");
         String tipo = request.getParameter("tipo");
         String dataAbertura = request.getParameter("dataAbertura");
-        String dataFechamento = request.getParameter("dataFechamento");
         String usrAtribuido = request.getParameter("usuarioAtribuidoId");
         String ativo = request.getParameter("ativo");
         String usrInclusao = request.getParameter("usuarioInclusaoId");
@@ -64,7 +62,8 @@ public class AtividadeViewHelper implements ViewHelperInterface {
         if(acao.equals(Acao.SALVAR.getAcao()) || acao.equals(Acao.ALTERAR.getAcao()) || acao.equals(Acao.EDITAR.getAcao()) && request.getMethod().equals("POST")) {
         	Resultado resultado = new Resultado();
         	Usuario usuarioInclusao = new Usuario();
-        	usuarioInclusao.setId(Integer.parseInt(usrInclusao));
+//        	usuarioInclusao.setId(Integer.parseInt(usrInclusao));
+        	usuarioInclusao.setId(1);
             Usuario usuarioAtribuido = new Usuario();
             usuarioAtribuido.setId(Integer.parseInt(usrAtribuido));
             Chamado chamado = new Chamado();
@@ -92,13 +91,11 @@ public class AtividadeViewHelper implements ViewHelperInterface {
             	
                 atividade.setTitulo(titulo);
                 atividade.setDescricao(descricao);
-                atividade.setTipo(OcorrenciaTipo.valueOf(tipo));
+                atividade.setTipo(OcorrenciaTipo.getMapaTipo().get((Integer.parseInt(tipo))));
                 atividade.setStatus(Integer.parseUnsignedInt(status));
                 atividade.setStatus(1);
-//                atividade.setDataAbertura(dateFormat.parse(dataAbertura));
-                calendar.setTime(dateFormat.parse(dataAbertura));
-                calendar.add(Calendar.DATE, 2);
-//                atividade.setDataFechamento(calendar.getTime());
+                atividade.setDataInicio(dateFormat.parse(dataAbertura));
+                atividade.setDataFim(calendar.getTime());
             } catch (ParseException e) {
                 System.out.println("[" + this.getClass().getSimpleName() + "] Erro ao obter dados do formulário." + e.getMessage());
                 e.printStackTrace();
@@ -138,7 +135,6 @@ public class AtividadeViewHelper implements ViewHelperInterface {
     @Override
     public void setView(Resultado resultado, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         ConsultarCommand consultar = new ConsultarCommand();
-        Resultado resUsuarioAtribuido = new Resultado();
         Resultado resChamado = new Resultado();
         Resultado resUsuario = new Resultado();
         
@@ -154,14 +150,12 @@ public class AtividadeViewHelper implements ViewHelperInterface {
         
         try {
         	resChamado = consultar.execute(new Chamado());
-        	resUsuarioAtribuido = consultar.execute(new Usuario());
         	resUsuario = consultar.execute(new Usuario());
         } catch (Exception e) {
         	System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_CONVERTER_DADOS.getDescricao() + ": " + e.getMessage());
         	e.printStackTrace();
         }
         
-        request.setAttribute("listaUsuarioAtribuido", resUsuarioAtribuido.getEntidades());
         request.setAttribute("listaChamado", resChamado.getEntidades());
         request.setAttribute("listaUsuario", resUsuario.getEntidades());
         
@@ -172,14 +166,12 @@ public class AtividadeViewHelper implements ViewHelperInterface {
             case 0:
                 try {
                     resChamado = consultar.execute(new Chamado());
-                    resUsuarioAtribuido = consultar.execute(new Usuario());
                     resUsuario = consultar.execute(new Usuario());
                 } catch (Exception e) {
                     System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_CONVERTER_DADOS.getDescricao() + ": " + e.getMessage());
                     e.printStackTrace();
                 }
 
-                request.setAttribute("listaUsuarioAtribuido", resUsuarioAtribuido.getEntidades());
                 request.setAttribute("listaChamado", resChamado.getEntidades());
                 request.setAttribute("listaUsuario", resUsuario.getEntidades());
                 
@@ -187,7 +179,6 @@ public class AtividadeViewHelper implements ViewHelperInterface {
                 break;
             
             case 1:
-            	request.setAttribute("listaUsuarioAtribuido", resUsuarioAtribuido.getEntidades());
                 request.setAttribute("listaChamado", resChamado.getEntidades());
                 request.setAttribute("listaUsuario", resUsuario.getEntidades());
                 request.setAttribute("resultado", resultado.getEntidades().get(0));

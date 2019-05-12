@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.drulis.gct.dominio;
+package br.com.drulis.gct.dominio.classificacao;
 
 /**
  * @author Victor Drulis Oliveira

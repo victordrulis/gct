@@ -13,9 +13,9 @@ import br.com.drulis.gct.dominio.Chamado;
 import br.com.drulis.gct.dominio.Cliente;
 import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.Mensagem;
-import br.com.drulis.gct.dominio.OcorrenciaTipo;
 import br.com.drulis.gct.dominio.Produto;
 import br.com.drulis.gct.dominio.Usuario;
+import br.com.drulis.gct.dominio.classificacao.OcorrenciaTipo;
 
 /**
  * @author Victor Drulis Oliveira
@@ -208,6 +208,7 @@ public class ChamadoDao extends DaoEntidade {
                 cham.setId(resultado.getInt("c.id"));
                 cham.setTitulo(resultado.getString("c.titulo"));
                 cham.setStatus(resultado.getInt("c.status"));
+                cham.setAtivo(resultado.getInt("c.ativo"));
                 cham.setTipo(OcorrenciaTipo.getMapaTipo().get(resultado.getInt("c.tipo")));
                 cham.setDescricao(resultado.getString("c.descricao"));
                 cham.setDataAbertura(resultado.getDate("c.data_inicio"));

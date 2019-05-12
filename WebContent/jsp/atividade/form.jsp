@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@page import="br.com.drulis.gct.dominio.Chamado"%>
 <%@page import="br.com.drulis.gct.dominio.Usuario"%>
-<%@page import="br.com.drulis.gct.dominio.OcorrenciaTipo"%>
+<%@page import="br.com.drulis.gct.dominio.classificacao.OcorrenciaTipo"%>
 <%@page import="java.util.List"%>
+<%@page import="java.util.Map"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,12 +34,14 @@
                     <label for="usuarioAtribuidoId">UsuarioAtribuido</label>
                     <select class="form-control" id="usuarioAtribuidoId" name="usuarioAtribuidoId">
                         <%
-                           List<Usuario> listaUsuarioAtribuido = (List<Usuario>) request.getAttribute("listaUsuarioAtribuido");
-                           for(Usuario usuarioAtribuido : listaUsuarioAtribuido) {
-                        %>
-                                <option value="<%= usuarioAtribuido.getId() %>"><%= usuarioAtribuido.getContato().getNome() %>  (CPF/CNPJ: <%= usuarioAtribuido.getContato().getCpfCnpj() %>)</option>
-                        <%
-                           }
+                           List<Usuario> listaUsuario = (List<Usuario>) request.getAttribute("listaUsuario");
+                    		if(listaUsuario != null || !listaUsuario.isEmpty()) {
+                           		for(Usuario usuarioAtribuido : listaUsuario) {
+		                        	%>
+		                                <option value="<%= usuarioAtribuido.getId() %>">Usuario forçado</option>
+		                        	<%
+                           		}
+                    		}
                         %>
                     </select>
                 </div>
@@ -50,9 +53,9 @@
                         <%
                            List<Chamado> listaChamado = (List<Chamado>) request.getAttribute("listaChamado");
                            for(Chamado chamado : listaChamado) {
-                        %>
-                                <option value="<%= chamado.getId() %>"><%= chamado.getTitulo() %></option>
-                        <%
+	                        	%>
+	                                <option value="<%= chamado.getId() %>"><%= chamado.getTitulo() %></option>
+	                        	<%
                            }
                         %>
                     </select>
@@ -66,21 +69,6 @@
 	        </div>
 	        
 	        <div class="row">
-	           <div class="form-group col-md-3">
-                    <label for="tipo">Tipo</label>
-                    <select class="form-control" id="tipo" name="tipo">
-                    <%
-                        for(OcorrenciaTipo tipo : OcorrenciaTipo.values()) {
-                    %>
-                        <option value="<%= tipo %>"><%= tipo.getDescricao() %></option>
-                   <%
-                        }                    
-                   %>
-                    </select>
-                </div>
-	        </div>
-	        
-	        <div class="row">
                 <div class="form-group col-md-8">
 	                <label for="descricao">Descricao</label> 
 	                <textarea class="form-control" id="descricao" name="descricao" rows="3"></textarea>
@@ -88,28 +76,6 @@
                 
 	        </div>
 	        
-	        <div class="row">
-               <div class="form-group col-md-4">
-                    <label for="usuarioAtribuidoId">Atribuido:</label>
-                    <select class="form-control" id="usuarioAtribuidoId" name="usuarioAtribuidoId">
-                        <%
-                           List<Usuario> listaUsuario = (List<Usuario>) request.getAttribute("listaUsuario");
-                        if(listaUsuario == null || listaUsuario.size() < 1) {
-                       	%>
-                       	
-                       	    <option value="0">Selecione um usuário...</option>
-                       	<%
-                        } else {
-                           for(Usuario usuario : listaUsuario) {
-                        %>
-                                <option value="<%= usuario.getId() %>"><%= usuario.getLogin() %></option>
-                        <%
-                           }
-                        }
-                        %>
-                    </select>
-                </div>
-                
                 <div class="form-group col-md-4">
                     <label for="status">Status</label>
                     <select class="form-control" id="status" name="status">
@@ -118,6 +84,19 @@
                         <option value="3">Aguardando</option>
                         <option value="4">Finalizado</option>
                         <option value="5">Cancelado</option>
+                    </select>
+                </div>
+                
+                <div class="form-group col-md-4">
+                    <label for="tipo">Tipo</label>
+                    <select class="form-control" id="tipo" name="tipo">
+                        <%
+                           for(Map.Entry<Integer, OcorrenciaTipo> tipo : OcorrenciaTipo.getMapaTipo().entrySet()) {
+	                        	%>
+	                                <option value="<%= tipo.getKey() %>"><%= tipo.getValue().getDescricao() %></option>
+	                        	<%
+                           }
+                        %>
                     </select>
                 </div>
             </div>
