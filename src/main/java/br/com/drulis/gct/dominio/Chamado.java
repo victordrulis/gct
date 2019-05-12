@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import br.com.drulis.gct.core.Entidade;
+import br.com.drulis.gct.dominio.classificacao.OcorrenciaStatus;
 import br.com.drulis.gct.dominio.classificacao.OcorrenciaTipo;
 
 public class Chamado extends Entidade {
@@ -14,13 +15,14 @@ public class Chamado extends Entidade {
     private Produto produto;
     private List<Atividade> listaAtividades;
     private OcorrenciaTipo tipo;
+    private OcorrenciaStatus ocorrenciaStatus;
     private String titulo;
     private String descricao;
     private Date dataAbertura;
     private Date dataFechamento;
     
     public Chamado(Usuario usuarioAtribuido, Cliente cliente, Produto produto, List<Atividade> listaAtividades, String titulo,
-            OcorrenciaTipo tipo, String descricao, Date dataAbertura, Date dataFechamento) {
+            OcorrenciaTipo tipo, OcorrenciaStatus ocorrenciaStatus, String descricao, Date dataAbertura, Date dataFechamento) {
         super();
         this.usuarioAtribuido = usuarioAtribuido;
         this.cliente = cliente;
@@ -28,6 +30,7 @@ public class Chamado extends Entidade {
         this.listaAtividades = listaAtividades;
         this.titulo = titulo;
         this.tipo = tipo;
+        this.ocorrenciaStatus = ocorrenciaStatus;
         this.descricao = descricao;
         this.dataAbertura = dataAbertura;
         this.dataFechamento = dataFechamento;
@@ -75,7 +78,15 @@ public class Chamado extends Entidade {
         this.tipo = tipo;
     }
 
-    public String getTitulo() {
+    public OcorrenciaStatus getOcorrenciaStatus() {
+		return ocorrenciaStatus;
+	}
+
+	public void setOcorrenciaStatus(OcorrenciaStatus ocorrenciaStatus) {
+		this.ocorrenciaStatus = ocorrenciaStatus;
+	}
+
+	public String getTitulo() {
         return titulo;
     }
 

@@ -1,9 +1,7 @@
 package br.com.drulis.gct.viewhelper;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -94,8 +92,7 @@ public class ClienteViewHelper implements ViewHelperInterface {
                 
                 cliente.setSla((sla != null) ? Integer.parseUnsignedInt(sla) : 0);
                 cliente.setStatus((status != null) ? Integer.parseUnsignedInt(status) : 0);
-                cliente.setInicioContrato((contratoDataInicio != null) ? dateFormat.parse(contratoDataInicio) : new Date());
-            } catch (ParseException e) {
+            } catch (Exception e) {
                 System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_CONVERTER_DADOS.getDescricao() + "; \n" + e.getMessage());
                 e.printStackTrace();
             }

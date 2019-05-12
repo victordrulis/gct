@@ -69,7 +69,7 @@
       <td>Usuario Atribuido 1</td>
 <%--       <td><%= atividade.getUsuarioAtribuido().getContato().getNome() %></td> --%>
       <td>Tipo atividade</td>
-      <td><%= atividade.getAtivo() %></td>
+      <td><%= atividade.getAtivo() > 0 ? "Sim" : "-" %></td>
       <td>
             <a href="/gct/atividade?acao=exibir&id=<%= atividade.getId() %>"><span>Visualizar</span></a>
       </td>

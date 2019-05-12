@@ -150,12 +150,9 @@ public class ContatoDao extends DaoEntidade {
                 con.setDataInclusao(resultado.getDate("c.data_inclusao"));
                 con.setDataAlteracao(resultado.getDate("c.data_alteracao"));
                 con.setDataInativacao(resultado.getDate("c.data_inativacao"));
-                
-                /*
-                con.getUsuarioInclusao().setId(resultado.getInt("c.usuario_inclusao_id"));
-                con.getUsuarioUpdate().setId(resultado.getInt("c.usuario_alteracao_id"));
-                con.getUsuarioInativacao().setId(resultado.getInt("c.usuario_inativacao_id"));
-                */
+                con.setUsuarioInclusao(new Usuario(resultado.getInt("c.usuario_inclusao_id"),null,null, null));
+                con.setUsuarioUpdate(new Usuario(resultado.getInt("c.usuario_alteracao_id"),null,null, null));
+                con.setUsuarioInativacao(new Usuario(resultado.getInt("c.usuario_inativacao_id"),null,null, null));
                 
                 listaContatos.add(con);
             }

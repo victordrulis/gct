@@ -60,15 +60,14 @@
            for(Chamado chamado : resultado) {
    %>
     <tr>
-      <td><%= chamado.getId() %></td>
+      <td align="center"><%= chamado.getId() %></td>
       <td><%= chamado.getTitulo() %></td>
       <td><%= chamado.getCliente().getContato().getNome() %></td>
       <td><%= chamado.getProduto().getTitulo() %>(ID: <%= chamado.getProduto().getId() %>)</td>
-      <td>Usuario Atribuido 1</td>
-<%--       <td><%= chamado.getUsuarioAtribuido().getContato().getNome() %></td> --%>
-      <td>Tipo chamado</td>
-      <td><%= chamado.getAtivo() %></td>
-      <td>
+      <td><%= chamado.getUsuarioAtribuido().getContato().getNome() %></td>
+      <td align="center"><%= chamado.getOcorrenciaStatus().getDescricao() %></td>
+      <td align="center"><%= chamado.getAtivo() > 0 ? "Sim" : "-" %></td>
+      <td align="center">
             <a href="/gct/chamado?acao=exibir&id=<%= chamado.getId() %>"><span>Visualizar</span></a>
       </td>
     </tr>

@@ -46,9 +46,14 @@
                    <br>
 		
 		  <div class="row">
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-2">
                     <h6><strong>Atribuido</strong></h6>
-                    <span><%= atividade.getUsuarioAtribuido().getId() %></span>
+                    <span><%= atividade.getUsuarioAtribuido().getContato().getNome() %></span>
+                </div>
+                
+                <div class="form-group col-md-2">
+                    <h6><strong>Incluído por</strong></h6>
+                    <span><%= atividade.getUsuarioInclusao().getContato().getNome() %></span>
                 </div>
                 
                 <div class="form-group col-md-4">
@@ -58,7 +63,7 @@
                 
                 <div class="form-group col-md-4">
                     <h6><strong>Status</strong></h6>
-                    <span><%= atividade.getStatus() %></span>
+                    <span><%= atividade.getOcorrenciaStatus().getDescricao() %></span>
                 </div>
             </div>
 			<div class="row">

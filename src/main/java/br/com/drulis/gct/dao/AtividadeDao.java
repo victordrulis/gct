@@ -14,6 +14,7 @@ import br.com.drulis.gct.dominio.Chamado;
 import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.dominio.Usuario;
+import br.com.drulis.gct.dominio.classificacao.OcorrenciaStatus;
 import br.com.drulis.gct.dominio.classificacao.OcorrenciaTipo;
 
 /**
@@ -24,9 +25,6 @@ import br.com.drulis.gct.dominio.classificacao.OcorrenciaTipo;
  */
 public class AtividadeDao extends DaoEntidade {
 
-    private AtividadeDao usuarioAtribuidoDao;
-    private ChamadoDao chamadoDao;
-    
     @Override
     public Entidade inserir(Entidade entidade) throws SQLException {
         System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Inserindo atividade...");
@@ -131,6 +129,7 @@ public class AtividadeDao extends DaoEntidade {
         System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Consultando atividade...");
         PreparedStatement ps = null;
         Atividade atividade = (Atividade) entidade;
+        UsuarioDao daoUsuario = new UsuarioDao();
         
         List<Entidade> listaAtividades = new ArrayList<Entidade>();
         StringBuilder sql = new StringBuilder();
@@ -201,17 +200,18 @@ public class AtividadeDao extends DaoEntidade {
                 chamado.setStatus(resultado.getInt("c.status"));
                 chamado.setAtivo(resultado.getInt("c.ativo"));
                 
-                ativ.setUsuarioAtribuido(usuarioAtribuido);
-                ativ.setUsuarioInclusao(usuarioInclusao);
-                ativ.setUsuarioUpdate(usuarioAlteracao);
-                ativ.setUsuarioInativacao(usuarioInativacao);
-                ativ.setUsuarioAtribuido(usuarioAtribuido);
+                ativ.setUsuarioAtribuido((Usuario) daoUsuario.consultar(usuarioAtribuido).get(0));
+                ativ.setUsuarioInclusao((Usuario) daoUsuario.consultar(usuarioInclusao).get(0));
+                ativ.setUsuarioUpdate((Usuario) daoUsuario.consultar(usuarioAlteracao).get(0));
+                ativ.setUsuarioInativacao((Usuario) daoUsuario.consultar(usuarioInativacao).get(0));
+                ativ.setUsuarioAtribuido((Usuario) daoUsuario.consultar(usuarioAtribuido).get(0));
                 ativ.setChamado(chamado);
                 ativ.setId(resultado.getInt("a.id"));
                 ativ.setTitulo(resultado.getString("a.titulo"));
                 ativ.setStatus(resultado.getInt("a.status"));
                 ativ.setAtivo(resultado.getInt("a.ativo"));
                 ativ.setTipo(OcorrenciaTipo.getMapaTipo().get(resultado.getInt("a.tipo")));
+                ativ.setOcorrenciaStatus(OcorrenciaStatus.getMapa().get(resultado.getInt("a.status")));
                 ativ.setDescricao(resultado.getString("a.descricao"));
                 ativ.setDataInicio(resultado.getDate("c.data_inicio"));
                 ativ.setDataFim(resultado.getDate("c.data_final"));

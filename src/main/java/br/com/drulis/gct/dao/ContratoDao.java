@@ -10,7 +10,6 @@ import java.util.List;
 
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.dominio.Cliente;
-import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.Contrato;
 import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.dominio.Produto;
@@ -119,10 +118,9 @@ public class ContratoDao extends DaoEntidade {
         List<Entidade> listaContratos = new ArrayList<Entidade>();
         StringBuilder sql = new StringBuilder();
         
-        sql.append("SELECT ctt.*, cli.*, c.*, p.* FROM contrato ctt ");
+        sql.append("SELECT ctt.*, cli.*, p.* FROM contrato ctt ");
         sql.append("LEFT JOIN produto p ON p.id = ctt.produto_id ");
         sql.append("LEFT JOIN cliente cli ON cli.id = ctt.cliente_id ");
-        sql.append("LEFT JOIN contato c ON c.id = cli.contato_id ");
         sql.append("WHERE 1 = 1 ");
         
         try {
@@ -131,6 +129,21 @@ public class ContratoDao extends DaoEntidade {
             if (contrato.getId() > 0) {
                 sql.append(" AND ctt.id = " + contrato.getId());
             }
+            
+            if (contrato.getCliente() != null && contrato.getProduto() != null) { 
+            	if (contrato.getCliente().getId() > 0 && contrato.getProduto().getId() <= 0) {
+	                sql.append(" AND cli.id = " + contrato.getCliente().getId());
+	            }
+	            
+	            if (contrato.getCliente().getId() <= 0 && contrato.getProduto().getId() > 0) {
+	                sql.append(" AND p.id = " + contrato.getProduto().getId());
+	            }
+	            
+	            if (contrato.getCliente().getId() > 0 && contrato.getProduto().getId() > 0) {
+	                sql.append(" AND cli.id = " + contrato.getCliente().getId());
+	                sql.append(" AND p.id = " + contrato.getProduto().getId());
+	            }
+            }
 
             ps = sessaoBD.prepareStatement(sql.toString());
             ResultSet resultado = ps.executeQuery();
@@ -138,18 +151,12 @@ public class ContratoDao extends DaoEntidade {
             while (resultado.next()) {
                 Cliente cli = new Cliente();
                 Produto prod = new Produto();
-                Contato con = new Contato();
                 
                 prod.setId(resultado.getInt("p.id"));
                 prod.setTitulo(resultado.getString(("p.titulo")));
                 prod.setDescricao(resultado.getString(("p.descricao")));
                 prod.setVersao(resultado.getString(("p.versao")));
                 
-                con.setId(resultado.getInt("c.id"));
-                con.setNome(resultado.getString("c.nome"));
-                con.setCpfCnpj(resultado.getString("c.cpf_cnpj"));
-                
-                cli.setContato(con);
                 cli.setId(resultado.getInt("cli.id"));
                 cli.setSla(resultado.getInt("cli.sla"));
                 

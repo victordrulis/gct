@@ -6,6 +6,7 @@ package br.com.drulis.gct.dominio;
 import java.util.Date;
 
 import br.com.drulis.gct.core.Entidade;
+import br.com.drulis.gct.dominio.classificacao.OcorrenciaStatus;
 import br.com.drulis.gct.dominio.classificacao.OcorrenciaTipo;
 
 /**
@@ -24,9 +25,10 @@ public class Atividade extends Entidade {
     private Date dataInicio;
     private Date dataFim;
     private OcorrenciaTipo tipo;
+    private OcorrenciaStatus ocorrenciaStatus;
     
     public Atividade(Chamado chamado, Usuario usuarioAtribuido, String descricao, Date dataInicioExecucao, String titulo,
-            Date dataFimExecucao, OcorrenciaTipo tipo, Integer ativo) {
+            Date dataFimExecucao, OcorrenciaTipo tipo, OcorrenciaStatus ocorrenciaStatus, Integer ativo) {
         super();
         this.chamado = chamado;
         this.usuarioAtribuido = usuarioAtribuido;
@@ -35,6 +37,7 @@ public class Atividade extends Entidade {
         this.dataInicio = dataInicioExecucao;
         this.dataFim = dataFimExecucao;
         this.tipo = tipo;
+        this.ocorrenciaStatus = ocorrenciaStatus;
         this.ativo = ativo;
     }
     
@@ -95,5 +98,13 @@ public class Atividade extends Entidade {
     public void setTipo(OcorrenciaTipo tipo) {
         this.tipo = tipo;
     }
+
+	public OcorrenciaStatus getOcorrenciaStatus() {
+		return ocorrenciaStatus;
+	}
+
+	public void setOcorrenciaStatus(OcorrenciaStatus ocorrenciaStatus) {
+		this.ocorrenciaStatus = ocorrenciaStatus;
+	}
 
 }

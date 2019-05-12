@@ -50,11 +50,10 @@
 				  <tr>
 				      <th class="th-sm">ID</th>
 				      <th class="th-sm">Nome</th>
+				      <th class="th-sm">E-mail</th>
+				      <th class="th-sm">Telefone</th>
 				      <th class="th-sm">SLA</th>
-					  <th class="th-sm">Início do Contrato</th>
-			          <th class="th-sm">Duração</th>
 					  <th class="th-sm">Ativo</th>
-					  <th class="th-sm">Produtos</th>
 					  <th class="th-sm">Ação</th>
 				  </tr>
 				</thead>
@@ -62,16 +61,10 @@
 		  			<tr>
 				      <td><%= chamado.getCliente().getId() %></td>
 				      <td><%= chamado.getCliente().getContato().getNome() %></td>
+				      <td><%= chamado.getCliente().getContato().getEmail() %></td>
+				      <td><%= chamado.getCliente().getContato().getTel() %></td>
 				      <td><%= chamado.getCliente().getSla() %></td>
-				      <td><%= chamado.getCliente().getDataInclusao() %></td>
-				      <td><%= chamado.getCliente().getDuracaoContrato() %></td>
-				      <td><%= chamado.getCliente().getAtivo() %></td>
-				      <td>
-				            <ul>
-				                <li>Produto 1</li>
-				                <li>Produto 2</li>
-				            </ul>
-				      </td>
+				      <td><%= chamado.getCliente().getAtivo() > 0 ? "Sim" : "-" %></td>
 				      <td>
 				            <a href="/gct/cliente?acao=exibir&id=<%= chamado.getCliente().getId() %>"><span>Visualizar</span></a>
 				      </td>
@@ -88,12 +81,11 @@
            	</div>
            	<div class="row">
            		<div class="form-group col-md-fluid">
-           		 <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+           		 <table id="produto" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
 					<thead>
 					  <tr>
 					      <th class="th-sm">ID</th>
 					      <th class="th-sm">Título</th>
-						  <th class="th-sm">Cadastrado em</th>
 						  <th class="th-sm">Status</th>
 						  <th class="th-sm">Ativo</th>
 						  <th class="th-sm">Ação</th>
@@ -103,9 +95,8 @@
   					<tr>
 				          <td><%= chamado.getProduto().getId() %></td>
 				          <td><%= chamado.getProduto().getTitulo() %></td>
-				          <td><%= chamado.getProduto().getDataInclusao() %></td>
 				          <td><%= chamado.getProduto().getStatus() %></td>
-				          <td><%= chamado.getProduto().getAtivo() %></td>
+				          <td><%= chamado.getProduto().getAtivo() > 0 ? "Sim" : "-"%></td>
 				          <td>
 				            <a href="/gct/produto?acao=exibir&id=<%= chamado.getProduto().getId() %>"><span>Visualiar</span></a>
 				          </td>
@@ -132,11 +123,11 @@
                 
                 <div class="form-group col-md-2">
                     <h6><strong>Status</strong></h6> 
-                    <span><%= chamado.getStatus() %></span>
+                    <span><%= chamado.getOcorrenciaStatus().getDescricao() %></span>
                 </div>
             </div>
 			<div class="row">
-				<div class="form-group col-md">
+				<div class="form-group col-md-4">
 	                <h6><strong>Descrição: </strong></h6>
 	                <p><%= chamado.getDescricao() %></p>
                 </div>
@@ -144,8 +135,13 @@
 
 	        <div class="row">
                 <div class="form-group col-md-2">
+                    <h6><strong>Incluído</strong></h6> 
+                    <span><%= chamado.getUsuarioInclusao().getContato().getNome() %></span>
+                </div>
+                
+                <div class="form-group col-md-2">
                     <h6><strong>Atribuido</strong></h6> 
-                    <span>Id = <%= chamado.getUsuarioAtribuido().getId() %></span>
+                    <span><%= chamado.getUsuarioAtribuido().getContato().getNome() %></span>
                 </div>
                 
                 <div class="form-group col-md-2">
@@ -194,8 +190,8 @@
 	                    <td><span><%= atividade.getTitulo() %></span></td>
 	                    <td><span><%= atividade.getUsuarioAtribuido().getContato().getNome() %></span></td>
 	                    <td><span><%= atividade.getTipo().getDescricao() %></span></td>
-	                    <td><span><%= atividade.getStatus() %></span></td>
-	                    <td><span><%= atividade.getAtivo() %></span></td>
+	                    <td><span><%= atividade.getOcorrenciaStatus().getDescricao() %></span></td>
+	                    <td><span><%= atividade.getAtivo() > 0 ? "Sim" : "-" %></span></td>
 	                    <td>
 	                    	<a href="/gct/atividade?acao=exibir&id=<%= atividade.getId() %>"> Visualizar </a>
 	                    </td>

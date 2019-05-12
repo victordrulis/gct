@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@page import="br.com.drulis.gct.dominio.Contato"%>
+<%@page import="br.com.drulis.gct.dominio.Contrato"%>
 <%@page import="br.com.drulis.gct.dominio.Cliente"%>
 <%@page import="java.util.List"%>
 <%@include file="../fragmentos/header.jsp" %>
@@ -44,11 +45,11 @@
 		  <tr>
 		      <th class="th-sm">ID</th>
 		      <th class="th-sm">Nome</th>
-		      <th class="th-sm">SLA</th>
-			  <th class="th-sm">Início do Contrato</th>
-	          <th class="th-sm">Duração</th>
+		      <th class="th-sm">E-mail</th>
+		      <th class="th-sm">CPF/CNPJ</th>
+			  <th class="th-sm">Data Inclusão</th>
 			  <th class="th-sm">Ativo</th>
-			  <th class="th-sm">Produtos</th>
+			  <th class="th-sm">Contratos</th>
 			  <th class="th-sm">Ação</th>
 		  </tr>
 		</thead>
@@ -62,14 +63,25 @@
     <tr>
       <td><%= cliente.getId() %></td>
       <td><%= cliente.getContato().getNome() %></td>
-      <td><%= cliente.getSla() %></td>
+      <td><%= cliente.getContato().getEmail() %></td>
+      <td><%= cliente.getContato().getCpfCnpj() %></td>
       <td><%= cliente.getDataInclusao() %></td>
-      <td><%= cliente.getDuracaoContrato() %></td>
-      <td><%= cliente.getAtivo() %></td>
+      <td><%= cliente.getAtivo() > 0 ? "Sim" : "-" %></td>
       <td>
             <ul>
-                <li>Produto 1</li>
-                <li>Produto 2</li>
+      <% 	
+      		if(cliente.getListaContrato() != null && !cliente.getListaContrato().isEmpty()) {
+      			for(Contrato c : cliente.getListaContrato()) {
+      %>
+      			
+                <li><%= c.getProduto().getTitulo() %></li>
+      <% 
+      		}
+          } else {
+      %>
+      		<span>-</span>
+      		
+    	<% } %>
             </ul>
       </td>
       <td>

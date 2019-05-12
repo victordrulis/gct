@@ -11,7 +11,10 @@ import java.util.List;
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.dominio.Cliente;
 import br.com.drulis.gct.dominio.Contato;
+import br.com.drulis.gct.dominio.Contrato;
 import br.com.drulis.gct.dominio.Mensagem;
+import br.com.drulis.gct.dominio.Produto;
+import br.com.drulis.gct.dominio.Usuario;
 
 /**
  * @author Victor Drulis Oliveira
@@ -113,10 +116,13 @@ public class ClienteDao extends DaoEntidade {
         System.out.println("[" + this.getClass().getSimpleName() + "] Consultar");
         PreparedStatement ps = null;
         Cliente cliente = (Cliente) entidade;
+        ContratoDao daoContrato = new ContratoDao();
         List<Entidade> listaClientes = new ArrayList<Entidade>();
         StringBuilder sql = new StringBuilder();
         
-        sql.append("SELECT cli.*, c.* FROM cliente cli LEFT JOIN contato c ON c.id = cli.contato_id WHERE 1 = 1 ");
+        sql.append("SELECT cli.*, c.* FROM cliente cli ");
+        sql.append("LEFT JOIN contato c ON c.id = cli.contato_id ");
+        sql.append("WHERE 1 = 1 ");
         
         try {
             this.conectar();
@@ -134,14 +140,25 @@ public class ClienteDao extends DaoEntidade {
                 
                 con.setId(resultado.getInt("c.id"));
                 con.setNome(resultado.getString(("c.nome")));
+                con.setCpfCnpj(resultado.getString(("c.cpf_cnpj")));
                 con.setEmail(resultado.getString(("c.Email")));
+                con.setAtivo(resultado.getInt("c.ativo"));
                 
                 cli.setContato(con);
                 cli.setId(resultado.getInt("cli.id"));
                 cli.setSla(resultado.getInt("cli.sla"));
+                cli.setAtivo(resultado.getInt("cli.ativo"));
+                cli.setUsuarioInclusao(new Usuario(resultado.getInt("cli.usuario_inclusao_id"), null, null, null));
+                cli.setUsuarioUpdate(new Usuario(resultado.getInt("cli.usuario_alteracao_id"), null, null, null));
+                cli.setUsuarioInativacao(new Usuario(resultado.getInt("cli.usuario_inativacao_id"), null, null, null));
                 cli.setDataInclusao(resultado.getDate("cli.data_inclusao"));
                 cli.setDataAlteracao(resultado.getDate("cli.data_alteracao"));
                 cli.setDataInativacao(resultado.getDate("cli.data_inativacao"));
+                
+                Contrato contrato = new Contrato(cli, new Produto(), null, null, null, null);
+                
+                cli.setListaContrato(new ArrayList<Contrato>());
+                cli.getListaContrato().addAll((List<Contrato>) (Object) daoContrato.consultar(contrato));
                 
                 listaClientes.add(cli);
             }

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.drulis.gct.core.Entidade;
+import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.dominio.Usuario;
 
@@ -122,35 +123,59 @@ public class UsuarioDao extends DaoEntidade {
         List<Entidade> listaUsuarios = new ArrayList<Entidade>();
         StringBuilder sql = new StringBuilder();
 
-        sql.append("SELECT c.* FROM usuario c WHERE 1 = 1 ");
+        sql.append("SELECT u.*, c.* FROM usuario u ");
+        sql.append("LEFT JOIN contato c ON c.id = u.contato_id ");
+        sql.append("WHERE 1 = 1 ");
         
         try {
             this.conectar();
 
             if (usuario.getId() > 0) {
-                sql.append(" AND c.usuario_id = " + usuario.getId());
+                sql.append(" AND u.usuario_id = " + usuario.getId());
+            }
+            
+            if (usuario.getContato() != null && usuario.getContato().getId() > 0) {
+                sql.append(" AND u.contato_id = " + usuario.getContato().getId());
             }
 
             ps = sessaoBD.prepareStatement(sql.toString());
             ResultSet resultado = ps.executeQuery();
 
             while (resultado.next()) {
-                Usuario con = new Usuario();
-                con.setId(resultado.getInt("c.usuario_id"));
-                con.setLogin(resultado.getString("c.login"));
-                con.setSenha(resultado.getString("c.pass"));
+                Usuario usr = new Usuario();
+                Contato con = new Contato();
+                Usuario uInclusao = new Usuario();
+                Usuario uAlteracao = new Usuario();
+                Usuario uInativacao = new Usuario();
+                
+                con.setId(resultado.getInt("c.id"));
+                con.setNome(resultado.getString("c.nome"));
+                con.setEmail(resultado.getString("c.email"));
+                con.setCpfCnpj(resultado.getString("c.cpf_cnpj"));
+                con.setEmail(resultado.getString("c.email"));
+                con.setTel(resultado.getString("c.telefone"));
                 con.setAtivo(resultado.getInt("c.ativo"));
                 con.setDataInclusao(resultado.getDate("c.data_inclusao"));
                 con.setDataAlteracao(resultado.getDate("c.data_alteracao"));
                 con.setDataInativacao(resultado.getDate("c.data_inativacao"));
                 
-                /*
-                con.getUsuarioInclusao().setId(resultado.getInt("c.usuario_inclusao_id"));
-                con.getUsuarioUpdate().setId(resultado.getInt("c.usuario_alteracao_id"));
-                con.getUsuarioInativacao().setId(resultado.getInt("c.usuario_inativacao_id"));
-                */
+                uInclusao.setId(resultado.getInt("u.usuario_inclusao_id"));
+                uAlteracao.setId(resultado.getInt("u.usuario_alteracao_id"));
+                uInativacao.setId(resultado.getInt("u.usuario_inativacao_id"));
                 
-                listaUsuarios.add(con);
+                usr.setContato(con);
+                usr.setId(resultado.getInt("u.usuario_id"));
+                usr.setLogin(resultado.getString("u.login"));
+                usr.setSenha(resultado.getString("u.pass"));
+                usr.setAtivo(resultado.getInt("u.ativo"));
+                usr.setDataInclusao(resultado.getDate("u.data_inclusao"));
+                usr.setDataAlteracao(resultado.getDate("u.data_alteracao"));
+                usr.setDataInativacao(resultado.getDate("u.data_inativacao"));
+                usr.setUsuarioInclusao(uInclusao);
+                usr.setUsuarioUpdate(uAlteracao);
+                usr.setUsuarioInativacao(uInativacao);
+                
+                listaUsuarios.add(usr);
             }
             System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_CONSULTAR.getDescricao());
         } catch (SQLException e) {

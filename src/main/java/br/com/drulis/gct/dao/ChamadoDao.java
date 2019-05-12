@@ -15,6 +15,7 @@ import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.dominio.Produto;
 import br.com.drulis.gct.dominio.Usuario;
+import br.com.drulis.gct.dominio.classificacao.OcorrenciaStatus;
 import br.com.drulis.gct.dominio.classificacao.OcorrenciaTipo;
 
 /**
@@ -25,9 +26,6 @@ import br.com.drulis.gct.dominio.classificacao.OcorrenciaTipo;
  */
 public class ChamadoDao extends DaoEntidade {
 
-    private ClienteDao clienteDao;
-    private ProdutoDao produtoDao;
-    
     @Override
     public Entidade inserir(Entidade entidade) throws SQLException {
         System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Inserindo chamado...");
@@ -133,6 +131,7 @@ public class ChamadoDao extends DaoEntidade {
         System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Consultando chamado...");
         PreparedStatement ps = null;
         Chamado chamado = (Chamado) entidade;
+        UsuarioDao daoUsuario = new UsuarioDao();
         
         List<Entidade> listaChamados = new ArrayList<Entidade>();
         StringBuilder sql = new StringBuilder();
@@ -187,6 +186,8 @@ public class ChamadoDao extends DaoEntidade {
                 contato.setId(resultado.getInt("con.id"));
                 contato.setNome(resultado.getString("con.nome"));
                 contato.setCpfCnpj(resultado.getString("con.cpf_cnpj"));
+                contato.setEmail(resultado.getString("con.email"));
+                contato.setTel(resultado.getString("con.telefone"));
                 contato.setAtivo(resultado.getInt("con.ativo"));
                 
                 cliente.setContato(contato);
@@ -199,10 +200,10 @@ public class ChamadoDao extends DaoEntidade {
                 produto.setStatus(resultado.getInt("p.produto_status_id"));
                 produto.setAtivo(resultado.getInt("p.ativo"));
                 
-                cham.setUsuarioAtribuido(usuarioAtribuido);
-                cham.setUsuarioInclusao(usuarioInclusao);
-                cham.setUsuarioUpdate(usuarioAlteracao);
-                cham.setUsuarioInativacao(usuarioInativacao);
+                cham.setUsuarioAtribuido((Usuario) daoUsuario.consultar(usuarioAtribuido).get(0));
+                cham.setUsuarioInclusao((Usuario) daoUsuario.consultar(usuarioInclusao).get(0));
+                cham.setUsuarioUpdate((Usuario) daoUsuario.consultar(usuarioAlteracao).get(0));
+                cham.setUsuarioInativacao((Usuario) daoUsuario.consultar(usuarioInativacao).get(0));
                 cham.setCliente(cliente);
                 cham.setProduto(produto);
                 cham.setId(resultado.getInt("c.id"));
@@ -210,6 +211,7 @@ public class ChamadoDao extends DaoEntidade {
                 cham.setStatus(resultado.getInt("c.status"));
                 cham.setAtivo(resultado.getInt("c.ativo"));
                 cham.setTipo(OcorrenciaTipo.getMapaTipo().get(resultado.getInt("c.tipo")));
+                cham.setOcorrenciaStatus(OcorrenciaStatus.getMapa().get(resultado.getInt("c.status")));
                 cham.setDescricao(resultado.getString("c.descricao"));
                 cham.setDataAbertura(resultado.getDate("c.data_inicio"));
                 cham.setDataFechamento(resultado.getDate("c.data_final"));
