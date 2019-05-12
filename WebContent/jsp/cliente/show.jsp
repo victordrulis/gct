@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@page import="br.com.drulis.gct.dominio.Contato"%>
+<%@page import="br.com.drulis.gct.dominio.Contrato"%>
 <%@page import="br.com.drulis.gct.dominio.Cliente"%>
 <%@page import="br.com.drulis.gct.dominio.Cliente"%>
 <%@page import="java.util.List"%>
@@ -64,6 +65,14 @@
           </tr>
         </thead>
   <tbody>
+  		<%
+  			if(cliente.getListaContrato() != null && cliente.getListaContrato().isEmpty()) {
+	  			for(Contrato contrato : cliente.getListaContrato()) {
+		%>
+	  				<%
+	  			}
+  			}
+  		%>
     <tr>
       <td>1</td>
       <td>Título</td>
@@ -77,18 +86,6 @@
       </td>
     </tr>
     
-    <tr>
-      <td>3</td>
-      <td>Título 3</td>
-      <td>Em homologação</td>
-      <td>11/02/2019</td>
-      <td>48</td>
-      <td>Sim</td>
-      <td>
-            <a href="/gct/produto?acao=exibir&id=2">Visualizar</a>
-            <a href="#">Remover</a> <!-- TODO: adicionar caminho para remover produto do cliente. Talvez um update?  -->
-      </td>
-    </tr>
   </tbody>
 </table>
        </div>

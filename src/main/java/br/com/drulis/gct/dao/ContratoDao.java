@@ -131,16 +131,11 @@ public class ContratoDao extends DaoEntidade {
             }
             
             if (contrato.getCliente() != null && contrato.getProduto() != null) { 
-            	if (contrato.getCliente().getId() > 0 && contrato.getProduto().getId() <= 0) {
+            	if (contrato.getCliente().getId() > 0) {
 	                sql.append(" AND cli.id = " + contrato.getCliente().getId());
 	            }
 	            
-	            if (contrato.getCliente().getId() <= 0 && contrato.getProduto().getId() > 0) {
-	                sql.append(" AND p.id = " + contrato.getProduto().getId());
-	            }
-	            
-	            if (contrato.getCliente().getId() > 0 && contrato.getProduto().getId() > 0) {
-	                sql.append(" AND cli.id = " + contrato.getCliente().getId());
+	            if (contrato.getProduto().getId() > 0) {
 	                sql.append(" AND p.id = " + contrato.getProduto().getId());
 	            }
             }
@@ -151,6 +146,7 @@ public class ContratoDao extends DaoEntidade {
             while (resultado.next()) {
                 Cliente cli = new Cliente();
                 Produto prod = new Produto();
+                Contrato c = new Contrato();
                 
                 prod.setId(resultado.getInt("p.id"));
                 prod.setTitulo(resultado.getString(("p.titulo")));
@@ -160,18 +156,18 @@ public class ContratoDao extends DaoEntidade {
                 cli.setId(resultado.getInt("cli.id"));
                 cli.setSla(resultado.getInt("cli.sla"));
                 
-                contrato.setCliente(cli);
-                contrato.setProduto(prod);
-                contrato.setDataInicio(resultado.getDate("ctt.data_inicio"));
-                contrato.setDataFim(resultado.getDate("ctt.data_fim"));
-                contrato.setDataInclusao(resultado.getDate("ctt.usuario_inclusao_id"));
-                contrato.setDataAlteracao(resultado.getDate("ctt.usuario_alteracao_id"));
-                contrato.setDataInativacao(resultado.getDate("ctt.usuario_exclusao_id"));
-                contrato.setDataInclusao(resultado.getDate("ctt.data_inclusao"));
-                contrato.setDataAlteracao(resultado.getDate("ctt.data_alteracao"));
-                contrato.setDataInativacao(resultado.getDate("ctt.data_exclusao"));
+                c.setCliente(cli);
+                c.setProduto(prod);
+                c.setDataInicio(resultado.getDate("ctt.data_inicio"));
+                c.setDataFim(resultado.getDate("ctt.data_fim"));
+                c.setDataInclusao(resultado.getDate("ctt.usuario_inclusao_id"));
+                c.setDataAlteracao(resultado.getDate("ctt.usuario_alteracao_id"));
+                c.setDataInativacao(resultado.getDate("ctt.usuario_exclusao_id"));
+                c.setDataInclusao(resultado.getDate("ctt.data_inclusao"));
+                c.setDataAlteracao(resultado.getDate("ctt.data_alteracao"));
+                c.setDataInativacao(resultado.getDate("ctt.data_exclusao"));
                 
-                listaContratos.add(contrato);
+                listaContratos.add(c);
             }
             
             System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_CONSULTAR.getDescricao());
