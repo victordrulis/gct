@@ -3,8 +3,8 @@
  */
 package br.com.drulis.gct.core.negocio;
 
+import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.core.StrategyInterface;
-import br.com.drulis.gct.dominio.DominioInterface;
 
 /**
  * @author Victor Drulis Oliveira
@@ -12,10 +12,10 @@ import br.com.drulis.gct.dominio.DominioInterface;
  * @contact victordrulis@gmail.com
  *
  */
-public class ChamadoStrategy implements StrategyInterface {
+public class ChamadoRegras implements StrategyInterface {
 
     @Override
-    public String processar(DominioInterface entidade) {
+    public String processar(Entidade entidade) {
         // TODO Auto-generated method stub
         return null;
     }

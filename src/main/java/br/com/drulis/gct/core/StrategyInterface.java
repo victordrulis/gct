@@ -3,7 +3,7 @@
  */
 package br.com.drulis.gct.core;
 
-import br.com.drulis.gct.dominio.DominioInterface;
+import br.com.drulis.gct.core.Entidade;
 
 /**
  * @author Victor Drulis Oliveira
@@ -12,5 +12,5 @@ import br.com.drulis.gct.dominio.DominioInterface;
  *
  */
 public interface StrategyInterface {
-    public String processar(DominioInterface entidade);
+    public String processar(Entidade entidade);
 }

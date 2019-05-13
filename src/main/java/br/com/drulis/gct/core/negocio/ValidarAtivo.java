@@ -3,8 +3,8 @@
  */
 package br.com.drulis.gct.core.negocio;
 
+import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.core.StrategyInterface;
-import br.com.drulis.gct.dominio.DominioInterface;
 
 /**
  * @author Victor Drulis Oliveira
@@ -14,13 +14,12 @@ import br.com.drulis.gct.dominio.DominioInterface;
  */
 public class ValidarAtivo implements StrategyInterface {
 
-    /* (non-Javadoc)
-     * @see br.com.drulis.gct.core.StrategyInterface#processar(br.com.drulis.gct.dominio.DominioInterface)
-     */
     @Override
-    public String processar(DominioInterface entidade) {
-        // TODO Auto-generated method stub
-        return null;
+    public String processar(Entidade entidade) {
+    	if(entidade.getAtivo() == 0 || entidade.getAtivo() > 1 || entidade.getAtivo() < 0) 
+    		return "A entidade tipo " + entidade.getClass().getSimpleName() + " está inativa.";
+    			
+		return null;
     }
 
 }
