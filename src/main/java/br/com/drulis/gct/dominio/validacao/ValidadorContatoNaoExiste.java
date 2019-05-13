@@ -4,9 +4,9 @@
 package br.com.drulis.gct.dominio.validacao;
 
 import br.com.drulis.gct.command.ConsultarCommand;
+import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.core.StrategyInterface;
 import br.com.drulis.gct.dominio.Contato;
-import br.com.drulis.gct.dominio.DominioInterface;
 import br.com.drulis.gct.util.Resultado;
 
 /**
@@ -23,7 +23,7 @@ public class ValidadorContatoNaoExiste implements StrategyInterface {
     private Resultado resultado = new Resultado();
     
     @Override
-    public String processar(DominioInterface entidade) {
+    public String processar(Entidade entidade) {
         Contato contato = (Contato) entidade;
         resultado = COMMAND.execute(contato);
         

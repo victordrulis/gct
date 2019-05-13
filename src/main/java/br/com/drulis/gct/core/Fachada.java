@@ -85,8 +85,13 @@ public class Fachada implements FachadaInterface {
         List<StrategyInterface> contatoRegrasConsultar = new ArrayList<StrategyInterface>();
         List<StrategyInterface> contatoRegrasExcluir = new ArrayList<StrategyInterface>();
         
+        List<StrategyInterface> chamadoRegrasSalvar = new ArrayList<StrategyInterface>();
+        List<StrategyInterface> chamadoRegrasAlterar = new ArrayList<StrategyInterface>();
+        List<StrategyInterface> chamadoRegrasConsultar = new ArrayList<StrategyInterface>();
+        List<StrategyInterface> chamadoRegrasExcluir = new ArrayList<StrategyInterface>();
+        
         contatoRegrasConsultar.add(this.regrasFactory.getValidarFormatoData());
-        contatoRegrasConsultar.add(this.regrasFactory.getValidarNãoVazio());
+        contatoRegrasConsultar.add(this.regrasFactory.getValidarNaoVazio());
         contatoRegrasSalvar.add(this.regrasFactory.getValidarCpfCnpj());
         contatoRegrasSalvar.add(this.regrasFactory.getValidarEmail());
         contatoRegrasSalvar.add(this.regrasFactory.getValidarNaoExistencia());
@@ -124,10 +129,16 @@ public class Fachada implements FachadaInterface {
         this.mapRegrasAtividade.put("CONSULTAR", listRegrasConsultar);
         this.mapRegrasAtividade.put("EXCLUIR", listRegrasExcluir);
         
-        this.mapRegrasChamado.put("SALVAR", listRegrasSalvar);
-        this.mapRegrasChamado.put("ALTERAR", listRegrasAlterar);
-        this.mapRegrasChamado.put("CONSULTAR", listRegrasConsultar);
-        this.mapRegrasChamado.put("EXCLUIR", listRegrasExcluir);
+        chamadoRegrasConsultar.add(this.regrasFactory.getValidarRangeDeDatas());
+        chamadoRegrasSalvar.add(this.regrasFactory.getValidarClienteAtivo());
+        chamadoRegrasSalvar.add(this.regrasFactory.getValidarProdutoAtivo());
+        chamadoRegrasAlterar.add(this.regrasFactory.getValidarExistencia());
+        chamadoRegrasAlterar.add(this.regrasFactory.getValidarAtivo());
+        chamadoRegrasExcluir.add(this.regrasFactory.getValidarAtivo());
+        this.mapRegrasChamado.put("SALVAR", chamadoRegrasSalvar);
+        this.mapRegrasChamado.put("ALTERAR", chamadoRegrasAlterar);
+        this.mapRegrasChamado.put("CONSULTAR", chamadoRegrasConsultar);
+        this.mapRegrasChamado.put("EXCLUIR", chamadoRegrasExcluir);
         
         this.mapRegrasNegocio.put(Contato.class.getName(), mapRegrasContato);
         this.mapRegrasNegocio.put(Usuario.class.getName(), mapRegrasUsuario);

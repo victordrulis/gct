@@ -16,7 +16,7 @@ import br.com.drulis.gct.dominio.Produto;
  * @contact victordrulis@gmail.com
  *
  */
-public class ValidarCampoNãoVazio implements StrategyInterface {
+public class ValidarCampoNaoVazio implements StrategyInterface {
 
     @Override
     public String processar(Entidade entidade) {

@@ -31,8 +31,8 @@ public class RegrasFactory {
         return new ValidarFormatoData();
     }
     
-    public StrategyInterface getValidarNãoVazio() {
-        return new ValidarCampoNãoVazio();
+    public StrategyInterface getValidarNaoVazio() {
+        return new ValidarCampoNaoVazio();
     }
     
     public StrategyInterface getValidarNumeroPositivo() {
@@ -77,5 +77,13 @@ public class RegrasFactory {
     
     public StrategyInterface getValidarPermissoes() {
         return new ValidarPermissoes();
+    }
+    
+    public StrategyInterface getValidarClienteAtivo() {
+    	return new ValidarClienteAtivo();
+    }
+    
+    public StrategyInterface getValidarProdutoAtivo() {
+    	return new ValidarProdutoAtivo();
     }
 }
