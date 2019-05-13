@@ -111,7 +111,8 @@ public class ClienteDao extends DaoEntidade {
         }
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public List<Entidade> consultar(Entidade entidade) throws SQLException {
         System.out.println("[" + this.getClass().getSimpleName() + "] Consultar");
         PreparedStatement ps = null;
@@ -141,7 +142,8 @@ public class ClienteDao extends DaoEntidade {
                 con.setId(resultado.getInt("c.id"));
                 con.setNome(resultado.getString(("c.nome")));
                 con.setCpfCnpj(resultado.getString(("c.cpf_cnpj")));
-                con.setEmail(resultado.getString(("c.Email")));
+                con.setTel(resultado.getString(("c.telefone")));
+                con.setEmail(resultado.getString(("c.email")));
                 con.setAtivo(resultado.getInt("c.ativo"));
                 
                 cli.setContato(con);

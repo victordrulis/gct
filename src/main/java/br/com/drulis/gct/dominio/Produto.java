@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.dominio.classificacao.ProdutoStatus;
+import br.com.drulis.gct.dominio.classificacao.ProdutoTipo;
 
 /**
  * @author Victor Drulis Oliveira
@@ -16,8 +17,10 @@ public class Produto extends Entidade implements Serializable {
 
     private String titulo;
     private String descricao;
+    private String codigo;
     private String versao;
-    private ProdutoStatus status;
+    private ProdutoStatus produtoStatus;
+    private ProdutoTipo produtoTipo;
     
     public Produto() {}
     
@@ -26,11 +29,14 @@ public class Produto extends Entidade implements Serializable {
      * @param descricao
      * @param versao
      */
-    public Produto(String titulo, String descricao, String versao) {
+    public Produto(String titulo, String descricao, String codigo, String versao, ProdutoStatus produtoStatus, ProdutoTipo produtoTipo) {
         super();
         this.titulo = titulo;
         this.descricao = descricao;
+        this.codigo = codigo;
         this.versao = versao;
+        this.produtoStatus = produtoStatus;
+        this.produtoTipo = produtoTipo;
     }
 
     public String getTitulo() {
@@ -47,50 +53,36 @@ public class Produto extends Entidade implements Serializable {
         this.descricao = descricao;
     }
 
-    public String getVersao() {
+    public ProdutoStatus getProdutoStatus() {
+		return produtoStatus;
+	}
+
+	public void setProdutoStatus(ProdutoStatus produtoStatus) {
+		this.produtoStatus = produtoStatus;
+	}
+
+	public ProdutoTipo getProdutoTipo() {
+		return produtoTipo;
+	}
+
+	public void setProdutoTipo(ProdutoTipo produtoTipo) {
+		this.produtoTipo = produtoTipo;
+	}
+
+	public String getVersao() {
         return versao;
     }
     public void setVersao(String versao) {
         this.versao = versao;
     }
 
-    public int getStatusId() {
-        return status.getId();
-    }
-    
-    public void setStatus(ProdutoStatus status) {
-        this.status = status;
-    }
+    public String getCodigo() {
+		return codigo;
+	}
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((titulo == null) ? 0 : titulo.hashCode());
-        result = prime * result + ((versao == null) ? 0 : versao.hashCode());
-        return result;
-    }
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Produto other = (Produto) obj;
-        if (titulo == null) {
-            if (other.titulo != null)
-                return false;
-        } else if (!titulo.equals(other.titulo))
-            return false;
-        if (versao == null) {
-            if (other.versao != null)
-                return false;
-        } else if (!versao.equals(other.versao))
-            return false;
-        return true;
-    }
     
 }

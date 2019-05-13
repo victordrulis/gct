@@ -210,7 +210,7 @@ public class AtividadeDao extends DaoEntidade {
                 ativ.setTitulo(resultado.getString("a.titulo"));
                 ativ.setStatus(resultado.getInt("a.status"));
                 ativ.setAtivo(resultado.getInt("a.ativo"));
-                ativ.setTipo(OcorrenciaTipo.getMapaTipo().get(resultado.getInt("a.tipo")));
+                ativ.setTipo(OcorrenciaTipo.getMapa().get(resultado.getInt("a.tipo")));
                 ativ.setOcorrenciaStatus(OcorrenciaStatus.getMapa().get(resultado.getInt("a.status")));
                 ativ.setDescricao(resultado.getString("a.descricao"));
                 ativ.setDataInicio(resultado.getDate("c.data_inicio"));

@@ -38,7 +38,7 @@ public enum OcorrenciaTipo {
         return descricao;
     }
     
-    public static Map<Integer, OcorrenciaTipo> getMapaTipo() {
+    public static Map<Integer, OcorrenciaTipo> getMapa() {
         mapOcorrenciaTipo = new HashMap<Integer, OcorrenciaTipo>();
         
         for(OcorrenciaTipo tipo : OcorrenciaTipo.values())

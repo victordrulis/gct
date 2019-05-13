@@ -10,6 +10,7 @@ import java.util.List;
 
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.dominio.Cliente;
+import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.Contrato;
 import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.dominio.Produto;
@@ -115,6 +116,7 @@ public class ContratoDao extends DaoEntidade {
         System.out.println("[" + this.getClass().getSimpleName() + "] Consultar");
         PreparedStatement ps = null;
         Contrato contrato = (Contrato) entidade;
+        ProdutoDao daoProduto = new ProdutoDao();
         List<Entidade> listaContratos = new ArrayList<Entidade>();
         StringBuilder sql = new StringBuilder();
         
@@ -149,15 +151,20 @@ public class ContratoDao extends DaoEntidade {
                 Contrato c = new Contrato();
                 
                 prod.setId(resultado.getInt("p.id"));
+                /*
                 prod.setTitulo(resultado.getString(("p.titulo")));
                 prod.setDescricao(resultado.getString(("p.descricao")));
+                prod.setCodigo(resultado.getString("p.codigo"));
                 prod.setVersao(resultado.getString(("p.versao")));
-                
+                */
                 cli.setId(resultado.getInt("cli.id"));
+                cli.setContato(new Contato(resultado.getInt("cli.contato_id")));
                 cli.setSla(resultado.getInt("cli.sla"));
+                cli.setStatus(resultado.getInt("cli.status"));
+                cli.setAtivo(resultado.getInt("cli.ativo"));
                 
                 c.setCliente(cli);
-                c.setProduto(prod);
+                c.setProduto((Produto) daoProduto.consultar(prod).get(0));
                 c.setDataInicio(resultado.getDate("ctt.data_inicio"));
                 c.setDataFim(resultado.getDate("ctt.data_fim"));
                 c.setDataInclusao(resultado.getDate("ctt.usuario_inclusao_id"));

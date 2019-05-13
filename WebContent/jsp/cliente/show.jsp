@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@page import="br.com.drulis.gct.dominio.Contato"%>
 <%@page import="br.com.drulis.gct.dominio.Contrato"%>
-<%@page import="br.com.drulis.gct.dominio.Cliente"%>
+<%@page import="br.com.drulis.gct.dominio.Produto"%>
 <%@page import="br.com.drulis.gct.dominio.Cliente"%>
 <%@page import="java.util.List"%>
 <!DOCTYPE html>
@@ -59,34 +59,41 @@
               <th class="th-sm">Título</th>
               <th class="th-sm">Status</th>
               <th class="th-sm">Início do Contrato</th>
-              <th class="th-sm">Duração (meses)</th>
               <th class="th-sm">Ativo</th>
               <th class="th-sm">Ação</th>
           </tr>
         </thead>
   <tbody>
   		<%
-  			if(cliente.getListaContrato() != null && cliente.getListaContrato().isEmpty()) {
+  			if(cliente.getListaContrato() != null && !cliente.getListaContrato().isEmpty()) {
 	  			for(Contrato contrato : cliente.getListaContrato()) {
 		%>
-	  				<%
+			    <tr>
+			      <td align="center"><%= contrato.getProduto().getId() %></td>
+			      <td><%= contrato.getProduto().getTitulo() %></td>
+			      <td><%= contrato.getProduto().getProdutoStatus().getDescricao() %></td>
+			      <td align="center"><%= contrato.getDataInicio() %></td>
+			      <td align="center"><%= contrato.getAtivo() > 0 ? "Sim" : "-" %></td>
+			      <td align="center">
+			            <a href="/gct/produto?acao=exibir&id=<%= contrato.getProduto().getId() %>">Visualizar</a>
+			      </td>
+			    </tr>
+				
+		<%
 	  			}
-  			}
+  			} else {
   		%>
-    <tr>
-      <td>1</td>
-      <td>Título</td>
-      <td>Em prodrução</td>
-      <td>21/03/2019</td>
-      <td>48</td>
-      <td>Sim</td>
-      <td>
-            <a href="/gct/produto?acao=exibir&id=1">Visualizar</a>
-            <a href="#">Remover</a> <!-- TODO: adicionar caminho para remover produto do cliente. Talvez um update?  -->
-      </td>
-    </tr>
+  			<tr>
+		      <td colspan="12" align="center">Não existem produtos contratados.</td>
+	      	</tr>
+      	<% } %>
     
   </tbody>
+  		<tfoot>
+		    <tr>
+		      <td align="left" colspan="12"><span><strong>Total:</strong></span> <%= cliente.getListaContrato().size() %></td>
+		    </tr>
+		  </tfoot>
 </table>
        </div>
               <hr>

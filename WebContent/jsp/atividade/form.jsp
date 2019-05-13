@@ -91,8 +91,8 @@
                     <label for="tipo">Tipo</label>
                     <select class="form-control" id="tipo" name="tipo">
                         <%
-                           for(Map.Entry<Integer, OcorrenciaTipo> tipo : OcorrenciaTipo.getMapaTipo().entrySet()) {
-	                        	%>
+                        	for(Map.Entry<Integer, OcorrenciaTipo> tipo : OcorrenciaTipo.getMapa().entrySet()) {
+                        %>
 	                                <option value="<%= tipo.getKey() %>"><%= tipo.getValue().getDescricao() %></option>
 	                        	<%
                            }

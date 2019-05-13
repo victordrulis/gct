@@ -15,6 +15,8 @@ import br.com.drulis.gct.core.Acao;
 import br.com.drulis.gct.dominio.DominioInterface;
 import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.dominio.Produto;
+import br.com.drulis.gct.dominio.classificacao.ProdutoStatus;
+import br.com.drulis.gct.dominio.classificacao.ProdutoTipo;
 import br.com.drulis.gct.util.Resultado;
 
 /**
@@ -32,12 +34,15 @@ public class ProdutoViewHelper implements ViewHelperInterface {
         Produto produto = new Produto();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         
-        String produtoId = request.getParameter("listaProdutoId");
         String titulo = request.getParameter("titulo");
-        String statusProduto = request.getParameter("statusProduto");
-        String dataInicioContrato = request.getParameter("dataInicioContrato");
+        String descricao = request.getParameter("descricao");
+        String codigo = request.getParameter("codigo");
+        String versao = request.getParameter("versao");
+        String statusProduto = request.getParameter("status");
+        String tipoProduto = request.getParameter("tipo");
+        String dataInicioContrato = request.getParameter("dataInclusao");
         
-        System.out.println(this.getClass().getSimpleName() + ": --getData, ACAO: " + acao + ", URI: " + request.getRequestURI());
+        System.out.println("[" + this.getClass().getSimpleName() + "] --getData, ACAO: " + acao + ", URI: " + request.getRequestURI());
 
         if(acao == null) {
             acao = Acao.LISTAR.getAcao();
@@ -50,29 +55,27 @@ public class ProdutoViewHelper implements ViewHelperInterface {
                 produto.setId(Integer.parseInt(id));
         }
         
-        if(!acao.equals(Acao.EXCLUIR.getAcao()) || acao.equals(Acao.SALVAR.getAcao()) && request.getMethod().equals("GET")) {
+        if(acao.equals(Acao.SALVAR.getAcao()) || acao.equals(Acao.ALTERAR.getAcao()) || acao.equals(Acao.EDITAR.getAcao()) && request.getMethod().equals("POST")) {
             
             try {
-                produto.setId((produtoId != null) ? Integer.parseInt(produtoId) : 0);
-                
-                produto.setTitulo((titulo != null) ? titulo : "Erro");
-                produto.setStatus((statusProduto != null) ? Integer.parseUnsignedInt(statusProduto) : 0);
+                produto.setTitulo(titulo);
+                produto.setDescricao(descricao);
+                produto.setCodigo(codigo);
+                produto.setVersao(versao);
+                produto.setProdutoStatus(ProdutoStatus.getMapa().get(Integer.parseInt(statusProduto)));
+                produto.setProdutoTipo(ProdutoTipo.getMapa().get(Integer.parseInt(tipoProduto)));
                 produto.setDataInativacao((dataInicioContrato != null) ? dateFormat.parse(dataInicioContrato) : new Date());
+                
+                if(request.getParameter("ativo") != null)
+                    produto.setAtivo(1);
             } catch (ParseException e) {
-                System.out.println(this.getClass().getSimpleName() + ": " + Mensagem.ERRO_CONVERTER_DADOS.getDescricao() + "; \n" + e.getMessage());
+                System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_CONVERTER_DADOS.getDescricao() + "; \n" + e.getMessage());
+                e.printStackTrace();
+            } catch (Exception e) {
+            	System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_INSERIR.getDescricao() + "; \n" + e.getMessage());
                 e.printStackTrace();
             }
             
-            if(request.getParameter("ativo") != null)
-                produto.setAtivo(1);
-        }
-        
-        if(acao.equals(Acao.SALVAR.getAcao()) || acao.equals(Acao.ALTERAR.getAcao()) || acao.equals(Acao.EDITAR.getAcao()) && request.getMethod().equals("POST")) {
-            
-//            produto.setDuracaoContrato(duracaoContrato);
-            
-            if(request.getParameter("ativo") != null)
-                produto.setAtivo(1);
         }
         
         return produto;
@@ -87,7 +90,7 @@ public class ProdutoViewHelper implements ViewHelperInterface {
         String uri = request.getRequestURI();
         String acao = request.getParameter("acao");
         
-        System.out.println(this.getClass().getSimpleName() + " -- setView: Acao = " + acao + ", URI: " + uri);
+        System.out.println("[" + this.getClass().getSimpleName() + "] Acao = " + acao + ", URI: " + uri);
         
         if(resultado != null) {
             mensagem = resultado.getMensagem();

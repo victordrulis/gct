@@ -91,7 +91,7 @@ public class AtividadeViewHelper implements ViewHelperInterface {
             	
                 atividade.setTitulo(titulo);
                 atividade.setDescricao(descricao);
-                atividade.setTipo(OcorrenciaTipo.getMapaTipo().get((Integer.parseInt(tipo))));
+                atividade.setTipo(OcorrenciaTipo.getMapa().get((Integer.parseInt(tipo))));
                 atividade.setStatus(Integer.parseUnsignedInt(status));
                 atividade.setStatus(1);
                 atividade.setDataInicio(dateFormat.parse(dataAbertura));

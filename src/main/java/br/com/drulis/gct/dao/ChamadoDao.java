@@ -210,7 +210,7 @@ public class ChamadoDao extends DaoEntidade {
                 cham.setTitulo(resultado.getString("c.titulo"));
                 cham.setStatus(resultado.getInt("c.status"));
                 cham.setAtivo(resultado.getInt("c.ativo"));
-                cham.setTipo(OcorrenciaTipo.getMapaTipo().get(resultado.getInt("c.tipo")));
+                cham.setTipo(OcorrenciaTipo.getMapa().get(resultado.getInt("c.tipo")));
                 cham.setOcorrenciaStatus(OcorrenciaStatus.getMapa().get(resultado.getInt("c.status")));
                 cham.setDescricao(resultado.getString("c.descricao"));
                 cham.setDataAbertura(resultado.getDate("c.data_inicio"));
