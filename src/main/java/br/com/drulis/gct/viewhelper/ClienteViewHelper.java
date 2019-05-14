@@ -59,15 +59,6 @@ public class ClienteViewHelper implements ViewHelperInterface {
             
             contato.setId(Integer.parseInt(contatoId));
             resultado = consultar.execute(contato);
-            
-            if (listaProdutoId != null){
-                for(String produtoId : listaProdutoId) {
-                    Produto p = new Produto();
-                    p.setId(Integer.parseInt(produtoId));
-                    cliente.getListaProdutos().add((Produto) consultar.execute(p).getEntidades().get(0));
-                }
-            }
-            
             cliente.setContato((Contato) resultado.getEntidades().get(0));
             cliente.setSla(Integer.parseUnsignedInt(sla));
             cliente.setStatus(Integer.parseUnsignedInt(status));
