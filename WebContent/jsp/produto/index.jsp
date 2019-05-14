@@ -65,7 +65,8 @@
           <td><%= produto.getDataInclusao() %></td>
           <td><%= produto.getAtivo() %></td>
           <td>
-            <a href="/gct/produto?acao=exibir&id=<%= produto.getId() %>"><span>Visualiar</span></a>
+            <span><a href="/gct/produto?acao=exibir&id=<%= produto.getId() %>"> Visualiar | </a></span>
+            <span><a href="/gct/chamado?acao=novo&produtoId=<%= produto.getId() %>"> | + Chamado </a></span>
           </td>
       </tr>
       <%
