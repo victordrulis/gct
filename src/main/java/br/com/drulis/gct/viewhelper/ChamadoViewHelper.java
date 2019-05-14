@@ -67,7 +67,7 @@ public class ChamadoViewHelper implements ViewHelperInterface {
         if(acao.equals(Acao.SALVAR.getAcao()) || acao.equals(Acao.ALTERAR.getAcao()) || acao.equals(Acao.EDITAR.getAcao()) && request.getMethod().equals("POST")) {
         	Resultado resultado = new Resultado();
         	Usuario usuarioInclusao = new Usuario();
-        	usuarioInclusao.setId(Integer.parseInt(usrInclusao));
+//        	usuarioInclusao.setId(Integer.parseInt(usrInclusao));
             Usuario usuarioAtribuido = new Usuario();
             usuarioAtribuido.setId(Integer.parseInt(usrAtribuido));
             Cliente cliente = new Cliente();

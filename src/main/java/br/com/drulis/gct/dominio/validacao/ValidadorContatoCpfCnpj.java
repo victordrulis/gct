@@ -3,9 +3,9 @@
  */
 package br.com.drulis.gct.dominio.validacao;
 
+import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.core.StrategyInterface;
 import br.com.drulis.gct.dominio.Contato;
-import br.com.drulis.gct.dominio.DominioInterface;
 import br.com.drulis.gct.util.CpfCnpjUtils;
 
 /**
@@ -19,7 +19,7 @@ public class ValidadorContatoCpfCnpj implements StrategyInterface {
     private static final String MENSAGEM = "CPF/CNPJ inválido: ";
     
     @Override
-    public String processar(DominioInterface entidade) {
+    public String processar(Entidade entidade) {
         Contato contato = (Contato) entidade;
         String cpfCnpj = contato.getCpfCnpj();
         

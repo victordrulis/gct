@@ -104,8 +104,6 @@ public class ProdutoDao extends DaoEntidade {
                 prod.setAtivo(resultado.getInt("p.ativo"));
                 prod.setDataInclusao(resultado.getDate("p.data_inclusao"));
                 prod.setDataAlteracao(resultado.getDate("p.data_alteracao"));
-                
-                System.out.println("[                  OXI                    ] ------->>>>> " + resultado.getDate("p.data_inativacao"));
                 prod.setDataInativacao(resultado.getDate("p.data_inativacao"));
                 
                 listaProdutos.add(prod);

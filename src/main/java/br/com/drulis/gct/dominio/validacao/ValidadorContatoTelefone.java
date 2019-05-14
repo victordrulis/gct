@@ -3,9 +3,9 @@
  */
 package br.com.drulis.gct.dominio.validacao;
 
+import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.core.StrategyInterface;
 import br.com.drulis.gct.dominio.Contato;
-import br.com.drulis.gct.dominio.DominioInterface;
 
 /**
  * @author Victor Drulis Oliveira
@@ -18,7 +18,7 @@ public class ValidadorContatoTelefone implements StrategyInterface {
     private static final String MENSAGEM = "Telefone inválido: ";
 
     @Override
-    public String processar(DominioInterface entidade) {
+    public String processar(Entidade entidade) {
         Contato contato = (Contato) entidade;
         String telefone = contato.getTel();
 

@@ -6,9 +6,9 @@ package br.com.drulis.gct.dominio.validacao;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.core.StrategyInterface;
 import br.com.drulis.gct.dominio.Contato;
-import br.com.drulis.gct.dominio.DominioInterface;
 
 /**
  * @author Victor Drulis Oliveira
@@ -21,7 +21,7 @@ public class ValidadorContatoEmail implements StrategyInterface {
     private static final String MENSAGEM = "E-mail inválido: ";
 
     @Override
-    public String processar(DominioInterface entidade) {
+    public String processar(Entidade entidade) {
         Contato contato = (Contato) entidade;
         String email = contato.getEmail();
 

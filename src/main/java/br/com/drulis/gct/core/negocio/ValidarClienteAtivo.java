@@ -12,15 +12,14 @@ import br.com.drulis.gct.core.StrategyInterface;
  * @contact victordrulis@gmail.com
  *
  */
-public class ValidarRangeDeDatas implements StrategyInterface {
+public class ValidarClienteAtivo implements StrategyInterface {
 
-    /* (non-Javadoc)
-     * @see br.com.drulis.gct.core.StrategyInterface#processar(br.com.drulis.gct.dominio.DominioInterface)
-     */
     @Override
     public String processar(Entidade entidade) {
-        // TODO Auto-generated method stub
-        return null;
+    	if(entidade.getAtivo() == 0 || entidade.getAtivo() > 1 || entidade.getAtivo() < 0) 
+    		return "A entidade tipo " + entidade.getClass().getSimpleName() + " está inativa.";
+    			
+		return null;
     }
 
 }

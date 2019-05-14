@@ -46,7 +46,8 @@ public class ChamadoDao extends DaoEntidade {
             ps.setInt(3, chamado.getStatus());
             ps.setInt(4, chamado.getAtivo());
             ps.setInt(5, chamado.getUsuarioAtribuido().getId());
-            ps.setInt(6, chamado.getUsuarioInclusao().getId());
+//            ps.setInt(6, chamado.getUsuarioInclusao().getId());
+            ps.setInt(6, 1);
             ps.setTimestamp(7, dataInclusao);
             ps.setInt(8, chamado.getProduto().getId());
             ps.setInt(9, chamado.getCliente().getId());

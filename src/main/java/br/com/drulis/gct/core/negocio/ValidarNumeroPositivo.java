@@ -3,8 +3,8 @@
  */
 package br.com.drulis.gct.core.negocio;
 
+import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.core.StrategyInterface;
-import br.com.drulis.gct.dominio.DominioInterface;
 
 /**
  * @author Victor Drulis Oliveira
@@ -18,7 +18,7 @@ public class ValidarNumeroPositivo implements StrategyInterface {
      * @see br.com.drulis.gct.core.StrategyInterface#processar(br.com.drulis.gct.dominio.DominioInterface)
      */
     @Override
-    public String processar(DominioInterface entidade) {
+    public String processar(Entidade entidade) {
         // TODO Auto-generated method stub
         return null;
     }
