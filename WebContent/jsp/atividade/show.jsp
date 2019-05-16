@@ -78,51 +78,6 @@
                 </div>
 	        </div>
 	        
-	        
-	        <div class="row">
-                <div class="form-group col-md-8">
-                    
-                    
-                    <table>
-                        <thead>
-	                        <tr>
-	                            <th><h6><strong>Interações</strong></h6></th>
-	                        </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Contato</td>
-                                <td>Descricao da interacao na atividade. Informacao informacao informacao informacao</td>
-                            </tr>
-                            <tr>
-                                <td>Contato</td>
-                                <td>Descricao da interacao na atividade. Informacao informacao informacao informacao</td>
-                            </tr>
-                            <tr>
-                                <td>Contato</td>
-                                <td>Descricao da interacao na atividade. Informacao informacao informacao informacao</td>
-                            </tr>
-                            <tr>
-                                <td>Contato</td>
-                                <td>Descricao da interacao na atividade. Informacao informacao informacao informacao</td>
-                            </tr>
-                            
-                        </tbody>
-                    </table>
-                    <hr>
-                    <form>
-                        <h6><strong>Nova Interação</strong></h6>
-		                <label for="interacao">Descrição</label> 
-		                <textarea class="form-control" id="interacao" rows="3"></textarea>
-		                
-	                     <button type="submit" class="btn btn-primary col-md-2">Salvar</button>
-	                     <button type="submit" class="btn btn-secundary col-md-2">Cancelar</button>
-                
-	                </form>
-                </div>
-                
-	        </div>
-	        
 	        <div class="row">
                <div class="form-group col-md-4">
                     
@@ -144,10 +99,10 @@
 			</div>	
 				
 				<div class="row">
-				     <a class="col-md-1" href="../../jsp/atividade/edit.jsp"><button type="submit" class="btn btn-primary">Editar</button></a>
-				     <a class="col-md-1" href="../../jsp/atividade/list.jsp"><button type="submit" class="btn btn-primary">Finalizar</button></a>
+				     <a class="col-md-1" href="/gct/atividade?acao=editar&id=<%= atividade.getId() %>"><button type="submit" class="btn btn-warning">Editar</button></a>
+				     <a class="col-md-1" href="/gct/atividade?acao=alterar&id=<%= atividade.getId() %>&status=finalizado"><button type="button" class="btn btn-danger">Finalizar</button></a>
+				     <a class="col-md-1" href="/gct/chamado?acao=exibir&id=<%= atividade.getChamado().getId()%>"><button type="button" class="btn btn-primary">Voltar ao Chamado</button></a>
 				</div>
-			
 
 	</div>
 	</main>

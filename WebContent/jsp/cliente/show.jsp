@@ -76,6 +76,7 @@
 			      <td align="center"><%= contrato.getAtivo() > 0 ? "Sim" : "-" %></td>
 			      <td align="center">
 			            <a href="/gct/produto?acao=exibir&id=<%= contrato.getProduto().getId() %>">Visualizar</a>
+			            <span><a href="/gct/chamado?acao=novo&produtoId=<%= contrato.getProduto().getId() %>&clienteId=<%= contrato.getCliente().getId() %>"> | + Chamado </a></span>
 			      </td>
 			    </tr>
 				
