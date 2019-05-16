@@ -10,12 +10,14 @@ import java.util.List;
 import java.util.Map;
 
 import br.com.drulis.gct.core.negocio.RegrasFactory;
+import br.com.drulis.gct.core.negocio.dashboard.Dashboard;
 import br.com.drulis.gct.dao.AtividadeDao;
 import br.com.drulis.gct.dao.ChamadoDao;
 import br.com.drulis.gct.dao.ClienteDao;
 import br.com.drulis.gct.dao.ContatoDao;
 import br.com.drulis.gct.dao.ContratoDao;
 import br.com.drulis.gct.dao.DaoInterface;
+import br.com.drulis.gct.dao.DashboardDao;
 import br.com.drulis.gct.dao.ProdutoDao;
 import br.com.drulis.gct.dao.UsuarioDao;
 import br.com.drulis.gct.dominio.Atividade;
@@ -47,6 +49,7 @@ public class Fachada implements FachadaInterface {
     private Map<String, List<StrategyInterface>> mapRegrasProduto;
     private Map<String, List<StrategyInterface>> mapRegrasAtividade;
     private Map<String, List<StrategyInterface>> mapRegrasChamado;
+    private Map<String, List<StrategyInterface>> mapRegrasDashboard;
 
     public Fachada() {
         this.mapDao = new HashMap<String, DaoInterface>();
@@ -58,6 +61,7 @@ public class Fachada implements FachadaInterface {
         this.mapRegrasProduto = new HashMap<String, List<StrategyInterface>>();
         this.mapRegrasAtividade = new HashMap<String, List<StrategyInterface>>();
         this.mapRegrasChamado = new HashMap<String, List<StrategyInterface>>();
+        this.mapRegrasDashboard = new HashMap<String, List<StrategyInterface>>();
 
         this.regrasFactory = new RegrasFactory();
         
@@ -68,6 +72,7 @@ public class Fachada implements FachadaInterface {
         ProdutoDao produtoDao = new ProdutoDao();
         AtividadeDao atividadeDao = new AtividadeDao();
         ChamadoDao chamadoDao = new ChamadoDao();
+        DashboardDao dashboardDao = new DashboardDao();
         this.mapDao.put(Contato.class.getName(), contatoDao);
         this.mapDao.put(Usuario.class.getName(), usuarioDao);
         this.mapDao.put(Contrato.class.getName(), contratoDao);
@@ -75,6 +80,7 @@ public class Fachada implements FachadaInterface {
         this.mapDao.put(Produto.class.getName(), produtoDao);
         this.mapDao.put(Atividade.class.getName(), atividadeDao);
         this.mapDao.put(Chamado.class.getName(), chamadoDao);
+        this.mapDao.put(Dashboard.class.getName(), dashboardDao);
 
         List<StrategyInterface> listRegrasSalvar = new ArrayList<StrategyInterface>();
         List<StrategyInterface> listRegrasAlterar = new ArrayList<StrategyInterface>();
@@ -147,6 +153,11 @@ public class Fachada implements FachadaInterface {
         this.mapRegrasNegocio.put(Produto.class.getName(), mapRegrasProduto);
         this.mapRegrasNegocio.put(Atividade.class.getName(), mapRegrasAtividade);
         this.mapRegrasNegocio.put(Chamado.class.getName(), mapRegrasChamado);
+        
+        this.mapRegrasDashboard.put("SALVAR", null);
+        this.mapRegrasDashboard.put("ALTERAR", null);
+        this.mapRegrasDashboard.put("CONSULTAR", null);
+        this.mapRegrasDashboard.put("EXCLUIR", null);
     }
 
     @Override

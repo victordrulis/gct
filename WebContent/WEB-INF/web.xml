@@ -26,6 +26,6 @@
     <url-pattern>/atividade</url-pattern>
     <url-pattern>/item</url-pattern>
     <url-pattern>/cliente</url-pattern>
-    <url-pattern>/dash</url-pattern>
+    <url-pattern>/dashboard</url-pattern>
   </servlet-mapping>
 </web-app>

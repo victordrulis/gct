@@ -93,8 +93,8 @@ public class Servlet extends HttpServlet {
         System.out.println("[" + this.getClass().getSimpleName() + "] doGet, URI: " + uri + ", Acao: " + acao);
         
         ViewHelperInterface viewHelper = listaViewHelper.get(uri);
-        CommandInterface command = listaCommand.get(acao);
         Entidade entidade = (Entidade) viewHelper.getData(request);
+        CommandInterface command = listaCommand.get(acao);
         resultado = command.execute(entidade);
         viewHelper.setView(resultado, request, response);
     }
@@ -103,7 +103,7 @@ public class Servlet extends HttpServlet {
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("[" + this.getClass().getSimpleName() + "] doPost");
+        System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] URI: " + request.getRequestURI() + "; Method: " + request.getMethod());
         this.doGet(request, response);
     }
 
