@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-<%@page import="br.com.drulis.gct.dominio.Contato"%>
+<%@page import="br.com.drulis.gct.dominio.classificacao.ProdutoStatus"%>
+<%@page import="br.com.drulis.gct.dominio.classificacao.ProdutoTipo"%>
+<%@page import="br.com.drulis.gct.dominio.Produto"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.Map"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,55 +17,112 @@
 </head>
 <body>
 	<%@include file="../fragmentos/nav.jsp"%>
-    <%
-       System.out.println(this.getClass().getSimpleName() + "-- Formulário de edição");
-       Contato contato = (Contato) request.getAttribute("resultado");
-    %>
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 	<div class="row conteudo-topo">
+		<%
+        	Produto produto = (Produto) request.getAttribute("resultado");
+    	%>
 		<div class="container">
-			<h2>Alterar Contato - ID: <%= contato.getId() %></h2>
-			<p>Alterar ou atualizar dados de contato.</p>
+			<h2>Alterar Produto - ID #<%= produto.getId() %></h2>
+			<p>Alterar ou editar dados de produto.</p>
 		</div>
 
 	</div>
 	<div class="container">
-		<form action="/gct/contato?acao=alterar" method="post">
-		      <input type="hidden" name="id" id="id" value="<%= contato.getId() %>">
+		<!-- Example row of columns -->
+		<form action="/gct/produto?acao=alterar" method="post">
+		<input type="hidden" id="id" name="id" value="<%= produto.getId() %>">
 			<div class="row">
-	            <div class="form-group col-md-5">
-	                <label for="nome">Nome</label>
-	                <input type="text" class="form-control" id="nome" name="nome" value="<%= contato.getNome() %>" readonly>
-	            </div>
-	            
 	            <div class="form-group col-md-4">
-	                <label for="cpfCnpj">CPF/CNPJ</label>
-	                <input type="text" class="form-control" id="cpfCnpj" name="cpfCnpj" value="<%= contato.getCpfCnpj() %>" readonly>
+	                <h6><strong><label for="titulo">Título</label></strong></h6>
+	                <input type="text" class="form-control" id="titulo" name="titulo" value="<%= produto.getTitulo() %>">
 	            </div>
-	            
-	            
 	        </div>
 	        
+            <div class="row">
+            	<div class="form-group col-md-1">
+	                <h6><strong><label for="versao">Versão</label></strong></h6>
+	                <input type="text" class="form-control" id="versao" name="versao" value="<%= produto.getVersao() %>">
+	            </div>
+	            <div class="form-group col-md-2">
+	                <h6><strong><label for="codigo">Código</label></strong></h6>
+	                <input type="text" class="form-control" id="codigo" name="codigo" value="<%= produto.getCodigo()%>">
+	            </div>
+            </div>
+	            
 	        <div class="row">
-                <div class="form-group col-md-4">
-	                <label for="email">Email</label> 
-	                <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" value="<%= contato.getEmail() %>">
-	                <small id="emailHelp" class="form-text text-muted">Receberá link de confirmação</small>
+                <div class="form-group col-md-6">
+	                <h6><strong><label for="descricao">Descrição</label></strong></h6>
+	                <textarea class="form-control" id="descricao" name="descricao"> <%= produto.getDescricao() %></textarea>
                 </div>
                 
-                <div class="form-group col-md-4">
-                    <label for="telefone">Telefone</label> 
-                    <input type="text" class="form-control" id="telefone" name="telefone" value="<%= contato.getTel() %>">
-                </div>
 	        </div>
-				<div class="form-check">
-					<input type="checkbox" class="form-check-input" id="ativo" name="ativo" <%= contato.getAtivo() == 1 ? "checked" : null%>>
-					<label class="form-check-label" for="ativo">Ativo</label>
+	       <div class="row">
+                <div class="form-group col-md-2">
+                    <label for="tipo"><strong>Tipo</strong></label>
+                    <select class="form-control" name="tipo" id="tipo">
+                    		<option value="0">Selecione...</option>
+                    	<%
+                    		for(Map.Entry<Integer, ProdutoTipo> tipo : ProdutoTipo.getMapa().entrySet()) {
+                   		%>
+                   				<option value="<%= tipo.getKey()%>" 
+                   					<% 
+                   						if(produto.getProdutoTipo() != null && produto.getProdutoTipo().getId() == tipo.getValue().getId()) { 
+                   					%>
+                   							selected="selected"
+                   					<% } %>
+                   					>
+                   					<%= tipo.getValue().getDescricao() %>
+                   				</option>
+                    	<%
+                    		}
+                    	%>
+                    </select>
+                </div>
+                
+                <div class="form-group col-md-2">
+                    <label for="status"><strong>Status</strong></label>
+                    <select class="form-control" name="status" id="status">
+                    		<option value="0">Selecione...</option>
+                    	<%
+                    		for(Map.Entry<Integer, ProdutoStatus> status : ProdutoStatus.getMapa().entrySet()) {
+                   		%>
+                   				<option value="<%= status.getKey()%>"
+                   				<% 
+               						if(produto.getProdutoStatus() != null && produto.getProdutoStatus().getId() == status.getValue().getId()) { 
+               					%>
+                 						selected="selected"
+                  				<% } %>
+                   					><%= status.getValue().getDescricao() %>
+                   				</option>
+                    	<%
+                    		}
+                    	%>
+                    </select>
+                </div>
+            </div>
+	       <div class="row">
+				<div class="form-group col-md-3">
+					<input type="checkbox" class="form-check-input" id="ativo" name="ativo" 
+					<% 
+						if(produto.getAtivo() != 0) {
+					%>
+							checked="checked"
+					<%
+						}
+					%>
+					>
+					<h6><strong><label class="form-check-label" for="ativo">Ativo</label></strong></h6>
 				</div>
-				<div class="row">
-				     <button type="submit" class="btn btn-primary col-md-1">Salvar</button>
-				     <button type="submit" class="btn btn-secundary col-md-1">Cancelar</button>
-				</div>
+				
+			</div>
+			<div class="row">
+			     <button type="submit" class="btn btn-primary col-md-1" id="acao" name="acao" value="alterar">Salvar</button>
+			     <button type="reset" class="btn btn-warning col-md-1">Desfazer</button>
+			     <a class="col-md-2" href="/gct/produto">
+			     	<button type="button" class="btn btn-secundary col-md">Cancelar</button>
+			     </a>
+			</div>
 			
 		</form>
 
