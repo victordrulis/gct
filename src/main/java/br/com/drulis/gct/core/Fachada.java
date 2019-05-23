@@ -101,6 +101,7 @@ public class Fachada implements FachadaInterface {
         contatoRegrasSalvar.add(this.regrasFactory.getValidarCpfCnpj());
         contatoRegrasSalvar.add(this.regrasFactory.getValidarEmail());
         contatoRegrasSalvar.add(this.regrasFactory.getValidarNaoExistencia());
+        contatoRegrasSalvar.add(this.regrasFactory.getValidarExistencia());
         contatoRegrasAlterar.add(this.regrasFactory.getValidarExistencia());
         contatoRegrasAlterar.add(this.regrasFactory.getValidarAtivo());
         contatoRegrasAlterar.add(this.regrasFactory.getValidarTelefoneComDDD());

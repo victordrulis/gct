@@ -47,11 +47,6 @@
 				<div class="form-group col-md-4">
                     <h6><strong>Título</strong></h6><p> <%= produto.getTitulo() %></p>
                 </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-1">
-                    <h6><strong>Versão</strong></h6><p> <%= produto.getVersao() %></p>
-                </div>
                 <div class="form-group col-md-2">
                     <h6><strong>Código</strong></h6><p> <%= produto.getCodigo() %></p>
                 </div>
@@ -64,9 +59,20 @@
             
             <div class="row">
                 <div class="form-group col-md-2">
+                    <h6><strong>Tipo</strong></h6><p> <%= produto.getProdutoTipo().getDescricao() %></p>
+                </div>
+                <div class="form-group col-md-1">
+                    <h6><strong>Versão</strong></h6><p> <%= produto.getVersao() %></p>
+                </div>
+                <div class="form-group col-md-2">
                     <h6><strong>Status</strong></h6><p> <%= produto.getProdutoStatus().getDescricao() %></p>
                 </div>
-            </div>    
+            </div>
+            <div class="row">
+                <div class="form-group col-md-2">
+                    <h6><strong>Ativo</strong></h6><p> <%= produto.getAtivo() == 1 ? "Sim" : "-" %></p>
+                </div>
+            </div>
            <hr> 
 			<div class="row">
 				    <div class="form-group">

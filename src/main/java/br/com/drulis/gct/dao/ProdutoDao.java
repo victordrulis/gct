@@ -12,6 +12,7 @@ import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.dominio.Produto;
 import br.com.drulis.gct.dominio.classificacao.ProdutoStatus;
+import br.com.drulis.gct.dominio.classificacao.ProdutoTipo;
 
 /**
  * @author Victor Drulis Oliveira
@@ -65,8 +66,55 @@ public class ProdutoDao extends DaoEntidade {
 
     @Override
     public Entidade alterar(Entidade entidade) throws SQLException {
-        System.out.println("[" + this.getClass().getSimpleName() + "] Alterar");
-        return null;
+        PreparedStatement ps = null;
+        Produto produto = (Produto) entidade;
+        StringBuilder sql = new StringBuilder();
+        Timestamp dataAlteracao = new Timestamp(System.currentTimeMillis());
+        System.out.println("[" + this.getClass().getSimpleName() + "] Alterando " + produto.getClass().getSimpleName());
+        
+        try {
+            this.conectar();
+            sessaoBD.setAutoCommit(false);
+            sql.append("UPDATE produto SET ");
+            sql.append("titulo = ?, ");
+            sql.append("descricao = ?, ");
+            sql.append("codigo = ?, ");
+            sql.append("versao = ?, ");
+            sql.append("tipo = ?, ");
+            sql.append("produto_status_id = ?, ");
+            sql.append("ativo = ?, ");
+            sql.append("usuario_alteracao_id = ?, ");
+            sql.append("data_alteracao = ? ");
+            sql.append("WHERE id = ?");
+            ps = sessaoBD.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, produto.getTitulo());
+            ps.setString(2, produto.getDescricao());
+            ps.setString(3, produto.getCodigo());
+            ps.setString(4, produto.getVersao());
+            ps.setInt(5, produto.getProdutoTipo().getId());
+            ps.setInt(6, produto.getProdutoStatus().getId());
+            ps.setInt(7, produto.getAtivo());
+            ps.setInt(8, 1);
+            ps.setTimestamp(9, dataAlteracao);
+            ps.setInt(10, produto.getId());
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            
+            while(rs.next()) {
+                produto.setId(rs.getInt(1));
+            }
+            
+            sessaoBD.commit();
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_ATUALIZAR.getDescricao() +" Produto id: " + produto.getId());
+        } catch(SQLException e) {
+        	System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + Mensagem.ERRO_ATUALIZAR.getDescricao() + ", mensagem: " + e.getMessage() );
+        	e.printStackTrace();
+        } catch(Exception e) {
+        	System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + Mensagem.ERRO_ATUALIZAR.getDescricao() + ", mensagem: " + e.getMessage() );
+        	e.printStackTrace();
+        }
+		return produto;
+            
     }
 
     @Override
@@ -100,6 +148,7 @@ public class ProdutoDao extends DaoEntidade {
                 prod.setCodigo(resultado.getString("p.codigo"));
                 prod.setDescricao(resultado.getString("p.descricao"));
                 prod.setProdutoStatus(ProdutoStatus.getMapa().get(resultado.getInt("p.produto_status_id")));
+                prod.setProdutoTipo(ProdutoTipo.getMapa().get(resultado.getInt("p.tipo")));
                 prod.setVersao(resultado.getString("p.versao"));
                 prod.setAtivo(resultado.getInt("p.ativo"));
                 prod.setDataInclusao(resultado.getDate("p.data_inclusao"));

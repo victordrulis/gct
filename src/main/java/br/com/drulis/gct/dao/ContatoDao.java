@@ -126,14 +126,21 @@ public class ContatoDao extends DaoEntidade {
         List<Entidade> listaContatos = new ArrayList<Entidade>();
         StringBuilder sql = new StringBuilder();
 
-        sql.append("SELECT c.* FROM contato c WHERE 1 = 1 ");
+        sql.append("SELECT c.* FROM contato c  WHERE");
         
         try {
             this.conectar();
 
-            if (contato.getId() > 0) {
-                sql.append(" AND c.id = " + contato.getId());
-            }
+            sql.append(" c.cpf_cnpj LIKE '%" + contato.getCpfCnpj() != null ? contato.getCpfCnpj() : "" + "%'");
+
+            if (contato.getId() > 0)
+				sql.append(" OR c.id = " + contato.getId());
+
+			if (contato.getNome() != null)
+				sql.append(" OR c.nome LIKE '%" + contato.getNome() + "%'");
+            
+            sql.append(" AND 1=1");
+            
 
             ps = sessaoBD.prepareStatement(sql.toString());
             ResultSet resultado = ps.executeQuery();

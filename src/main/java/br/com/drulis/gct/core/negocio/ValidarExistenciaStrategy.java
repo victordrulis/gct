@@ -5,6 +5,7 @@ package br.com.drulis.gct.core.negocio;
 
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.core.StrategyInterface;
+import br.com.drulis.gct.dao.ContatoDao;
 
 /**
  * @author Victor Drulis Oliveira
@@ -16,8 +17,8 @@ public class ValidarExistenciaStrategy implements StrategyInterface {
 
     @Override
     public String processar(Entidade entidade) {
-        // TODO Auto-generated method stub
-        return null;
+        ContatoDao dao = new ContatoDao();
+         return dao.consultar(entidade).size() != 0 ? "Contato já existe." : null;
     }
 
 }

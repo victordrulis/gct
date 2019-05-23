@@ -24,6 +24,10 @@ public class Produto extends Entidade implements Serializable {
     
     public Produto() {}
     
+    public Produto(Integer id) {
+    	this.id = id;
+    }
+    
     /**
      * @param titulo
      * @param descricao

@@ -45,13 +45,18 @@ public class ChamadoViewHelper implements ViewHelperInterface {
         String descricao = request.getParameter("descricao");
         String status = request.getParameter("status");
         String tipo = request.getParameter("tipo");
+        String ativo = request.getParameter("ativo");
         String dataAbertura = request.getParameter("dataAbertura");
         String dataFechamento = request.getParameter("dataFechamento");
-        String usrAtribuido = request.getParameter("usuarioAtribuidoId");
-        String ativo = request.getParameter("ativo");
+        String dataInclusao = request.getParameter("dataInclusao");
+        String dataAlteracao = request.getParameter("dataAlteracao");
+        String dataInativacao = request.getParameter("dataInativacao");
         String usrInclusao = request.getParameter("usuarioInclusaoId");
+        String usrAtribuido = request.getParameter("usuarioAtribuidoId");
+        String usuarioAlteracao = request.getParameter("usuarioAlteracaoId");
+        String usuarioInativacao = request.getParameter("usuarioInativacaoId");
         
-        System.out.println("[" + this.getClass().getSimpleName() + "] --getData, ACAO: " + acao + ", URI: " + request.getRequestURI());
+        System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Ação: " + acao + ", URI: " + request.getRequestURI());
 
         if(acao == null) {
             acao = Acao.LISTAR.getAcao();
@@ -63,16 +68,23 @@ public class ChamadoViewHelper implements ViewHelperInterface {
             if(id != null && id != "")
                 chamado.setId(Integer.parseInt(id));
         }
-        
+
+        if(acao.equals(Acao.NOVO.getAcao()) && request.getMethod().equals("GET")) {
+        	if(request.getParameter("produtoId") != null && request.getParameter("clienteId") != null) {
+        		chamado.setProduto(new Produto(Integer.parseInt(request.getParameter("produtoId"))));
+        		chamado.setCliente(new Cliente(Integer.parseInt(request.getParameter("clienteId"))));
+        	}
+        }
+
         if(acao.equals(Acao.SALVAR.getAcao()) || acao.equals(Acao.ALTERAR.getAcao()) || acao.equals(Acao.EDITAR.getAcao()) && request.getMethod().equals("POST")) {
         	Resultado resultado = new Resultado();
         	Usuario usuarioInclusao = new Usuario();
+        	Cliente cliente = new Cliente();
+        	Produto produto = new Produto();
+        	Usuario usuarioAtribuido = new Usuario();
 //        	usuarioInclusao.setId(Integer.parseInt(usrInclusao));
-            Usuario usuarioAtribuido = new Usuario();
             usuarioAtribuido.setId(Integer.parseInt(usrAtribuido));
-            Cliente cliente = new Cliente();
             cliente.setId(Integer.parseInt(clienteId));
-            Produto produto = new Produto();
             produto.setId(Integer.parseInt(produtoId));
             
             Calendar calendar = Calendar.getInstance();
@@ -168,6 +180,10 @@ public class ChamadoViewHelper implements ViewHelperInterface {
         } catch (Exception e) {
         	System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_CONVERTER_DADOS.getDescricao() + ": " + e.getMessage());
         	e.printStackTrace();
+        }
+        
+        if(acao != null && (acao.equals(Acao.NOVO.getAcao()))) {
+        	
         }
         
         if(acao != null && (acao.equals(Acao.NOVO.getAcao()))) {

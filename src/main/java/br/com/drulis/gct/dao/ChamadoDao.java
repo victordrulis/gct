@@ -28,11 +28,11 @@ public class ChamadoDao extends DaoEntidade {
 
     @Override
     public Entidade inserir(Entidade entidade) throws SQLException {
-        System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Inserindo chamado...");
         PreparedStatement ps = null;
         Chamado chamado = (Chamado) entidade;
         StringBuilder sql = new StringBuilder();
         Timestamp dataInclusao = new Timestamp(System.currentTimeMillis());
+        System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Inserindo chamado...");
         
         try {
             this.conectar();
@@ -43,7 +43,7 @@ public class ChamadoDao extends DaoEntidade {
             ps = sessaoBD.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, chamado.getTitulo());
             ps.setString(2, chamado.getDescricao());
-            ps.setInt(3, chamado.getStatus());
+            ps.setInt(3, chamado.getOcorrenciaStatus().getId());
             ps.setInt(4, chamado.getAtivo());
             ps.setInt(5, chamado.getUsuarioAtribuido().getId());
 //            ps.setInt(6, chamado.getUsuarioInclusao().getId());

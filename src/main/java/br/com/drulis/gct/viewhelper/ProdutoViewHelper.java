@@ -1,7 +1,6 @@
 package br.com.drulis.gct.viewhelper;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,6 +14,7 @@ import br.com.drulis.gct.core.Acao;
 import br.com.drulis.gct.dominio.DominioInterface;
 import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.dominio.Produto;
+import br.com.drulis.gct.dominio.Usuario;
 import br.com.drulis.gct.dominio.classificacao.ProdutoStatus;
 import br.com.drulis.gct.dominio.classificacao.ProdutoTipo;
 import br.com.drulis.gct.util.Resultado;
@@ -34,29 +34,26 @@ public class ProdutoViewHelper implements ViewHelperInterface {
         Produto produto = new Produto();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         
+        String id = request.getParameter("id");
         String titulo = request.getParameter("titulo");
         String descricao = request.getParameter("descricao");
         String codigo = request.getParameter("codigo");
         String versao = request.getParameter("versao");
         String statusProduto = request.getParameter("status");
         String tipoProduto = request.getParameter("tipo");
-        String dataInicioContrato = request.getParameter("dataInclusao");
+        String dataInclusao = request.getParameter("dataInclusao");
+        String dataAlteracao = request.getParameter("dataAlteracao");
+        String dataExclusao = request.getParameter("dataExclusao");
         
         System.out.println("[" + this.getClass().getSimpleName() + "] --getData, ACAO: " + acao + ", URI: " + request.getRequestURI());
 
-        if(acao == null) {
+        if(acao == null)
             acao = Acao.LISTAR.getAcao();
-        }
         
-        if(!acao.equals(Acao.SALVAR.getAcao()) && !acao.equals(Acao.NOVO.getAcao())) {
-            String id = request.getParameter("id");
-            
-            if(id != null && id != "")
-                produto.setId(Integer.parseInt(id));
-        }
+        if(!acao.equals(Acao.SALVAR.getAcao()) && !acao.equals(Acao.NOVO.getAcao()) && id != null)
+            produto.setId(Integer.parseInt(id));
         
-        if(acao.equals(Acao.SALVAR.getAcao()) || acao.equals(Acao.ALTERAR.getAcao()) || acao.equals(Acao.EDITAR.getAcao()) && request.getMethod().equals("POST")) {
-            
+        if(acao != null && !acao.equals(Acao.EXCLUIR.getAcao()) && request.getMethod().equals("POST")) {
             try {
                 produto.setTitulo(titulo);
                 produto.setDescricao(descricao);
@@ -64,18 +61,36 @@ public class ProdutoViewHelper implements ViewHelperInterface {
                 produto.setVersao(versao);
                 produto.setProdutoStatus(ProdutoStatus.getMapa().get(Integer.parseInt(statusProduto)));
                 produto.setProdutoTipo(ProdutoTipo.getMapa().get(Integer.parseInt(tipoProduto)));
-                produto.setDataInativacao((dataInicioContrato != null) ? dateFormat.parse(dataInicioContrato) : new Date());
+                produto.setDataInclusao(dataInclusao != null ? dateFormat.parse(dataInclusao) : new Date());
+                produto.setDataAlteracao(dataAlteracao != null ? dateFormat.parse(dataAlteracao) : new Date());
+                produto.setDataInativacao(dataExclusao != null ? dateFormat.parse(dataExclusao) : new Date());
                 
+                switch(acao) {
+                case "salvar":
+                	produto.setUsuarioInclusao(new Usuario(1, null, null, null));
+                	break;
+                case "alterar":
+                	produto.setId(Integer.parseInt(id));
+                	produto.setUsuarioUpdate(new Usuario(1, null, null, null));
+                	break;
+                case "excluir":
+                	produto.setId(Integer.parseInt(id));
+                	produto.setUsuarioInativacao(new Usuario(1, null, null, null));
+                	break;
+            	default:
+            		produto.setId(Integer.parseInt(id));
+            		produto.setUsuarioInclusao(new Usuario(1, null, null, null));
+            		produto.setUsuarioUpdate(new Usuario(1, null, null, null));
+            		produto.setUsuarioInativacao(new Usuario(1, null, null, null));
+                }
+
                 if(request.getParameter("ativo") != null)
                     produto.setAtivo(1);
-            } catch (ParseException e) {
-                System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_CONVERTER_DADOS.getDescricao() + "; \n" + e.getMessage());
-                e.printStackTrace();
+
             } catch (Exception e) {
-            	System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_INSERIR.getDescricao() + "; \n" + e.getMessage());
+            	System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + Mensagem.ERRO_CONVERTER_DADOS.getDescricao() + "; \n" + e.getMessage());
                 e.printStackTrace();
             }
-            
         }
         
         return produto;

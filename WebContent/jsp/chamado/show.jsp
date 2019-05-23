@@ -151,7 +151,7 @@
                 
                 <div class="form-group col-md-2">
                     <h6><strong>Data alteração</strong></h6> 
-                    <span><%= chamado.getDataAlteracao() %></span>
+                    <span><%= chamado.getDataAlteracao() != null ? chamado.getDataAlteracao() : "-" %></span>
                 </div>
             </div>
             <hr>
@@ -177,7 +177,7 @@
             <%
             	List<Atividade> listaAtividade = (List<Atividade>) request.getAttribute("listaAtividades");
             	if(listaAtividade == null || listaAtividade.isEmpty()) {
-          		%>
+        	%>
 	           		<tr>
             			<td align="center" colspan="12"><span>Não há atividades.</span></td>
            			</tr>

@@ -1,10 +1,13 @@
+<%@page import="com.itextpdf.text.pdf.events.IndexEvents.Entry"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@page import="br.com.drulis.gct.dominio.Chamado"%>
 <%@page import="br.com.drulis.gct.dominio.Cliente"%>
 <%@page import="br.com.drulis.gct.dominio.Produto"%>
 <%@page import="br.com.drulis.gct.dominio.Usuario"%>
 <%@page import="br.com.drulis.gct.dominio.classificacao.OcorrenciaTipo"%>
+<%@page import="br.com.drulis.gct.dominio.classificacao.OcorrenciaStatus"%>
 <%@page import="java.util.List"%>
+<%@page import="java.util.Map"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -42,7 +45,7 @@
                            for(Cliente cliente : listaCliente) {
                         %>
                                 <option value="<%= cliente.getId() %>" 
-                                <% if(cliente.getId() == chamado.getCliente().getId()) { %> selected> <% } else {%> > <% } %>
+                                <% if(cliente.getId() == chamado.getCliente().getId()) { %> selected="selected"> <% } else {%> > <% } %>
                                 <%= cliente.getContato().getNome() %>  (CPF/CNPJ: <%= cliente.getContato().getCpfCnpj() %>)</option>
                         <%
                            }
@@ -58,7 +61,9 @@
                            List<Produto> listaProduto = (List<Produto>) request.getAttribute("listaProduto");
                            for(Produto produto : listaProduto) {
                         %>
-                                <option value="<%= produto.getId() %>"><%= produto.getTitulo() %></option>
+                                <option value="<%= produto.getId() %>"
+                                <% if(produto.getId() == chamado.getProduto().getId()) { %> selected="selected"> <% } else {%> > <% } %>
+                                <%= produto.getTitulo() %></option>
                         <%
                            }
                         %>
@@ -77,9 +82,9 @@
                     <label for="tipo">Tipo</label>
                     <select class="form-control" id="tipo" name="tipo">
                     <%
-                        for(OcorrenciaTipo tipo : OcorrenciaTipo.values()) {
+                        for(Map.Entry<Integer, OcorrenciaTipo> tipo : OcorrenciaTipo.getMapa().entrySet()) {
                     %>
-                        <option value="<%= tipo %>"><%= tipo.getDescricao() %></option>
+                        <option value="<%= tipo.getKey() %>"><%= tipo.getValue().getDescricao() %></option>
                    <%
                         }                    
                    %>
@@ -120,11 +125,13 @@
                 <div class="form-group col-md-4">
                     <label for="status">Status</label>
                     <select class="form-control" id="status" name="status">
-                        <option value="1">Atribuido</option>
-                        <option value="2">Em execução</option>
-                        <option value="3">Aguardando</option>
-                        <option value="4">Finalizado</option>
-                        <option value="5">Cancelado</option>
+                        <%
+                        for(OcorrenciaStatus status : OcorrenciaStatus.values()) {
+	                    %>
+	                        <option value="<%= status %>"><%= status.getDescricao() %></option>
+	                   <%
+                        }                    
+	                   %>
                     </select>
                 </div>
             </div>
