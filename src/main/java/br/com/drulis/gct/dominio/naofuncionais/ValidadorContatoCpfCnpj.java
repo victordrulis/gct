@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.drulis.gct.dominio.validacao;
+package br.com.drulis.gct.dominio.naofuncionais;
 
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.core.StrategyInterface;

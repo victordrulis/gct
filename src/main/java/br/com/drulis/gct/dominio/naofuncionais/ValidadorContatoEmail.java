@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.drulis.gct.dominio.validacao;
+package br.com.drulis.gct.dominio.naofuncionais;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
