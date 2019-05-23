@@ -27,87 +27,25 @@ public class DashboardDao extends DaoEntidade {
 
     @Override
     public Entidade inserir(Entidade entidade) {
-        System.out.println("[" + this.getClass().getSimpleName() + "] Inserir");
-        PreparedStatement ps = null;
-        Dashboard dashboard = (Dashboard) entidade;
-        StringBuilder sql = new StringBuilder();
-        Timestamp dataInclusao = new Timestamp(System.currentTimeMillis());
-        
-        try {
-            this.conectar();
-            sessaoBD.setAutoCommit(false);
-            sql.append("INSERT INTO dashboard (nome, cpf_cnpj, telefone, email, ativo, usuario_inclusao_id, data_inclusao)");
-            sql.append(" VALUES (?,?,?,?,?,?,?)");
-            ps = sessaoBD.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(5, 1);
-            ps.setInt(6, 1);
-            ps.setTimestamp(7, dataInclusao);
-            ps.executeUpdate();
-            ResultSet rs = ps.getGeneratedKeys();
-            
-            while(rs.next()) {
-                dashboard.setId(rs.getInt(1));
-            }
-            
-            sessaoBD.commit();
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_INSERIR.getDescricao() +" id: " + dashboard.getId());
-            return dashboard;
-        } catch (SQLException e) {
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e);
-            e.printStackTrace();
-            return null;
-        } catch (Exception e) {
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e);
-            e.printStackTrace();
-            return null;
-        }
+        System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Inserir... SEM AÇÃO");
+        return null;
     }
 
     @Override
     public Entidade alterar(Entidade entidade) {
-        System.out.println("[" + this.getClass().getSimpleName() + "] Alterar");
-        Dashboard dashboard = new Dashboard();
-        Dashboard alterado = new Dashboard();
-        StringBuilder sql = new StringBuilder();
-        PreparedStatement ps = null;
-
-        alterado = (Dashboard) entidade;
-
-        try {
-            this.conectar();
-            sessaoBD.setAutoCommit(false);
-            sql.append("UPDATE dashboard SET ");
-            sql.append("telefone = ?, ");
-            sql.append("email = ?, ");
-            sql.append("ativo = ?, ");
-            sql.append("usuario_alteracao_id = ? ");
-            sql.append("WHERE id = ?");
-            ps = sessaoBD.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(3, alterado.getAtivo());
-            ps.setInt(4, 1);
-            ps.setInt(5, alterado.getId());
-            ps.executeUpdate();
-            ResultSet rs = ps.getGeneratedKeys();
-            while(rs.next()) {
-                alterado.setId(rs.getInt(1));
-            }
-            sessaoBD.commit();
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_ATUALIZAR.getDescricao() + ", id: " + dashboard.getId());
-            return alterado;
-        } catch (SQLException e) {
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_ATUALIZAR + ": " + e.getMessage());
-            e.printStackTrace();
-            return null;
-        } catch (Exception e) {
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_ATUALIZAR + ": " + e.getMessage());
-            e.printStackTrace();
-            return null;
-        }
+        System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Alterar ... SEM AÇÃO");
+        return null;
+    }
+    
+    @Override
+    public Boolean excluir(Entidade entidade) {
+        System.out.println("[" + this.getClass().getSimpleName() + "] Excluir... SEM AÇÃO");
+        return true;
     }
 
     @Override
     public List<Entidade> consultar(Entidade entidade) {
-        System.out.println("[" + this.getClass().getSimpleName() + "] Consultar");
+        System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Consulta padrão");
         
         PreparedStatement ps = null;
         Dashboard dashboard = (Dashboard) entidade;
@@ -121,7 +59,7 @@ public class DashboardDao extends DaoEntidade {
         List<Entidade> listaDashboards = new ArrayList<Entidade>();
         StringBuilder sql = new StringBuilder();
 
-        sql.append("SELECT c.* FROM dashboard c WHERE 1 = 1 ");
+        sql.append("SELECT c.* FROM chamado c WHERE 1 = 1 ");
         
         try {
             this.conectar();
@@ -157,26 +95,18 @@ public class DashboardDao extends DaoEntidade {
         return listaDashboards;
     }
 
-    @Override
-    public Boolean excluir(Entidade entidade) {
-        PreparedStatement ps = null;
-        Dashboard dashboard = (Dashboard) entidade;
-        StringBuilder sql = new StringBuilder();
-        
-        System.out.println("[" + this.getClass().getSimpleName() + "] Excluir id: " + dashboard.getId());
-        
-        try {
-            this.conectar();
-            this.sessaoBD.setAutoCommit(false);
-            sql.append("UPDATE dashboard SET ativo = 0 WHERE id = ?");
-            ps = this.sessaoBD.prepareStatement(sql.toString());
-            ps.setInt(1,  dashboard.getId());
-            ps.executeUpdate();
-            this.sessaoBD.commit();
-            return true;
-        } catch(SQLException e) {
-            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_EXCLUIR.getDescricao()+ " --- id: " + dashboard.getId() + e.getMessage());
-            return false;
-        }
+    public List<Entidade> consultarChamados(Entidade entidade) {
+    	System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Consulta de chamados na data e status");
+    	return null;
+    }
+    
+    public List<Entidade> consultarClientes(Entidade entidade) {
+    	System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Consulta de clientes na data e status");
+    	return null;
+    }
+    
+    public List<Entidade> consultarAtividades(Entidade entidade) {
+    	System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Consulta de atividades na data e status");
+    	return null;
     }
 }
