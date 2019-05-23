@@ -3,7 +3,7 @@
  */
 package br.com.drulis.gct.core;
 
-import br.com.drulis.gct.util.Resultado;
+import br.com.drulis.gct.core.util.Resultado;
 
 /**
  * @author Victor Drulis Oliveira

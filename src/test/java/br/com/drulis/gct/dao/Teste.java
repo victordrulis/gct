@@ -1,5 +1,6 @@
 package br.com.drulis.gct.dao;
 
+import br.com.drulis.gct.core.dao.ContatoDao;
 import br.com.drulis.gct.dominio.Contato;
 import br.com.drulis.gct.dominio.Usuario;
 

@@ -5,8 +5,8 @@ package br.com.drulis.gct.dominio.validacao;
 
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.core.StrategyInterface;
+import br.com.drulis.gct.core.util.CpfCnpjUtils;
 import br.com.drulis.gct.dominio.Contato;
-import br.com.drulis.gct.util.CpfCnpjUtils;
 
 /**
  * @author Victor Drulis Oliveira

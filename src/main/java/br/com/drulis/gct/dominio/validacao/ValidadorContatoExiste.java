@@ -3,11 +3,11 @@
  */
 package br.com.drulis.gct.dominio.validacao;
 
-import br.com.drulis.gct.command.ConsultarCommand;
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.core.StrategyInterface;
+import br.com.drulis.gct.core.util.Resultado;
 import br.com.drulis.gct.dominio.Contato;
-import br.com.drulis.gct.util.Resultado;
+import br.com.drulis.gct.web.command.ConsultarCommand;
 
 /**
  * @author Victor Drulis Oliveira

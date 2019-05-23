@@ -9,17 +9,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import br.com.drulis.gct.core.negocio.RegrasFactory;
-import br.com.drulis.gct.core.negocio.dashboard.Dashboard;
-import br.com.drulis.gct.dao.AtividadeDao;
-import br.com.drulis.gct.dao.ChamadoDao;
-import br.com.drulis.gct.dao.ClienteDao;
-import br.com.drulis.gct.dao.ContatoDao;
-import br.com.drulis.gct.dao.ContratoDao;
-import br.com.drulis.gct.dao.DaoInterface;
-import br.com.drulis.gct.dao.DashboardDao;
-import br.com.drulis.gct.dao.ProdutoDao;
-import br.com.drulis.gct.dao.UsuarioDao;
+import br.com.drulis.gct.core.dao.AtividadeDao;
+import br.com.drulis.gct.core.dao.ChamadoDao;
+import br.com.drulis.gct.core.dao.ClienteDao;
+import br.com.drulis.gct.core.dao.ContatoDao;
+import br.com.drulis.gct.core.dao.ContratoDao;
+import br.com.drulis.gct.core.dao.DaoInterface;
+import br.com.drulis.gct.core.dao.DashboardDao;
+import br.com.drulis.gct.core.dao.ProdutoDao;
+import br.com.drulis.gct.core.dao.UsuarioDao;
+import br.com.drulis.gct.core.util.Resultado;
 import br.com.drulis.gct.dominio.Atividade;
 import br.com.drulis.gct.dominio.Chamado;
 import br.com.drulis.gct.dominio.Cliente;
@@ -28,7 +27,8 @@ import br.com.drulis.gct.dominio.Contrato;
 import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.dominio.Produto;
 import br.com.drulis.gct.dominio.Usuario;
-import br.com.drulis.gct.util.Resultado;
+import br.com.drulis.gct.dominio.negocio.RegrasFactory;
+import br.com.drulis.gct.dominio.negocio.dashboard.Dashboard;
 
 /**
  * @author Victor Drulis Oliveira
