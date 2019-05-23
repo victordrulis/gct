@@ -12,7 +12,7 @@ import com.google.gson.Gson;
 import br.com.drulis.gct.core.util.PdfGenerator;
 import br.com.drulis.gct.core.util.Resultado;
 import br.com.drulis.gct.dominio.DominioInterface;
-import br.com.drulis.gct.dominio.negocio.dashboard.Dashboard;
+import br.com.drulis.gct.dominio.dashboard.Dashboard;
 import br.com.drulis.gct.web.command.ConsultarCommand;
 
 /**

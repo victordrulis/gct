@@ -15,7 +15,7 @@ import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.core.util.PdfGenerator;
 import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.dominio.Usuario;
-import br.com.drulis.gct.dominio.negocio.dashboard.Dashboard;
+import br.com.drulis.gct.dominio.dashboard.Dashboard;
 
 /**
  * @author Victor Drulis Oliveira

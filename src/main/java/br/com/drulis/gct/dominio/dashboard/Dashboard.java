@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.drulis.gct.dominio.negocio.dashboard;
+package br.com.drulis.gct.dominio.dashboard;
 
 import com.google.gson.Gson;
 

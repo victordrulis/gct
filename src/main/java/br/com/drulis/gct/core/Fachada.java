@@ -27,8 +27,8 @@ import br.com.drulis.gct.dominio.Contrato;
 import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.dominio.Produto;
 import br.com.drulis.gct.dominio.Usuario;
+import br.com.drulis.gct.dominio.dashboard.Dashboard;
 import br.com.drulis.gct.dominio.negocio.RegrasFactory;
-import br.com.drulis.gct.dominio.negocio.dashboard.Dashboard;
 
 /**
  * @author Victor Drulis Oliveira
