@@ -4,6 +4,7 @@
 <%@page import="br.com.drulis.gct.dominio.Chamado"%>
 <%@page import="br.com.drulis.gct.dominio.Usuario"%>
 <%@page import="br.com.drulis.gct.dominio.classificacao.OcorrenciaTipo"%>
+<%@page import="br.com.drulis.gct.dominio.classificacao.OcorrenciaStatus"%>
 <%@page import="java.util.List"%>
 <!DOCTYPE html>
 <html>
@@ -38,7 +39,7 @@
                     <label for="usuarioAtribuidoId">UsuarioAtribuido</label>
                     <select class="form-control" id="usuarioAtribuidoId" name="usuarioAtribuidoId">
                         <%
-                           List<Usuario> listaUsuarioAtribuido = (List<Usuario>) request.getAttribute("listaUsuarioAtribuido");
+                           List<Usuario> listaUsuarioAtribuido = (List<Usuario>) request.getAttribute("listaUsuario");
                            for(Usuario usuarioAtribuido : listaUsuarioAtribuido) {
                         %>
                                 <option value="<%= usuarioAtribuido.getId() %>" 
@@ -52,13 +53,13 @@
             </div>
             <div class="row">
                 <div class="form-group col-md-6">
-                    <label for="produtoId">Chamado</label>
-                    <select class="form-control" id="produtoId" name="produtoId">
+                    <label for="chamadoId">Chamado</label>
+                    <select class="form-control" id="chamadoId" name="chamadoId">
                         <%
                            List<Chamado> listaChamado = (List<Chamado>) request.getAttribute("listaChamado");
                            for(Chamado produto : listaChamado) {
                         %>
-                                <option value="<%= produto.getId() %>"><%= produto.getTitulo() %></option>
+                                <option value="<%= produto.getId() %>"><span> ID: <%= produto.getId() %> - <%= produto.getTitulo() %></span></option>
                         <%
                            }
                         %>
@@ -79,7 +80,7 @@
                     <%
                         for(OcorrenciaTipo tipo : OcorrenciaTipo.values()) {
                     %>
-                        <option value="<%= tipo %>"><%= tipo.getDescricao() %></option>
+                        <option value="<%= tipo.getId() %>"><%= tipo.getDescricao() %></option>
                    <%
                         }                    
                    %>
@@ -117,14 +118,16 @@
                     </select>
                 </div>
                 
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                     <label for="status">Status</label>
                     <select class="form-control" id="status" name="status">
-                        <option value="1">Atribuido</option>
-                        <option value="2">Em execução</option>
-                        <option value="3">Aguardando</option>
-                        <option value="4">Finalizado</option>
-                        <option value="5">Cancelado</option>
+                    <%
+                        for(OcorrenciaStatus status : OcorrenciaStatus.values()) {
+                    %>
+                        <option value="<%= status.getId() %>"><%= status.getDescricao() %></option>
+                   <%
+                        }                    
+                   %>
                     </select>
                 </div>
             </div>

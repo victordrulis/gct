@@ -11,7 +11,7 @@
   </welcome-file-list>
   <servlet>
     <servlet-name>Servlet</servlet-name>
-    <servlet-class>br.com.drulis.gct.core.controller.Servlet</servlet-class>
+    <servlet-class>br.com.drulis.gct.web.controller.Servlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>Servlet</servlet-name>

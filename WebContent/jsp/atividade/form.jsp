@@ -2,6 +2,7 @@
 <%@page import="br.com.drulis.gct.dominio.Chamado"%>
 <%@page import="br.com.drulis.gct.dominio.Usuario"%>
 <%@page import="br.com.drulis.gct.dominio.classificacao.OcorrenciaTipo"%>
+<%@page import="br.com.drulis.gct.dominio.classificacao.OcorrenciaStatus"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.Map"%>
 <!DOCTYPE html>
@@ -76,14 +77,16 @@
                 
 	        </div>
 	        
-                <div class="form-group col-md-4">
+                 <div class="form-group col-md-4">
                     <label for="status">Status</label>
                     <select class="form-control" id="status" name="status">
-                        <option value="1">Atribuido</option>
-                        <option value="2">Em execução</option>
-                        <option value="3">Aguardando</option>
-                        <option value="4">Finalizado</option>
-                        <option value="5">Cancelado</option>
+                        <%
+                        	for(Map.Entry<Integer, OcorrenciaStatus> status : OcorrenciaStatus.getMapa().entrySet()) {
+                        %>
+	                                <option value="<%= status.getKey() %>"><%= status.getValue().getDescricao() %></option>
+	                        	<%
+                           }
+                        %>
                     </select>
                 </div>
                 

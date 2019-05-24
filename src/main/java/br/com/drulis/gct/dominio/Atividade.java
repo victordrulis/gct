@@ -27,6 +27,8 @@ public class Atividade extends Entidade {
     private OcorrenciaTipo tipo;
     private OcorrenciaStatus ocorrenciaStatus;
     
+    public Atividade() {}
+    
     public Atividade(Chamado chamado, Usuario usuarioAtribuido, String descricao, Date dataInicioExecucao, String titulo,
             Date dataFimExecucao, OcorrenciaTipo tipo, OcorrenciaStatus ocorrenciaStatus, Integer ativo) {
         super();
@@ -40,8 +42,6 @@ public class Atividade extends Entidade {
         this.ocorrenciaStatus = ocorrenciaStatus;
         this.ativo = ativo;
     }
-    
-    public Atividade() {}
 
     public Chamado getChamado() {
         return chamado;

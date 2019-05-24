@@ -16,6 +16,7 @@ import br.com.drulis.gct.dominio.Chamado;
 import br.com.drulis.gct.dominio.DominioInterface;
 import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.dominio.Usuario;
+import br.com.drulis.gct.dominio.classificacao.OcorrenciaStatus;
 import br.com.drulis.gct.dominio.classificacao.OcorrenciaTipo;
 import br.com.drulis.gct.web.command.ConsultarCommand;
 
@@ -35,7 +36,6 @@ public class AtividadeViewHelper implements ViewHelperInterface {
         Atividade atividade = new Atividade();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         
-        String[] listaAtividades = request.getParameterValues("listaAtividades");
         String chamadoId = request.getParameter("chamadoId");
         String titulo = request.getParameter("titulo");
         String descricao = request.getParameter("descricao");
@@ -59,7 +59,7 @@ public class AtividadeViewHelper implements ViewHelperInterface {
                 atividade.setId(Integer.parseInt(id));
         }
         
-        if(acao.equals(Acao.SALVAR.getAcao()) || acao.equals(Acao.ALTERAR.getAcao()) || acao.equals(Acao.EDITAR.getAcao()) && request.getMethod().equals("POST")) {
+        if(!acao.equals(Acao.EXCLUIR.getAcao()) && request.getMethod().equals("POST")) {
         	Resultado resultado = new Resultado();
         	Usuario usuarioInclusao = new Usuario();
 //        	usuarioInclusao.setId(Integer.parseInt(usrInclusao));
@@ -71,13 +71,6 @@ public class AtividadeViewHelper implements ViewHelperInterface {
             
             Calendar calendar = Calendar.getInstance();
             
-            if (listaAtividades != null){
-                for(String atividadeId : listaAtividades) {
-                    Atividade p = new Atividade();
-                    p.setId(Integer.parseInt(atividadeId));
-//                    atividade.getListaAtividades().add((Atividade) consultar.execute(p).getEntidades().get(0));
-                }
-            }
 
             try {
                 resultado = consultar.execute(usuarioInclusao);
@@ -92,8 +85,7 @@ public class AtividadeViewHelper implements ViewHelperInterface {
                 atividade.setTitulo(titulo);
                 atividade.setDescricao(descricao);
                 atividade.setTipo(OcorrenciaTipo.getMapa().get((Integer.parseInt(tipo))));
-                atividade.setStatus(Integer.parseUnsignedInt(status));
-                atividade.setStatus(1);
+                atividade.setOcorrenciaStatus(OcorrenciaStatus.getMapa().get(Integer.parseUnsignedInt(status)));
                 atividade.setDataInicio(dateFormat.parse(dataAbertura));
                 atividade.setDataFim(calendar.getTime());
             } catch (ParseException e) {
@@ -101,30 +93,6 @@ public class AtividadeViewHelper implements ViewHelperInterface {
                 e.printStackTrace();
             }
 
-            if(ativo != null || ativo != "0")
-                atividade.setAtivo(1);
-        }
-        
-        if(!acao.equals(Acao.EXCLUIR.getAcao()) && request.getMethod().equals("GET")) {
-            
-//            try {
-                
-                if (listaAtividades != null){
-                    for(String atividadeId : listaAtividades) {
-                        Atividade p = new Atividade();
-                        p.setId(Integer.parseInt(atividadeId));
-                    }
-                }
-                
-                atividade.setTitulo(titulo);
-                atividade.setStatus((status != null) ? Integer.parseUnsignedInt(status) : 0);
-//                atividade.setDataAbertura((dataAbertura != null) ? dateFormat.parse(dataAbertura) : new Date());
-//                atividade.setDataFechamento((dataFechamento != null) ? dateFormat.parse(dataFechamento) : new Date());
-//            } catch (ParseException e) {
-//                System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_CONVERTER_DADOS.getDescricao() + "; \n" + e.getMessage());
-//                e.printStackTrace();
-//            }
-            
             if(ativo != null || ativo != "0")
                 atividade.setAtivo(1);
         }
