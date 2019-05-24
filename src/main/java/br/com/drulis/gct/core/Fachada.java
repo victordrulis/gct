@@ -147,6 +147,11 @@ public class Fachada implements FachadaInterface {
         this.mapRegrasChamado.put("CONSULTAR", chamadoRegrasConsultar);
         this.mapRegrasChamado.put("EXCLUIR", chamadoRegrasExcluir);
         
+        this.mapRegrasDashboard.put("SALVAR", null);
+        this.mapRegrasDashboard.put("ALTERAR", null);
+        this.mapRegrasDashboard.put("CONSULTAR", null);
+        this.mapRegrasDashboard.put("EXCLUIR", null);
+        
         this.mapRegrasNegocio.put(Contato.class.getName(), mapRegrasContato);
         this.mapRegrasNegocio.put(Usuario.class.getName(), mapRegrasUsuario);
         this.mapRegrasNegocio.put(Contrato.class.getName(), mapRegrasContrato);
@@ -154,11 +159,8 @@ public class Fachada implements FachadaInterface {
         this.mapRegrasNegocio.put(Produto.class.getName(), mapRegrasProduto);
         this.mapRegrasNegocio.put(Atividade.class.getName(), mapRegrasAtividade);
         this.mapRegrasNegocio.put(Chamado.class.getName(), mapRegrasChamado);
+        this.mapRegrasNegocio.put(Dashboard.class.getName(), mapRegrasDashboard);
         
-        this.mapRegrasDashboard.put("SALVAR", null);
-        this.mapRegrasDashboard.put("ALTERAR", null);
-        this.mapRegrasDashboard.put("CONSULTAR", null);
-        this.mapRegrasDashboard.put("EXCLUIR", null);
     }
 
     @Override
@@ -175,7 +177,7 @@ public class Fachada implements FachadaInterface {
                 List<Entidade> entidades = new ArrayList<Entidade>();
                 entidades.add(entidade);
                 resultado.setEntidades(entidades);
-                System.out.println("[" + this.getClass().getSimpleName() + "] " + entidade.getClass().getSimpleName() + " salvo. ID: " + resultado.getEntidades().get(0).getId());
+                System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] " + entidade.getClass().getSimpleName() + " salvo. ID: " + resultado.getEntidades().get(0).getId());
             } catch (SQLException e) {
                 e.printStackTrace();
                 System.out.println(this.getClass().getSimpleName() + Mensagem.ERRO_INSERIR.getDescricao() + "-- Entidade: " + entidade.getClass() + "\n" + e.getMessage());
@@ -241,7 +243,7 @@ public class Fachada implements FachadaInterface {
         resultado = new Resultado();
         String nomeEntidade = entidade.getClass().getName();
         String mensagem = executarRegras(entidade, Acao.EXCLUIR);
-        System.out.println("[" + this.getClass().getSimpleName() + "] Excluindo registros de " + entidade.getClass().getSimpleName());
+        System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Excluindo registros de " + entidade.getClass().getSimpleName());
 
         if (mensagem == null) {
             DaoInterface dao = this.mapDao.get(nomeEntidade);
@@ -277,7 +279,7 @@ public class Fachada implements FachadaInterface {
 
         Map<String, List<StrategyInterface>> mapRegrasDaAcao = this.mapRegrasNegocio.get(nomeEntidade);
 
-        System.out.println("[" + this.getClass().getSimpleName() + "] " + mapRegrasDaAcao.getClass().getSimpleName());
+        System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] " + mapRegrasDaAcao.getClass().getSimpleName());
         
         if (mapRegrasDaAcao != null) {
             List<StrategyInterface> listRegrasDaAcao = mapRegrasDaAcao.get(acao.getAcao());
@@ -289,6 +291,7 @@ public class Fachada implements FachadaInterface {
                     if (mensagemRegra != null) {
                         mensagem.append(mensagemRegra);
                         mensagem.append("\n");
+                        System.out.println("[" + this.getClass().getSimpleName() + "] [WARNING] " + mensagem);
                     }
                 }
             }
