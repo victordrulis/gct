@@ -1,7 +1,10 @@
 package br.com.drulis.gct.web.viewhelper;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -27,14 +30,31 @@ public class DashboardViewHelper implements ViewHelperInterface {
     @Override
     public DominioInterface getData(HttpServletRequest request) {
         ConsultarCommand consultar = new ConsultarCommand();
-        String acao = request.getParameter("acao");
         Dashboard dashboard = new Dashboard();
+        Calendar cal = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        String acao = "dashboard";
+        String dataInicio = request.getParameter("dataIncio");
+        String dataFim = request.getParameter("dataFim");
+        String tipoEntidade = request.getParameter("tipoEntidade");
+        String statusEntidade = request.getParameter("statusEntidade");
         
         PdfGenerator pdf = new PdfGenerator();
         pdf.gerar();
         pdf.copiarUltimoPdf();
+
+        try {
+			if(dataInicio == null)
+				dashboard.setDataInicio(dateFormat.parse("2018-01-01"));
+			
+			if(dataFim == null)
+				dashboard.setDataFim(new Date());
         
+        } catch (ParseException e) {
+        	System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + e.getMessage());
+        	e.printStackTrace();
+        }
         return dashboard;
     }
 
