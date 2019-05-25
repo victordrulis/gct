@@ -45,6 +45,7 @@ public class AtividadeViewHelper implements ViewHelperInterface {
         String usrAtribuido = request.getParameter("usuarioAtribuidoId");
         String ativo = request.getParameter("ativo");
         String usrInclusao = request.getParameter("usuarioInclusaoId");
+        String usrAlteracao = request.getParameter("usuarioAlteracaoId");
         
         System.out.println("[" + this.getClass().getSimpleName() + "] --getData, ACAO: " + acao + ", URI: " + request.getRequestURI());
 
@@ -61,7 +62,8 @@ public class AtividadeViewHelper implements ViewHelperInterface {
         
         if(!acao.equals(Acao.EXCLUIR.getAcao()) && request.getMethod().equals("POST")) {
         	Resultado resultado = new Resultado();
-        	Usuario usuarioInclusao = new Usuario();
+        	Usuario usuarioInclusao = new Usuario(1, null, null, null);
+        	Usuario usuarioAlteracao = new Usuario(1, null, null, null);
 //        	usuarioInclusao.setId(Integer.parseInt(usrInclusao));
         	usuarioInclusao.setId(1);
             Usuario usuarioAtribuido = new Usuario();
@@ -75,6 +77,9 @@ public class AtividadeViewHelper implements ViewHelperInterface {
             try {
                 resultado = consultar.execute(usuarioInclusao);
                 atividade.setUsuarioInclusao(usuarioInclusao);
+                
+                if(acao.equals(Acao.ALTERAR.getAcao()))
+                	atividade.setUsuarioUpdate(usuarioAlteracao);
                 
             	resultado = consultar.execute(usuarioAtribuido);
             	atividade.setUsuarioAtribuido((Usuario) resultado.getEntidades().get(0));

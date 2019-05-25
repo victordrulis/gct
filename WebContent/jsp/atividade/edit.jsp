@@ -34,32 +34,23 @@
 		<!-- Example row of columns -->
 		<form action="/gct/atividade?acao=alterar" method="post">
 		<input type="hidden" id="id" name="id" value="<%= atividade.getId()%>">
-		  <div class="row">
-                <div class="form-group col-md-6">
-                    <label for="usuarioAtribuidoId">UsuarioAtribuido</label>
-                    <select class="form-control" id="usuarioAtribuidoId" name="usuarioAtribuidoId">
-                        <%
-                           List<Usuario> listaUsuarioAtribuido = (List<Usuario>) request.getAttribute("listaUsuario");
-                           for(Usuario usuarioAtribuido : listaUsuarioAtribuido) {
-                        %>
-                                <option value="<%= usuarioAtribuido.getId() %>" 
-                                <% if(usuarioAtribuido.getId() == atividade.getUsuarioAtribuido().getId()) { %> selected> <% } else {%> > <% } %>
-                                <%= usuarioAtribuido.getContato().getNome() %>  (CPF/CNPJ: <%= usuarioAtribuido.getContato().getCpfCnpj() %>)</option>
-                        <%
-                           }
-                        %>
-                    </select>
-                </div>
-            </div>
             <div class="row">
-                <div class="form-group col-md-6">
-                    <label for="chamadoId">Chamado</label>
+                <div class="form-group col-md-8">
+                    <label for="chamadoId"><strong>Chamado</strong></label>
                     <select class="form-control" id="chamadoId" name="chamadoId">
                         <%
                            List<Chamado> listaChamado = (List<Chamado>) request.getAttribute("listaChamado");
-                           for(Chamado produto : listaChamado) {
+                           for(Chamado chamado : listaChamado) {
                         %>
-                                <option value="<%= produto.getId() %>"><span> ID: <%= produto.getId() %> - <%= produto.getTitulo() %></span></option>
+                                <option value="<%= chamado.getId() %>"
+                        <%
+                        	if(chamado.getId() == atividade.getChamado().getId()) {
+                        %>
+                                selected="selected">
+                        <%
+                        	} else { %>> <% } %>
+                                
+                                <span> ID: <%= chamado.getId() %> - <%= chamado.getTitulo() %></span></option>
                         <%
                            }
                         %>
@@ -68,58 +59,41 @@
             </div>
 			<div class="row">
 	            <div class="form-group col-md-8">
-	                <label for="titulo">Título</label>
-	                <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Titulo">
+	                <label for="titulo"><strong>Título</strong></label>
+	                <input type="text" class="form-control" id="titulo" name="titulo" value="<%= atividade.getTitulo() %>">
 	            </div>
 	        </div>
 	        
 	        <div class="row">
-	           <div class="form-group col-md-3">
-                    <label for="tipo">Tipo</label>
+                <div class="form-group col-md-8">
+	                <label for="descricao"><strong>Descricao</strong></label> 
+	                <textarea class="form-control" id="descricao" name="descricao" rows="3"><%= atividade.getDescricao() %></textarea>
+                </div>
+                
+	        </div>
+	        
+	        <div class="row">
+	        
+	           <div class="form-group col-md-4">
+                    <label for="tipo"><strong>Tipo</strong></label>
                     <select class="form-control" id="tipo" name="tipo">
                     <%
                         for(OcorrenciaTipo tipo : OcorrenciaTipo.values()) {
                     %>
-                        <option value="<%= tipo.getId() %>"><%= tipo.getDescricao() %></option>
+                        <option value="<%= tipo.getId() %>"
+                        <%
+                        	if(tipo.getId() == atividade.getTipo().getId()) {
+                        %>		selected="selected">
+                        <% } else { %> > <% } %>
+                        	<%= tipo.getDescricao() %></option>
                    <%
                         }                    
                    %>
                     </select>
                 </div>
-	        </div>
-	        
-	        <div class="row">
-                <div class="form-group col-md-8">
-	                <label for="descricao">Descricao</label> 
-	                <textarea class="form-control" id="descricao" name="descricao" rows="3"></textarea>
-                </div>
                 
-	        </div>
-	        
-	        <div class="row">
-               <div class="form-group col-md-4">
-                    <label for="usuarioAtribuidoId">Atribuido:</label>
-                    <select class="form-control" id="usuarioAtribuidoId" name="usuarioAtribuidoId">
-                        <%
-                           List<Usuario> listaUsuario = (List<Usuario>) request.getAttribute("listaUsuario");
-                        if(listaUsuario == null || listaUsuario.size() < 1) {
-                       	%>
-                       	
-                       	    <option value="0">Selecione um usuário...</option>
-                       	<%
-                        } else {
-                           for(Usuario usuario : listaUsuario) {
-                        %>
-                                <option value="<%= usuario.getId() %>"><%= usuario.getLogin() %></option>
-                        <%
-                           }
-                        }
-                        %>
-                    </select>
-                </div>
-                
-                <div class="form-group col-md-3">
-                    <label for="status">Status</label>
+                <div class="form-group col-md-4">
+                    <label for="status"><strong>Status</strong></label>
                     <select class="form-control" id="status" name="status">
                     <%
                         for(OcorrenciaStatus status : OcorrenciaStatus.values()) {
@@ -133,8 +107,23 @@
             </div>
             
             <div class="row">
-                <div class="form-group col-md-3">
-                    <label for="dataAbertura">Início</label>
+                <div class="form-group col-md-6">
+                    <label for="usuarioAtribuidoId"><strong>Usuario Atribuido</strong></label>
+                    <select class="form-control" id="usuarioAtribuidoId" name="usuarioAtribuidoId">
+                        <%
+                           List<Usuario> listaUsuarioAtribuido = (List<Usuario>) request.getAttribute("listaUsuario");
+                           for(Usuario usuarioAtribuido : listaUsuarioAtribuido) {
+                        %>
+                                <option value="<%= usuarioAtribuido.getId() %>" 
+                                <% if(usuarioAtribuido.getId() == atividade.getUsuarioAtribuido().getId()) { %> selected> <% } else {%> > <% } %>
+                                <%= usuarioAtribuido.getContato().getNome() %>  (CPF/CNPJ: <%= usuarioAtribuido.getContato().getCpfCnpj() %>)</option>
+                        <%
+                           }
+                        %>
+                    </select>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="dataAbertura"><strong>Início</strong></label>
                     <input type="date" class="form-control" id="dataAbertura" name="dataAbertura" placeholder="00/00/0000">
                 </div>
             </div>
@@ -142,7 +131,7 @@
 			<div class="row">
 			     <div class="form-check">
                     <input type="checkbox" class="form-check-input" id="ativo" name="ativo" checked="checked">
-                    <label class="form-check-label" for="ativo">Ativo</label>
+                    <label class="form-check-label" for="ativo"><strong>Ativo</strong></label>
                 </div>
 			</div>	
 				

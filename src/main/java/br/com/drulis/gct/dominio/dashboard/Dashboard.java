@@ -4,10 +4,11 @@
 package br.com.drulis.gct.dominio.dashboard;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-
-import com.google.gson.Gson;
+import java.util.Map;
 
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.dominio.Atividade;
@@ -21,39 +22,35 @@ import br.com.drulis.gct.dominio.Cliente;
 public class Dashboard extends Entidade {
 	private static final long serialVersionUID = 1L;
 	
-	private Gson dados;
 	private Date dataInicio;
 	private Date dataFim;
-	private List<Chamado> listaChamados;
-	private List<Atividade> listaAtividades;
-	private List<Cliente> listaClientes;
+	private Map<Calendar, List<Chamado>> mapaListaChamados;
+	private Map<Calendar, List<Atividade>> mapaListaAtividades;
+	private Map<Calendar, List<Cliente>> mapaListaClientes;
 	
-	public Dashboard() {}
+	public Dashboard() { super();}
 	
-	public Dashboard(Gson dados) {
+	public Dashboard(Map<Calendar, List<Chamado>> mapaListaChamados, Map<Calendar, List<Atividade>> mapaListaAtividades, Map<Calendar, List<Cliente>> mapaListaClientes) {
 		super();
-		this.dados = dados;
-		this.listaChamados = new ArrayList<Chamado>();
-		this.listaAtividades = new ArrayList<Atividade>();
-		this.listaClientes = new ArrayList<Cliente>();
-	}
-
-	public Gson getDados() {
-		return dados;
-	}
-
-	public void setDados(Gson dados) {
-		this.dados = dados;
+		
+		this.mapaListaChamados = mapaListaChamados;
+		this.mapaListaAtividades = mapaListaAtividades;
+		this.mapaListaClientes = mapaListaClientes;
+		
+		if(mapaListaChamados == null)
+			this.mapaListaChamados = new HashMap<Calendar, List<Chamado>>();
+		
+		if(mapaListaAtividades == null)
+			this.mapaListaAtividades = new HashMap<Calendar, List<Atividade>>();
+		
+		if(mapaListaClientes == null)
+			this.mapaListaClientes = new HashMap<Calendar, List<Cliente>>();
 	}
 
 	public Date getDataInicio() {
 		return dataInicio;
 	}
-
-	public void setDataInicio(Date dataInicio) {
-		this.dataInicio = dataInicio;
-	}
-
+	
 	public Date getDataFim() {
 		return dataFim;
 	}
@@ -62,28 +59,32 @@ public class Dashboard extends Entidade {
 		this.dataFim = dataFim;
 	}
 
-	public List<Chamado> getListaChamados() {
-		return listaChamados;
+	public void setDataInicio(Date dataInicio) {
+		this.dataInicio = dataInicio;
 	}
 
-	public void setListaChamados(List<Chamado> listaChamados) {
-		this.listaChamados = listaChamados;
+	public Map<Calendar, List<Chamado>> getMapaListaChamados() {
+		return mapaListaChamados;
 	}
 
-	public List<Atividade> getListaAtividades() {
-		return listaAtividades;
+	public void setMapaListaChamados(Map<Calendar, List<Chamado>> mapaListaChamados) {
+		this.mapaListaChamados = mapaListaChamados;
 	}
 
-	public void setListaAtividades(List<Atividade> listaAtividades) {
-		this.listaAtividades = listaAtividades;
+	public Map<Calendar, List<Atividade>> getMapaListaAtividades() {
+		return mapaListaAtividades;
 	}
 
-	public List<Cliente> getListaClientes() {
-		return listaClientes;
+	public void setMapaListaAtividades(Map<Calendar, List<Atividade>> mapaListaAtividades) {
+		this.mapaListaAtividades = mapaListaAtividades;
 	}
 
-	public void setListaClientes(List<Cliente> listaClientes) {
-		this.listaClientes = listaClientes;
+	public Map<Calendar, List<Cliente>> getMapaListaClientes() {
+		return mapaListaClientes;
 	}
-	
+
+	public void setMapaListaClientes(Map<Calendar, List<Cliente>> mapaListaClientes) {
+		this.mapaListaClientes = mapaListaClientes;
+	}
+
 }

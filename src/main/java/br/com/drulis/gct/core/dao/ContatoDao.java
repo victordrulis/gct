@@ -129,12 +129,14 @@ public class ContatoDao extends DaoEntidade {
         sql.append("SELECT c.* FROM contato c  WHERE");
         
         try {
-            this.conectar();
 
-            sql.append(" c.cpf_cnpj LIKE '%" + contato.getCpfCnpj() != null ? contato.getCpfCnpj() : "" + "%'");
+            sql.append(" c.cpf_cnpj LIKE '%");
+            if(contato.getCpfCnpj() != null)
+            	sql.append(contato.getCpfCnpj());
+            sql.append("%\'");
 
             if (contato.getId() > 0)
-				sql.append(" OR c.id = " + contato.getId());
+				sql.append(" AND c.id = " + contato.getId());
 
 			if (contato.getNome() != null)
 				sql.append(" OR c.nome LIKE '%" + contato.getNome() + "%'");
@@ -142,6 +144,7 @@ public class ContatoDao extends DaoEntidade {
             sql.append(" AND 1=1");
             
 
+            this.conectar();
             ps = sessaoBD.prepareStatement(sql.toString());
             ResultSet resultado = ps.executeQuery();
 
