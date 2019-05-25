@@ -29,14 +29,14 @@
 	<div class="container">
 		<div class="row">
 	    <div class="form-group">
-		     <a href="/gct/chamado?acao=editar&id=<%= chamado.getId() %>"><button type="button" class="btn btn-primary">Editar</button></a>
+		     <a href="/gct/chamado?acao=editar&id=<%= chamado.getId() %>"><button type="button" class="btn btn-warning">Editar</button></a>
 	     </div>
 	                <div class=" ">
-		     <a href="/gct/chamado?acao=excluir&id=<%= chamado.getId() %>"><button type="button" class="btn btn-warning">Excluir</button></a>
+		     <a href="/gct/chamado?acao=excluir&id=<%= chamado.getId() %>"><button type="button" class="btn btn-danger">Excluir</button></a>
 	     </div>
 	     
 	     <div class=" ">
-              <a href="/gct/chamado"><button type="button" class="btn btn-secundary">Voltar</button></a>
+              <a href="/gct/chamado"><button type="button" class="btn btn-secondary">Voltar</button></a>
            </div>
 	    </div>
 			<hr>
@@ -159,7 +159,7 @@
 	            <div class="form-group col-md-12">
 	                <h5><strong>Atividades</strong></h5>
 	                
-	                <a href="/gct/atividade?acao=novo"><button type="button" class="btn btn-primary">Nova</button></a>
+	                <a href="/gct/atividade?acao=novo"><button type="button" class="btn btn-success">Nova</button></a>
 	                
 	             <table id="listaAtividade" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
 					<thead>
@@ -209,14 +209,14 @@
            <hr> 
 			<div class="row">
 				    <div class="form-group">
-					     <a href="/gct/chamado?acao=editar&id=<%= chamado.getId() %>"><button type="button" class="btn btn-primary">Editar</button></a>
+					     <a href="/gct/chamado?acao=editar&id=<%= chamado.getId() %>"><button type="button" class="btn btn-warning">Editar</button></a>
 				     </div>
                     <div class="form-group ">
-					     <a href="/gct/chamado?acao=excluir&id=<%= chamado.getId() %>"><button type="button" class="btn btn-warning">Excluir</button></a>
+					     <a href="/gct/chamado?acao=excluir&id=<%= chamado.getId() %>"><button type="button" class="btn btn-danger">Excluir</button></a>
 				     </div>
 				     
 				     <div class="form-group ">
-                         <a href="/gct/chamado"><button type="button" class="btn btn-secundary">Voltar</button></a>
+                         <a href="/gct/chamado"><button type="button" class="btn btn-secondary">Voltar</button></a>
                      </div>
 		     </div>
 

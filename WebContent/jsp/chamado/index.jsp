@@ -22,7 +22,7 @@
         <div class="container">
             <h2>Chamados</h2>
             <p>Todos os chamados cadastrados.</p>
-            <a href="/gct/chamado?acao=novo">Novo Chamado</a>
+            <a href="/gct/chamado?acao=novo"><button type="button" class="btn btn-success">Novo</button></a>
         </div>
     </div>
     <hr>

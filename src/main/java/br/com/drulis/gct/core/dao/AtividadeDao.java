@@ -86,23 +86,24 @@ public class AtividadeDao extends DaoEntidade {
             sql.append("titulo = ?, ");
             sql.append("descricao = ?, ");
             sql.append("status = ?, ");
+            sql.append("tipo = ?, ");
             sql.append("ativo = ?, ");
             sql.append("usuario_alteracao_id = ?, ");
-            sql.append("data_alteracao = now(), ");
-            sql.append("chamado_id = ?, ");
-            sql.append("usuarioAtribuido_id = ? ");
+            sql.append("data_alteracao = ?, ");
+            sql.append("chamado_id = ? ");
             sql.append("WHERE id = ?");
             
             ps = sessaoBD.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, alterado.getUsuarioAtribuido().getId());
             ps.setString(2, alterado.getTitulo());
             ps.setString(3, alterado.getDescricao());
-            ps.setInt(5, alterado.getStatus());
-            ps.setInt(5, alterado.getAtivo());
-            ps.setInt(6, alterado.getUsuarioInclusao().getId());
-            ps.setInt(7, alterado.getChamado().getId());
-            ps.setInt(8, alterado.getUsuarioAtribuido().getId());
-            ps.setInt(9, alterado.getId());
+            ps.setInt(4, alterado.getOcorrenciaStatus().getId());
+            ps.setInt(5, alterado.getTipo().getId());
+            ps.setInt(6, alterado.getAtivo());
+            ps.setInt(7, alterado.getUsuarioUpdate().getId());
+            ps.setTimestamp(8, new Timestamp(System.currentTimeMillis()));
+            ps.setInt(9, alterado.getChamado().getId());
+            ps.setInt(10, alterado.getId());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             

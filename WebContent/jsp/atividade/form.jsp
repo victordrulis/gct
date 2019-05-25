@@ -32,7 +32,7 @@
 		<form action="/gct/atividade?acao=salvar" method="post">
 		  <div class="row">
                 <div class="form-group col-md-6">
-                    <label for="usuarioAtribuidoId">UsuarioAtribuido</label>
+                    <label for="usuarioAtribuidoId"><strong>Usuario Atribuido</strong></label>
                     <select class="form-control" id="usuarioAtribuidoId" name="usuarioAtribuidoId">
                         <%
                            List<Usuario> listaUsuario = (List<Usuario>) request.getAttribute("listaUsuario");
@@ -49,7 +49,7 @@
             </div>
             <div class="row">
                 <div class="form-group col-md-6">
-                    <label for="chamadoId">Chamado</label>
+                    <label for="chamadoId"><strong>Chamado</strong></label>
                     <select class="form-control" id="chamadoId" name="chamadoId">
                         <%
                            List<Chamado> listaChamado = (List<Chamado>) request.getAttribute("listaChamado");
@@ -64,21 +64,21 @@
             </div>
 			<div class="row">
 	            <div class="form-group col-md-8">
-	                <label for="titulo">Título</label>
+	                <label for="titulo"><strong>Título</strong></label>
 	                <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Titulo">
 	            </div>
 	        </div>
 	        
 	        <div class="row">
                 <div class="form-group col-md-8">
-	                <label for="descricao">Descricao</label> 
+	                <label for="descricao"><strong>Descricao</strong></label> 
 	                <textarea class="form-control" id="descricao" name="descricao" rows="3"></textarea>
                 </div>
                 
 	        </div>
 	        
                  <div class="form-group col-md-4">
-                    <label for="status">Status</label>
+                    <label for="status"><strong>Status</strong></label>
                     <select class="form-control" id="status" name="status">
                         <%
                         	for(Map.Entry<Integer, OcorrenciaStatus> status : OcorrenciaStatus.getMapa().entrySet()) {
@@ -91,7 +91,7 @@
                 </div>
                 
                 <div class="form-group col-md-4">
-                    <label for="tipo">Tipo</label>
+                    <label for="tipo"><strong>Tipo</strong></label>
                     <select class="form-control" id="tipo" name="tipo">
                         <%
                         	for(Map.Entry<Integer, OcorrenciaTipo> tipo : OcorrenciaTipo.getMapa().entrySet()) {
@@ -106,7 +106,7 @@
             
             <div class="row">
                 <div class="form-group col-md-3">
-                    <label for="dataAbertura">Início</label>
+                    <label for="dataAbertura"><strong>Início</strong></label>
                     <input type="date" class="form-control" id="dataAbertura" name="dataAbertura" placeholder="00/00/0000">
                 </div>
             </div>
@@ -119,7 +119,7 @@
 			</div>	
 				
 				<div class="row">
-				     <button type="submit" class="btn btn-primary col-md-1" id="acao" name="acao" value="salvar">Salvar</button>
+				     <button type="submit" class="btn btn-success col-md-1" id="acao" name="acao" value="salvar">Salvar</button>
 				     <a href="/gct/atividade"><button type="button" class="btn btn-secundary col-md-1">Cancelar</button></a>
 				</div>
 			
