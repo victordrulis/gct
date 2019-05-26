@@ -10,6 +10,7 @@ import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.dominio.Atividade;
 import br.com.drulis.gct.dominio.Chamado;
 import br.com.drulis.gct.dominio.Cliente;
+import br.com.drulis.gct.dominio.classificacao.DominioType;
 import br.com.drulis.gct.dominio.classificacao.ProdutoStatus;
 import br.com.drulis.gct.dominio.classificacao.ProdutoTipo;
 
@@ -26,8 +27,8 @@ public class Dashboard extends Entidade {
 	private Map<Chamado, Integer> mapaListaChamados;
 	private Map<Atividade, Integer> mapaListaAtividades;
 	private Map<Cliente, Integer> mapaListaClientes;
-	private Map<ProdutoStatus, Integer> mapaStatusProdutos;
-	private Map<ProdutoTipo, Integer> mapaTipoProdutos;
+	private Map<DominioType, Integer> mapaStatusProdutos;
+	private Map<DominioType, Integer> mapaTipoProdutos;
 	
 	public Dashboard() { super();}
 	
@@ -85,19 +86,19 @@ public class Dashboard extends Entidade {
 		this.mapaListaClientes = mapaListaClientes;
 	}
 
-	public Map<ProdutoStatus, Integer> getMapaStatusProdutos() {
+	public Map<DominioType, Integer> getMapaStatusProdutos() {
 		return mapaStatusProdutos;
 	}
 
-	public void setMapaStatusProdutos(Map<ProdutoStatus, Integer> mapaStatusProdutos) {
+	public void setMapaStatusProdutos(Map<DominioType, Integer> mapaStatusProdutos) {
 		this.mapaStatusProdutos = mapaStatusProdutos;
 	}
 
-	public Map<ProdutoTipo, Integer> getMapaTipoProdutos() {
+	public Map<DominioType, Integer> getMapaTipoProdutos() {
 		return mapaTipoProdutos;
 	}
 
-	public void setMapaTipoProdutos(Map<ProdutoTipo, Integer> mapaTipoProdutos) {
+	public void setMapaTipoProdutos(Map<DominioType, Integer> mapaTipoProdutos) {
 		this.mapaTipoProdutos = mapaTipoProdutos;
 	}
 

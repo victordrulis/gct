@@ -83,7 +83,10 @@ to {
 				<div class=""></div>
 			</div>
 		</div>
-		<canvas id="chart-0" style="display: block; width: 512px; height: 256px;" width="512" height="256" class="chartjs-render-monitor"></canvas>
+		<canvas id="chart-0" style="display: block; width: 800px; height: 400px;" width="800" height="400" class="chartjs-render-monitor"></canvas>
+		<hr>
+		<canvas id="chart-1" style="display: block; width: 800px; height: 400px;" width="800" height="400" class="chartjs-render-monitor"></canvas>
+		<hr>
 	</div>
 	<br>
 	</div>
@@ -91,123 +94,129 @@ to {
 </main>
 	
 <%@include file="../fragmentos/footer.jsp" %>
-	
 <script>
-var presets = window.chartColors;
+var dadosGraficoTipo = '${dadosGraficoTipo}';
+var convertido = dadosGraficoTipo.slice(1, dadosGraficoTipo.length - 1).split(",");
+let tipos = [];
+let tipoQtd = [];
+
+convertido.forEach(item => {
+	tipos.push(item.split("=")[0]);
+	tipoQtd.push(item.split("=")[1])
+});
+
+console.log(tipos);
+console.log(tipoQtd);
+
+var DATA_COUNT = 12;
+
 var utils = Samples.utils;
-var inputs = {
-	min: 8,
-	max: 16,
-	count: 8,
-	decimals: 2,
-	continuity: 1
-};
+
+utils.srand(110);
+
+function alternatePointStyles(ctx) {
+	var index = ctx.dataIndex;
+	return index % 2 === 0 ? 'circle' : 'rect';
+}
+
+function makeHalfAsOpaque(ctx) {
+	var c = ctx.dataset.backgroundColor;
+	return utils.transparentize(c);
+}
+
+function adjustRadiusBasedOnData(ctx) {
+	var v = ctx.dataset.data[ctx.dataIndex];
+	return v < 10 ? 5
+		: v < 25 ? 7
+		: v < 50 ? 9
+		: v < 75 ? 11
+		: 15;
+}
 
 function generateData() {
-	// radar chart doesn't support stacked values, let's do it manually
-	var values = utils.numbers(inputs);
-	inputs.from = values;
-	return values;
+	return utils.numbers({
+		count: DATA_COUNT,
+		min: 0,
+		max: 100
+	});
 }
 
-function generateLabels() {
-	return utils.months({count: inputs.count});
-}
-
-console.log(generateLabels());
-
-utils.srand(42);
-
-var data = {
-	labels: generateLabels(),
+var dataTipo = {
+	labels: tipos,
 	datasets: [{
-		backgroundColor: utils.transparentize(presets.red),
-		borderColor: presets.red,
-		data: generateData(),
-		label: 'D0'
-	}, {
-		backgroundColor: utils.transparentize(presets.orange),
-		borderColor: presets.orange,
-		data: generateData(),
-		hidden: true,
-		label: 'D1',
-		fill: '-1'
-	}, {
-		backgroundColor: utils.transparentize(presets.yellow),
-		borderColor: presets.yellow,
-		data: generateData(),
-		label: 'D2',
-		fill: 1
-	}, {
-		backgroundColor: utils.transparentize(presets.green),
-		borderColor: presets.green,
-		data: generateData(),
-		label: 'D3',
-		fill: false
-	}, {
-		backgroundColor: utils.transparentize(presets.blue),
-		borderColor: presets.blue,
-		data: generateData(),
-		label: 'D4',
-		fill: '-1'
-	}, {
-		backgroundColor: utils.transparentize(presets.purple),
-		borderColor: presets.purple,
-		data: generateData(),
-		label: 'D5',
-		fill: '-1'
+		data: tipoQtd,
+		backgroundColor: '#4cff33',
+		borderColor: '#419e34',
 	}]
 };
 
-var options = {
-	maintainAspectRatio: true,
-	spanGaps: false,
+var optionsTipo = {
+	legend: false,
+	tooltips: true,
+	title: {
+		display: true,
+		text: [
+			'PRODUTO: TIPO',
+			'Quantidade por tipos de produtos ativos'
+			],
+		fontSize: 20
+	},
 	elements: {
 		line: {
-			tension: 0.000001
+			fill: false,
+		},
+		point: {
+			hoverBackgroundColor: makeHalfAsOpaque,
+			radius: adjustRadiusBasedOnData,
+			pointStyle: alternatePointStyles,
+			hoverRadius: 15,
 		}
 	},
-	plugins: {
-		filler: {
-			propagate: false
-		},
-		'samples-filler-analyser': {
-			target: 'chart-analyser'
-		}
-	}
+	scales: {
+        yAxes: [{
+            ticks: {
+                beginAtZero: true
+            }
+        }],
+        xAxes: [{
+            barPercentage: 0.618
+        }]
+    }
 };
 
 var chart = new Chart('chart-0', {
-	type: 'radar',
-	data: data,
-	options: options
+	type: 'bar',
+	data: dataTipo,
+	options: optionsTipo
 });
 
-// eslint-disable-next-line no-unused-vars
-function togglePropagate(btn) {
-	var value = btn.classList.toggle('btn-on');
-	chart.options.plugins.filler.propagate = value;
-	chart.update();
-}
 
 // eslint-disable-next-line no-unused-vars
-function toggleSmooth(btn) {
-	var value = btn.classList.toggle('btn-on');
-	chart.options.elements.line.tension = value ? 0.4 : 0.000001;
+function addDataset() {
+	var newColor = utils.color(chart.data.datasets.length);
+
+	chart.data.datasets.push({
+		data: generateData(),
+		backgroundColor: newColor,
+		borderColor: newColor
+	});
 	chart.update();
 }
 
 // eslint-disable-next-line no-unused-vars
 function randomize() {
-	inputs.from = [];
 	chart.data.datasets.forEach(function(dataset) {
 		dataset.data = generateData();
 	});
 	chart.update();
 }
+
+// eslint-disable-next-line no-unused-vars
+function removeDataset() {
+	chart.data.datasets.shift();
+	chart.update();
+}
+
 </script>
-
-
-
 </body>
 </html>

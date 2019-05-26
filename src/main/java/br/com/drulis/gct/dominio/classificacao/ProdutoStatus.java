@@ -12,7 +12,7 @@ import java.util.Map;
  * @contact victordrulis@gmail.com
  *
  */
-public enum ProdutoStatus {
+public enum ProdutoStatus implements DominioType {
     
     TESTES(1, "Testes"),
     HOMOLOGACAO(2, "Homologação"),
@@ -33,6 +33,7 @@ public enum ProdutoStatus {
         return id;
     }
 
+    @Override
     public String getDescricao() {
         return descricao;
     }

@@ -3,10 +3,11 @@ package br.com.drulis.gct.web.viewhelper;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import com.google.gson.Gson;
 import br.com.drulis.gct.core.util.Resultado;
 import br.com.drulis.gct.dominio.DominioInterface;
 import br.com.drulis.gct.dominio.Produto;
+import br.com.drulis.gct.dominio.classificacao.DominioType;
 import br.com.drulis.gct.dominio.dashboard.Dashboard;
 import br.com.drulis.gct.web.command.ConsultarCommand;
 
@@ -85,7 +87,6 @@ public class DashboardViewHelper implements ViewHelperInterface {
         
         Dashboard dash = (Dashboard) resultado.getEntidades().get(0);
         request.setAttribute("dadosGrafico", dash);
-        
         switch(acao) {
 	        case "Chamado":
 	        	request.getRequestDispatcher("/jsp/dashboard/chamado.jsp").forward(request, response);
@@ -94,11 +95,12 @@ public class DashboardViewHelper implements ViewHelperInterface {
 	        	request.getRequestDispatcher("/jsp/dashboard/atividade.jsp").forward(request, response);
 	        	break;
 	        case "Produto":
+	        	if(dash.getMapaTipoProdutos() != null)
+	        			request.setAttribute("dadosGraficoTipo", Arrays.toString(getMapaDescricaoQtde(dash.getMapaTipoProdutos()).entrySet().toArray()));
 	        	
-	        	dash.getMapaTipoProdutos().forEach((t, q) -> {
-	        		
-	        	});
-	        	request.setAttribute("dadosGrafico", dados.toJson(dash.getMapaTipoProdutos()));
+	        	if(dash.getMapaStatusProdutos() != null)
+	        			request.setAttribute("dadosGraficoStatus", Arrays.toString(getMapaDescricaoQtde(dash.getMapaStatusProdutos()).entrySet().toArray()));
+	        	
 	        	request.getRequestDispatcher("/jsp/dashboard/produto.jsp").forward(request, response);
 	        	break;
 	        case "Cliente":
@@ -110,6 +112,14 @@ public class DashboardViewHelper implements ViewHelperInterface {
 	    		break;
         }
         
+    }
+    
+    private Map<String, Integer> getMapaDescricaoQtde(Map<DominioType, Integer> mapa) {
+    	Map<String, Integer> mapaDescricaoQtde = new TreeMap<String, Integer>();
+    	mapa.forEach((k, v) -> {
+    		mapaDescricaoQtde.put(k.getDescricao(), v);
+    	});
+    	return mapaDescricaoQtde;
     }
 
 }

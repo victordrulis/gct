@@ -17,6 +17,7 @@ import br.com.drulis.gct.dominio.Cliente;
 import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.dominio.Produto;
 import br.com.drulis.gct.dominio.Usuario;
+import br.com.drulis.gct.dominio.classificacao.DominioType;
 import br.com.drulis.gct.dominio.classificacao.ProdutoTipo;
 import br.com.drulis.gct.dominio.dashboard.Dashboard;
 
@@ -247,17 +248,18 @@ public class DashboardDao extends DaoEntidade {
             ps = sessaoBD.prepareStatement(sql.toString());
             ResultSet resultado = ps.executeQuery();
 
-            Map<ProdutoTipo, Integer> mapaTipoProdutos = new HashMap<ProdutoTipo, Integer>();
+            Map<DominioType, Integer> mapaTipoProdutos = new HashMap<DominioType, Integer>();
             
             while (resultado.next())
                 mapaTipoProdutos.put(ProdutoTipo.getMapa().get(resultado.getInt("produto_status_id")), resultado.getInt("qtd"));
 
             dashboard.setMapaTipoProdutos(mapaTipoProdutos);
-            listaDashboards.add(dashboard);
             
             mapaTipoProdutos.forEach((tipo, qtde) -> {
             	System.out.println(tipo.getDescricao() + ": " + qtde);
             });
+            
+            listaDashboards.add(dashboard);
             System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_CONSULTAR.getDescricao());
         } catch (SQLException e) {
             System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_NAO_ENCONTRADO.getDescricao()+ "\n" + e.getMessage());

@@ -12,7 +12,7 @@ import java.util.Map;
  * @contact victordrulis@gmail.com
  *
  */
-public enum ProdutoTipo {
+public enum ProdutoTipo implements DominioType {
     
     INFRA(1, "Infraestrutura"),
     SUPORTE(2, "Suporte"),
@@ -35,6 +35,7 @@ public enum ProdutoTipo {
         return id;
     }
 
+    @Override
     public String getDescricao() {
         return descricao;
     }
