@@ -3,17 +3,15 @@
  */
 package br.com.drulis.gct.dominio.dashboard;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.dominio.Atividade;
 import br.com.drulis.gct.dominio.Chamado;
 import br.com.drulis.gct.dominio.Cliente;
-import br.com.drulis.gct.dominio.Produto;
+import br.com.drulis.gct.dominio.classificacao.ProdutoStatus;
+import br.com.drulis.gct.dominio.classificacao.ProdutoTipo;
 
 /**
  * @author victor
@@ -24,36 +22,27 @@ public class Dashboard extends Entidade {
 	
 	private Date dataInicio;
 	private Date dataFim;
-	private Chamado chamado;
-	private Atividade atividade;
-	private Cliente cliente;
-	private Produto produto;
-	private Map<Calendar, List<Chamado>> mapaListaChamados;
-	private Map<Calendar, List<Atividade>> mapaListaAtividades;
-	private Map<Calendar, List<Cliente>> mapaListaClientes;
-	private Map<Calendar, List<Produto>> mapaListaProdutos;
+	private Entidade entidade;
+	private Map<Chamado, Integer> mapaListaChamados;
+	private Map<Atividade, Integer> mapaListaAtividades;
+	private Map<Cliente, Integer> mapaListaClientes;
+	private Map<ProdutoStatus, Integer> mapaStatusProdutos;
+	private Map<ProdutoTipo, Integer> mapaTipoProdutos;
 	
 	public Dashboard() { super();}
 	
-	public Dashboard(Map<Calendar, List<Chamado>> mapaListaChamados, Map<Calendar, List<Atividade>> mapaListaAtividades, Map<Calendar, List<Cliente>> mapaListaClientes, Map<Calendar, List<Produto>> mapaListaProdutos) {
+	public Dashboard(Date dataInicio, Date dataFim) {
 		super();
-		
-		this.mapaListaChamados = mapaListaChamados;
-		this.mapaListaAtividades = mapaListaAtividades;
-		this.mapaListaClientes = mapaListaClientes;
-		this.mapaListaProdutos = mapaListaProdutos;
-		
-		if(mapaListaChamados == null)
-			this.mapaListaChamados = new HashMap<Calendar, List<Chamado>>();
-		
-		if(mapaListaAtividades == null)
-			this.mapaListaAtividades = new HashMap<Calendar, List<Atividade>>();
-		
-		if(mapaListaClientes == null)
-			this.mapaListaClientes = new HashMap<Calendar, List<Cliente>>();
-		
-		if(mapaListaProdutos == null)
-			this.mapaListaProdutos = new HashMap<Calendar, List<Produto>>();
+		this.dataInicio = dataInicio;
+		this.dataFim = dataFim;
+	}
+	
+	public Entidade getEntidade() {
+		return entidade;
+	}
+	
+	public void setEntidade(Entidade entidade) {
+		this.entidade = entidade;
 	}
 
 	public Date getDataInicio() {
@@ -72,68 +61,44 @@ public class Dashboard extends Entidade {
 		this.dataInicio = dataInicio;
 	}
 
-	public Chamado getChamado() {
-		return chamado;
-	}
-
-	public void setChamado(Chamado chamado) {
-		this.chamado = chamado;
-	}
-
-	public Atividade getAtividade() {
-		return atividade;
-	}
-
-	public void setAtividade(Atividade atividade) {
-		this.atividade = atividade;
-	}
-
-	public Cliente getCliente() {
-		return cliente;
-	}
-
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
-	}
-
-	public Produto getProduto() {
-		return produto;
-	}
-
-	public void setProduto(Produto produto) {
-		this.produto = produto;
-	}
-
-	public Map<Calendar, List<Chamado>> getMapaListaChamados() {
+	public Map<Chamado, Integer> getMapaListaChamados() {
 		return mapaListaChamados;
 	}
 
-	public void setMapaListaChamados(Map<Calendar, List<Chamado>> mapaListaChamados) {
+	public void setMapaListaChamados(Map<Chamado, Integer> mapaListaChamados) {
 		this.mapaListaChamados = mapaListaChamados;
 	}
 
-	public Map<Calendar, List<Atividade>> getMapaListaAtividades() {
+	public Map<Atividade, Integer> getMapaListaAtividades() {
 		return mapaListaAtividades;
 	}
 
-	public void setMapaListaAtividades(Map<Calendar, List<Atividade>> mapaListaAtividades) {
+	public void setMapaListaAtividades(Map<Atividade, Integer> mapaListaAtividades) {
 		this.mapaListaAtividades = mapaListaAtividades;
 	}
 
-	public Map<Calendar, List<Cliente>> getMapaListaClientes() {
+	public Map<Cliente, Integer> getMapaListaClientes() {
 		return mapaListaClientes;
 	}
 
-	public void setMapaListaClientes(Map<Calendar, List<Cliente>> mapaListaClientes) {
+	public void setMapaListaClientes(Map<Cliente, Integer> mapaListaClientes) {
 		this.mapaListaClientes = mapaListaClientes;
 	}
 
-	public Map<Calendar, List<Produto>> getMapaListaProdutos() {
-		return mapaListaProdutos;
+	public Map<ProdutoStatus, Integer> getMapaStatusProdutos() {
+		return mapaStatusProdutos;
 	}
 
-	public void setMapaListaProdutos(Map<Calendar, List<Produto>> mapaListaProdutos) {
-		this.mapaListaProdutos = mapaListaProdutos;
+	public void setMapaStatusProdutos(Map<ProdutoStatus, Integer> mapaStatusProdutos) {
+		this.mapaStatusProdutos = mapaStatusProdutos;
+	}
+
+	public Map<ProdutoTipo, Integer> getMapaTipoProdutos() {
+		return mapaTipoProdutos;
+	}
+
+	public void setMapaTipoProdutos(Map<ProdutoTipo, Integer> mapaTipoProdutos) {
+		this.mapaTipoProdutos = mapaTipoProdutos;
 	}
 
 }

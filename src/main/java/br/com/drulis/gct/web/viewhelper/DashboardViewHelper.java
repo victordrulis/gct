@@ -3,8 +3,10 @@ package br.com.drulis.gct.web.viewhelper;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -12,9 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 
-import br.com.drulis.gct.core.util.PdfGenerator;
 import br.com.drulis.gct.core.util.Resultado;
 import br.com.drulis.gct.dominio.DominioInterface;
+import br.com.drulis.gct.dominio.Produto;
 import br.com.drulis.gct.dominio.dashboard.Dashboard;
 import br.com.drulis.gct.web.command.ConsultarCommand;
 
@@ -37,24 +39,30 @@ public class DashboardViewHelper implements ViewHelperInterface {
         String acao = "dashboard";
         String dataInicio = request.getParameter("dataIncio");
         String dataFim = request.getParameter("dataFim");
-        String tipoEntidade = request.getParameter("tipoEntidade");
+        String entidade = request.getParameter("entidade");
         String statusEntidade = request.getParameter("statusEntidade");
         
-        PdfGenerator pdf = new PdfGenerator();
-        pdf.gerar();
-        pdf.copiarUltimoPdf();
-
         try {
-			if(dataInicio == null)
-				dashboard.setDataInicio(dateFormat.parse("2018-01-01"));
+        	dashboard.setDataInicio(dateFormat.parse("2018-01-01"));
+        	dashboard.setDataFim(new Date());
+        	
+        	// TODO
+        	dashboard.setEntidade(new Produto());
+        	
+			if(dataInicio != null)
+				dashboard.setDataInicio(dateFormat.parse(dataInicio));
 			
-			if(dataFim == null)
-				dashboard.setDataFim(new Date());
-        
+			if(dataFim != null)
+				dashboard.setDataFim(dateFormat.parse(dataFim));
+			
+//			if(entidade != null)
+//				dashboard.setEntidade();
+			
         } catch (ParseException e) {
         	System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + e.getMessage());
         	e.printStackTrace();
         }
+        
         return dashboard;
     }
 
@@ -62,22 +70,45 @@ public class DashboardViewHelper implements ViewHelperInterface {
     public void setView(Resultado resultado, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String uri = request.getRequestURI();
         String acao = request.getParameter("acao");
+        Gson dados = new Gson();
         
-        PdfGenerator pdf = new PdfGenerator();
-        pdf.gerar();
-        pdf.copiarUltimoPdf();
-        
-        System.out.println("[" + this.getClass().getSimpleName() + "] Redirecionando requisicao: Acao = " + acao + ", URI: " + uri);
+        System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Redirecionando requisicao: Acao = " + acao + ", URI: " + uri);
         
         if(resultado != null && resultado.getMensagem() != null) {
         	request.setAttribute("mensagem", resultado.getMensagem());
+        	request.getRequestDispatcher("/mensagem.jsp").forward(request, response);
         }
         
-        Gson dados = new Gson();
-        dados.toJson("teste");
+        // TODO
+        if(acao == null)
+        	acao = "Produto";
         
-        request.setAttribute("dados", dados);
-        request.getRequestDispatcher("/jsp/dashboard/index.jsp").forward(request, response);
+        Dashboard dash = (Dashboard) resultado.getEntidades().get(0);
+        request.setAttribute("dadosGrafico", dash);
+        
+        switch(acao) {
+	        case "Chamado":
+	        	request.getRequestDispatcher("/jsp/dashboard/chamado.jsp").forward(request, response);
+	        	break;
+	        case "Atividade":
+	        	request.getRequestDispatcher("/jsp/dashboard/atividade.jsp").forward(request, response);
+	        	break;
+	        case "Produto":
+	        	
+	        	dash.getMapaTipoProdutos().forEach((t, q) -> {
+	        		
+	        	});
+	        	request.setAttribute("dadosGrafico", dados.toJson(dash.getMapaTipoProdutos()));
+	        	request.getRequestDispatcher("/jsp/dashboard/produto.jsp").forward(request, response);
+	        	break;
+	        case "Cliente":
+	        	request.getRequestDispatcher("/jsp/dashboard/cliente.jsp").forward(request, response);
+	        	break;
+	    	default:
+	    		request.setAttribute("dadosGrafico", null);
+	    		request.getRequestDispatcher("/jsp/dashboard/index.jsp").forward(request, response);
+	    		break;
+        }
         
     }
 

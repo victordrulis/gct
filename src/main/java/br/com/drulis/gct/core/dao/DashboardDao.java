@@ -7,11 +7,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import br.com.drulis.gct.core.Entidade;
+import br.com.drulis.gct.dominio.Atividade;
+import br.com.drulis.gct.dominio.Cliente;
 import br.com.drulis.gct.dominio.Mensagem;
+import br.com.drulis.gct.dominio.Produto;
 import br.com.drulis.gct.dominio.Usuario;
+import br.com.drulis.gct.dominio.classificacao.ProdutoTipo;
 import br.com.drulis.gct.dominio.dashboard.Dashboard;
 
 /**
@@ -43,7 +49,18 @@ public class DashboardDao extends DaoEntidade {
     @Override
     public List<Entidade> consultar(Entidade entidade) {
         System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Consulta padrão");
-        return consultarChamados(entidade);
+        Dashboard dash = (Dashboard) entidade;
+        
+        if(dash.getEntidade().getClass() == Atividade.class)
+        	return consultarAtividades(dash);
+
+        if(dash.getEntidade().getClass() == Produto.class)
+        	return consultarProdutos(dash);
+        
+        if(dash.getEntidade().getClass() == Cliente.class)
+        	return consultarClientes(dash);
+        
+        return consultarChamados(dash);
     }
 
     /**
@@ -197,6 +214,50 @@ public class DashboardDao extends DaoEntidade {
                 
                 listaDashboards.add(con);
             }
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_CONSULTAR.getDescricao());
+        } catch (SQLException e) {
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_NAO_ENCONTRADO.getDescricao()+ "\n" + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_EXIBIR.getDescricao() + e.getMessage());
+            e.printStackTrace();
+        }
+        return listaDashboards;
+    }
+    
+    /**
+     * Busca chamados ativos com status Abertos e Em Execução, por cliente e produto ou não
+     * 
+     * @param entidade
+     * @return
+     */
+    public List<Entidade> consultarProdutos(Entidade entidade) {
+    	System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Consulta de chamados na data e status");
+    	PreparedStatement ps = null;
+        Dashboard dashboard = (Dashboard) entidade;
+        
+        List<Entidade> listaDashboards = new ArrayList<Entidade>();
+        StringBuilder sql = new StringBuilder();
+
+        sql.append("SELECT produto_status_id, count(*) qtd FROM produto WHERE ativo = 1 GROUP BY produto_status_id  ORDER BY produto_status_id ASC");
+        
+        try {
+
+            this.conectar();
+            ps = sessaoBD.prepareStatement(sql.toString());
+            ResultSet resultado = ps.executeQuery();
+
+            Map<ProdutoTipo, Integer> mapaTipoProdutos = new HashMap<ProdutoTipo, Integer>();
+            
+            while (resultado.next())
+                mapaTipoProdutos.put(ProdutoTipo.getMapa().get(resultado.getInt("produto_status_id")), resultado.getInt("qtd"));
+
+            dashboard.setMapaTipoProdutos(mapaTipoProdutos);
+            listaDashboards.add(dashboard);
+            
+            mapaTipoProdutos.forEach((tipo, qtde) -> {
+            	System.out.println(tipo.getDescricao() + ": " + qtde);
+            });
             System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_CONSULTAR.getDescricao());
         } catch (SQLException e) {
             System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_NAO_ENCONTRADO.getDescricao()+ "\n" + e.getMessage());
