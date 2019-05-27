@@ -95,150 +95,145 @@ to {
 	
 <%@include file="../fragmentos/footer.jsp" %>
 <script>
-var dadosGrafico = JSON.parse('${dadosGrafico}');
-let meses = [];
-let statusMes = [];
-let status = [];
 
-console.log(dadosGrafico);
 
-for(let mes in dadosGrafico) {
-	meses.push(mes);
-	statusMes.push(dadosGrafico[mes]);
-}
 
-for(let s in statusMes) {
-	status.push(statusMes[s]);
-}
+function criarDados() {
+	let dadosGrafico = JSON.parse('${dadosGrafico}');
+	let meses = [];
+	let statusMes = [];
+	let status = [];
 
-for(let qtd in status){
-	console.log("Quantidades: " + qtd);
-}
+	console.log(dadosGrafico);
 
-console.log("---------");
-console.log("MESES: ");
-console.log(meses);
-console.log("---------");
-console.log("Status por MESES: ")
-console.log(statusMes);
-console.log("---------");
-console.log("SATUS: ");
-console.log(status);
-console.log("---------");
+	for(let mes in dadosGrafico) {
+		meses.push(mes);
+		statusMes.push(dadosGrafico[mes]);
+	}
 
-console.log('Meses analisados: ' + meses);
-
-var DATA_COUNT = 12;
-var utils = Samples.utils;
-utils.srand(110);
-
-function alternatePointStyles(ctx) {
-	var index = ctx.dataIndex;
-	return index % 2 === 0 ? 'circle' : 'rect';
-}
-
-function makeHalfAsOpaque(ctx) {
-	var c = ctx.dataset.backgroundColor;
-	return utils.transparentize(c);
-}
-
-function adjustRadiusBasedOnData(ctx) {
-	var v = ctx.dataset.data[ctx.dataIndex];
-	return v < 10 ? 5
-		: v < 25 ? 7
-		: v < 50 ? 9
-		: v < 75 ? 11
-		: 15;
-}
-
-function generateData() {
-	return utils.numbers({
-		count: DATA_COUNT,
-		min: 0,
-		max: 100
-	});
-}
-
-var data = {
-	labels: meses,
-	datasets: [{
-		data: [
-			10,
-			5,
-			7,
-			25
-		],
-		backgroundColor: '#4cff33',
-		borderColor: '#419e34',
-	}]
-};
-
-var options = {
-	legend: false,
-	tooltips: true,
-	title: {
-		display: true,
-		text: [
-			'ATIVIDADES: STATUS',
-			'Quantidade de atividades ativos por status'
-			],
-		fontSize: 20
-	},
-	elements: {
-		line: {
-			fill: false,
-		},
-		point: {
-			hoverBackgroundColor: makeHalfAsOpaque,
-			radius: adjustRadiusBasedOnData,
-			pointStyle: alternatePointStyles,
-			hoverRadius: 15,
+	for(let s in statusMes) {
+		let arr = [];
+		for(let x in statusMes[s]) {
+			arr.push(x)
 		}
-	},
-	scales: {
-        yAxes: [{
-            ticks: {
-                beginAtZero: true
-            }
-        }],
-        xAxes: [{
-            barPercentage: 0.618
-        }]
-    }
-};
+		status.push(arr);
+	}
 
-var chart = new Chart('chart-0', {
-	type: 'line',
-	data: data,
-	options: options
-});
+	for(let qtd in status){
+	}
 
+	console.log("---------");
+	console.log("MESES: ");
+	console.log(meses);
+	console.log("---------");
+	console.log("Status por MESES: ")
+	console.log(statusMes);
+	console.log("---------");
+	console.log("SATUS: ");
+	console.log(status);
+	console.log("---------");
+	
+	console.log('Meses analisados: ' + meses);
+}
 
-// eslint-disable-next-line no-unused-vars
-function addDataset() {
-	var newColor = utils.color(chart.data.datasets.length);
+criarDados();
 
-	chart.data.datasets.push({
-		data: generateData(),
-		backgroundColor: newColor,
-		borderColor: newColor
+var lineChartData = {
+		labels: meses,
+		datasets: [{
+			label: 'Melhoria',
+			borderColor: window.chartColors.red,
+			backgroundColor: window.chartColors.red,
+			fill: false,
+			data: [
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor()
+			],
+			yAxisID: 'y-axis-1',
+		}, {
+			label: 'Tarefa',
+			borderColor: window.chartColors.blue,
+			backgroundColor: window.chartColors.blue,
+			fill: false,
+			data: [
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor()
+			],
+			yAxisID: 'y-axis-2'
+		},{
+			label: 'Alteração',
+			borderColor: window.chartColors.blue,
+			backgroundColor: window.chartColors.blue,
+			fill: false,
+			data: [
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor()
+			],
+			yAxisID: 'y-axis-2'
+		}]
+	};
+
+	window.onload = function() {
+		var ctx = document.getElementById('chart-0').getContext('2d');
+		window.myLine = Chart.Line(ctx, {
+			data: lineChartData,
+			options: {
+				responsive: true,
+				hoverMode: 'index',
+				stacked: false,
+				title: {
+					display: true,
+					text: [
+						'ATIVIDADE: STATUS',
+						'Quantidade de atividades ativas por data'
+					]
+				},
+				scales: {
+					yAxes: [{
+						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+						display: true,
+						position: 'left',
+						id: 'y-axis-1',
+					}, {
+						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+						display: true,
+						position: 'right',
+						id: 'y-axis-2',
+
+						// grid line settings
+						gridLines: {
+							drawOnChartArea: false, // only want the grid lines for one axis to show up
+						},
+					}],
+				}
+			}
+		});
+	};
+
+	document.getElementById('randomizeData').addEventListener('click', function() {
+		lineChartData.datasets.forEach(function(dataset) {
+			dataset.data = dataset.data.map(function() {
+				return randomScalingFactor();
+			});
+		});
+
+		window.myLine.update();
 	});
-	chart.update();
-}
-
-// eslint-disable-next-line no-unused-vars
-function randomize() {
-	chart.data.datasets.forEach(function(dataset) {
-		dataset.data = generateData();
-	});
-	chart.update();
-}
-
-// eslint-disable-next-line no-unused-vars
-function removeDataset() {
-	chart.data.datasets.shift();
-	chart.update();
-}
 
 </script>
 </body>
