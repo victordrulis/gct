@@ -23,7 +23,7 @@ public class Dashboard extends Entidade {
 	private Entidade entidade;
 	private Map<Chamado, Integer> mapaListaChamados;
 	
-	// <Ano, <Mes, <Tipo, <Status, Qtde>>>>
+	// <Data <Status, Qtde>>>>
 	private Map<String,  Map<String, Integer>>  mapaListaAtividades;
 	
 	private Map<Cliente, Integer> mapaListaClientes;

@@ -3,9 +3,11 @@ package br.com.drulis.gct.web.viewhelper;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -101,7 +103,6 @@ public class DashboardViewHelper implements ViewHelperInterface {
         
         if(resultado.getEntidades() != null) {
         	dash = (Dashboard) resultado.getEntidades().get(0);
-        	request.setAttribute("dadosGrafico", dash);
         }
         
         switch(tipo) {
@@ -109,14 +110,31 @@ public class DashboardViewHelper implements ViewHelperInterface {
 	        	request.getRequestDispatcher("/jsp/dashboard/chamado.jsp").forward(request, response);
 	        	break;
 	        case "atividade":
-	        	if(dash.getMapaListaAtividades() != null)
+	        	if(dash.getMapaListaAtividades() != null) {
+	        		List<String> labels = new ArrayList<String>();
+	        		List<String> label = new ArrayList<String>();
+	        		List<Integer> values = new ArrayList<Integer>();
+	        		
+	        		dash.getMapaListaAtividades().forEach((k, v) -> {
+	        			labels.add(k);
+	        			v.forEach((kl, vl) -> {
+	        				label.add(kl);
+	        				values.add(vl);
+	        			});
+	        		});
+	        		
+	        		request.setAttribute("labels", gson.toJson(labels));
+	        		request.setAttribute("label", gson.toJson(label));
+	        		request.setAttribute("values", gson.toJson(values));
+	        		
 	        		request.setAttribute("dadosGrafico", gson.toJson(dash.getMapaListaAtividades()));
+	        	}
 	        	
 	        	request.getRequestDispatcher("/jsp/dashboard/atividade.jsp").forward(request, response);
 	        	break;
 	        case "produto":
 	        	if(dash.getMapaTipoProdutos() != null)
-	        			request.setAttribute("dadosGraficoTipo", Arrays.toString(getMapaDescricaoQtde(dash.getMapaTipoProdutos()).entrySet().toArray()));
+	        		request.setAttribute("dadosGraficoTipo", Arrays.toString(getMapaDescricaoQtde(dash.getMapaTipoProdutos()).entrySet().toArray()));
 	        	
 	        	if(dash.getMapaStatusProdutos() != null)
 	        			request.setAttribute("dadosGraficoStatus", Arrays.toString(getMapaDescricaoQtde(dash.getMapaStatusProdutos()).entrySet().toArray()));
