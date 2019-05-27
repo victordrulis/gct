@@ -21,7 +21,7 @@
         <div class="container">
             <h2>Contatos</h2>
             <p>Lista de contatos</p>
-            <a href="/gct/contato?acao=novo">Novo Contato</a>
+            <a href="/gct/contato?acao=novo"><button type="button" class="btn btn-success">Novo</button></a>
         </div>
 
     </div>
@@ -69,7 +69,7 @@
           <td><%= contato.getDataInclusao() %></td>
           <td><%= contato.getAtivo() %></td>
           <td>
-            <a href="/gct/contato?acao=exibir&id=<%= contato.getId() %>"><span>Visualiar</span></a>
+            <a href="/gct/contato?acao=exibir&id=<%= contato.getId() %>"><button type="button" class="btn btn-primary">Visualizar</button></a>
           </td>
       </tr>
       <%

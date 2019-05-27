@@ -73,10 +73,10 @@
 			</div>
 				<div class="row">
 				    <div class="form-group">
-					     <a href="/gct/contato?acao=editar&id=<%= contato.getId() %>"><button type="button" class="btn btn-primary">Editar</button></a>
+					     <a href="/gct/contato?acao=editar&id=<%= contato.getId() %>"><button type="button" class="btn btn-warning">Editar</button></a>
 				     </div>
                     <div class="form-group ">
-					     <a href="/gct/contato?acao=excluir&id=<%= contato.getId() %>"><button type="button" class="btn btn-warning">Excluir</button></a>
+					     <a href="/gct/contato?acao=excluir&id=<%= contato.getId() %>"><button type="button" class="btn btn-danger">Excluir</button></a>
 				     </div>
 				     
 				     <div class="form-group ">

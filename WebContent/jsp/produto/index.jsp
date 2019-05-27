@@ -21,7 +21,7 @@
         <div class="container">
             <h2>Produtos</h2>
             <p>Lista de produtos</p>
-            <a href="/gct/produto?acao=novo">Novo Produto</a>
+            <a href="/gct/produto?acao=novo"><button type="button" class="btn btn-success">Novo</button></a>
         </div>
 
     </div>
@@ -43,8 +43,8 @@
     <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
 		<thead>
 		  <tr>
-		      <th class="th-sm">Id</th>
-		      <th class="th-sm">Titulo</th>
+		      <th class="th-sm">ID</th>
+		      <th class="th-sm">Título</th>
 		      <th class="th-sm">Descricao</th>
 			  <th class="th-sm">Cadastrado em</th>
 			  <th class="th-sm">Ativo</th>
@@ -65,8 +65,8 @@
           <td><%= produto.getDataInclusao() %></td>
           <td><%= produto.getAtivo() %></td>
           <td>
-            <span><a href="/gct/produto?acao=exibir&id=<%= produto.getId() %>"> Visualiar | </a></span>
-            <span><a href="/gct/chamado?acao=novo&produtoId=<%= produto.getId() %>"> | + Chamado </a></span>
+            <span><a href="/gct/produto?acao=exibir&id=<%= produto.getId() %>"><button type="button" class="btn btn-primary">Visualizar</button></a></span>
+            <span><a href="/gct/chamado?acao=novo&produtoId=<%= produto.getId() %>"><button type="button" class="btn btn-warning">Chamado</button></a></span>
           </td>
       </tr>
       <%

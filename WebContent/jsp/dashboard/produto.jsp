@@ -145,8 +145,8 @@ var dataTipo = {
 	labels: tipos,
 	datasets: [{
 		data: tipoQtd,
-		backgroundColor: '#4cff33',
-		borderColor: '#419e34',
+		backgroundColor: '#900C3F',
+		borderColor: '#900C3F',
 	}]
 };
 
@@ -157,7 +157,7 @@ var optionsTipo = {
 		display: true,
 		text: [
 			'PRODUTO: TIPO',
-			'Quantidade por tipos de produtos ativos'
+			'Quantidade de produtos ativos por tipo'
 			],
 		fontSize: 20
 	},

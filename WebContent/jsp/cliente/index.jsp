@@ -23,7 +23,7 @@
         <div class="container">
             <h2>Clientes</h2>
             <p>Todos os clientes cadastrados.</p>
-            <a href="/gct/cliente?acao=novo">Novo Cliente</a>
+            <a href="/gct/cliente?acao=novo"><button type="button" class="btn btn-success">Novo</button></a>
         </div>
     </div>
     <hr>
@@ -49,7 +49,7 @@
 		      <th class="th-sm">CPF/CNPJ</th>
 			  <th class="th-sm">Data Inclusão</th>
 			  <th class="th-sm">Ativo</th>
-			  <th class="th-sm">Contratos</th>
+			  <th class="th-sm">Produtos Contratos</th>
 			  <th class="th-sm">Ação</th>
 		  </tr>
 		</thead>
@@ -85,7 +85,8 @@
             </ul>
       </td>
       <td>
-            <a href="/gct/cliente?acao=exibir&id=<%= cliente.getId() %>"><span>Visualizar</span></a>
+            <a href="/gct/cliente?acao=exibir&id=<%= cliente.getId() %>"><button type="button" class="btn btn-primary">Visualizar</button></a>
+            <a href="/gct/chamado?acao=novo&clienteId=<%= cliente.getId() %>"><button type="button" class="btn btn-warning">Chamado</button></a>
       </td>
     </tr>
     <%

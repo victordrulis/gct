@@ -24,7 +24,7 @@
         <div class="container">
             <h2>Atividades</h2>
             <p>Todos os atividades cadastrados.</p>
-            <a href="/gct/atividade?acao=novo">Nova Atividade</a>
+            <a href="/gct/atividade?acao=novo"><button type="button" class="btn btn-success">Novo</button></a>
         </div>
     </div>
     <hr>
@@ -46,9 +46,8 @@
 		  <tr>
 		      <th class="th-sm">ID</th>
 		      <th class="th-sm">Título</th>
-		      <th class="th-sm">UsuarioAtribuido</th>
 			  <th class="th-sm">Chamado</th>
-	          <th class="th-sm">Atribuido</th>
+	          <th class="th-sm"> Usr Atribuido</th>
 	          <th class="th-sm">Status</th>
 			  <th class="th-sm">Ativo</th>
 			  <th class="th-sm">Ação</th>
@@ -64,14 +63,14 @@
     <tr>
       <td><%= atividade.getId() %></td>
       <td><%= atividade.getTitulo() %></td>
-      <td><%= atividade.getChamado() %></td>
+      <td><%= atividade.getChamado().getTitulo() %></td>
       <td><%= atividade.getUsuarioAtribuido().getId() %></td>
-      <td>Usuario Atribuido 1</td>
 <%--       <td><%= atividade.getUsuarioAtribuido().getContato().getNome() %></td> --%>
-      <td>Tipo atividade</td>
+      <td><%= atividade.getOcorrenciaStatus().getDescricao() %></td>
       <td><%= atividade.getAtivo() > 0 ? "Sim" : "-" %></td>
       <td>
-            <a href="/gct/atividade?acao=exibir&id=<%= atividade.getId() %>"><span>Visualizar</span></a>
+            <a href="/gct/atividade?acao=exibir&id=<%= atividade.getId() %>"><button type="button" class="btn btn-primary">Visualizar</button></a>
+            <a href="/gct/chamado?acao=exibir&id=<%= atividade.getChamado().getId() %>"><button type="button" class="btn btn-secundary">Chamado</button></a>
       </td>
     </tr>
     <%

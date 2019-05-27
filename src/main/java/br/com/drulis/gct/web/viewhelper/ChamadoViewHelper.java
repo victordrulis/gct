@@ -230,7 +230,6 @@ public class ChamadoViewHelper implements ViewHelperInterface {
                     break;
                 }
                 
-                request.setAttribute("resultado", resultado.getEntidades());
                 request.getRequestDispatcher("/jsp/chamado/index.jsp").forward(request, response);
                 break;
             

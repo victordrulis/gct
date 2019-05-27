@@ -63,12 +63,12 @@
       <td align="center"><%= chamado.getId() %></td>
       <td><%= chamado.getTitulo() %></td>
       <td><a href="/gct/cliente?acao=exibir&id=<%= chamado.getCliente().getId() %>"><%= chamado.getCliente().getContato().getNome() %></a></td>
-      <td><a href="/gct/produto?acao=exibir&id=<%= chamado.getProduto().getId() %>"><%= chamado.getProduto().getTitulo() %>(ID: <%= chamado.getProduto().getId() %>)</td>
+      <td><a href="/gct/produto?acao=exibir&id=<%= chamado.getProduto().getId() %>"><span><%= chamado.getProduto().getTitulo() %> (ID: <%= chamado.getProduto().getId() %>)</span></td>
       <td><%= chamado.getUsuarioAtribuido().getContato().getNome() %></td>
       <td align="center"><%= chamado.getOcorrenciaStatus().getDescricao() %></td>
       <td align="center"><%= chamado.getAtivo() > 0 ? "Sim" : "-" %></td>
       <td align="center">
-            <a href="/gct/chamado?acao=exibir&id=<%= chamado.getId() %>"><span>Visualizar</span></a>
+            <a href="/gct/chamado?acao=exibir&id=<%= chamado.getId() %>"><button type="button" class="btn btn-primary">Visualizar</button></a>
       </td>
     </tr>
     <%
