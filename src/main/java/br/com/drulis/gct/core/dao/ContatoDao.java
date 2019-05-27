@@ -113,7 +113,8 @@ public class ContatoDao extends DaoEntidade {
 
     @Override
     public List<Entidade> consultar(Entidade entidade) {
-        System.out.println("[" + this.getClass().getSimpleName() + "] Consultar");
+//        System.out.println("[" + this.getClass().getSimpleName() + "] Consultar");
+        this.logger.info(this.getClass().getSimpleName() + ": Consultar");
         PreparedStatement ps = null;
         Contato contato = (Contato) entidade;
         
