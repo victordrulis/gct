@@ -199,11 +199,17 @@ var lineChartData = {
 						display: true,
 						position: 'left',
 						id: 'y-axis-1',
+						ticks: {
+			                beginAtZero: true
+			            },
 					}, {
 						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
 						display: true,
 						position: 'right',
 						id: 'y-axis-2',
+						ticks: {
+                            beginAtZero: true
+                        },
 
 						// grid line settings
 						gridLines: {
