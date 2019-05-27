@@ -7,12 +7,9 @@ import java.util.Date;
 import java.util.Map;
 
 import br.com.drulis.gct.core.Entidade;
-import br.com.drulis.gct.dominio.Atividade;
 import br.com.drulis.gct.dominio.Chamado;
 import br.com.drulis.gct.dominio.Cliente;
 import br.com.drulis.gct.dominio.classificacao.DominioType;
-import br.com.drulis.gct.dominio.classificacao.ProdutoStatus;
-import br.com.drulis.gct.dominio.classificacao.ProdutoTipo;
 
 /**
  * @author victor
@@ -25,7 +22,10 @@ public class Dashboard extends Entidade {
 	private Date dataFim;
 	private Entidade entidade;
 	private Map<Chamado, Integer> mapaListaChamados;
-	private Map<Atividade, Integer> mapaListaAtividades;
+	
+	// <Ano, <Mes, <Tipo, <Status, Qtde>>>>
+	private Map<String,  Map<String, Integer>>  mapaListaAtividades;
+	
 	private Map<Cliente, Integer> mapaListaClientes;
 	private Map<DominioType, Integer> mapaStatusProdutos;
 	private Map<DominioType, Integer> mapaTipoProdutos;
@@ -70,11 +70,11 @@ public class Dashboard extends Entidade {
 		this.mapaListaChamados = mapaListaChamados;
 	}
 
-	public Map<Atividade, Integer> getMapaListaAtividades() {
+	public Map<String,  Map<String, Integer>> getMapaListaAtividades() {
 		return mapaListaAtividades;
 	}
 
-	public void setMapaListaAtividades(Map<Atividade, Integer> mapaListaAtividades) {
+	public void setMapaListaAtividades(Map<String,  Map<String, Integer>> mapaListaAtividades) {
 		this.mapaListaAtividades = mapaListaAtividades;
 	}
 

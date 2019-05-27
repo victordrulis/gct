@@ -18,6 +18,7 @@ import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.dominio.Produto;
 import br.com.drulis.gct.dominio.Usuario;
 import br.com.drulis.gct.dominio.classificacao.DominioType;
+import br.com.drulis.gct.dominio.classificacao.OcorrenciaStatus;
 import br.com.drulis.gct.dominio.classificacao.ProdutoTipo;
 import br.com.drulis.gct.dominio.dashboard.Dashboard;
 
@@ -188,33 +189,40 @@ public class DashboardDao extends DaoEntidade {
         List<Entidade> listaDashboards = new ArrayList<Entidade>();
         StringBuilder sql = new StringBuilder();
 
-        sql.append("SELECT a.* FROM atividade a");
+		sql.append("SELECT YEAR(a.data_inclusao) ano, ");
+		sql.append("MONTH(a.data_inclusao) mes, ");
+		sql.append("a.status,");
+		sql.append("count(*) qtd ");
+		sql.append("FROM atividade a ");
+		sql.append("WHERE a.ativo = 1 AND YEAR(a.data_inclusao) = YEAR(NOW()) ");
+		sql.append("GROUP BY YEAR(a.data_inclusao), MONTH(a.data_inclusao), a.status ");
+		sql.append("ORDER BY ano DESC, mes ASC, a.status, qtd ASC");
         
-        try {
-        	sql.append(" WHERE a.ativo = 1");
-
-        	// TODO
-            if (dashboard.getId() > 0) {
-                sql.append(" AND a.chamado_id = " + dashboard.getId());
-            }
-            
+		// <ANO/MES, <Status, Qtde>>>>
+		Map<String,  Map<String, Integer>> mapaMes = new HashMap<String, Map<String, Integer>>(); 
+		
+		
+		try {
             this.conectar();
             ps = sessaoBD.prepareStatement(sql.toString());
             ResultSet resultado = ps.executeQuery();
 
             while (resultado.next()) {
-                Dashboard con = new Dashboard();
-                con.setId(resultado.getInt("c.id"));
-                con.setAtivo(resultado.getInt("c.ativo"));
-                con.setDataInclusao(resultado.getDate("c.data_inclusao"));
-                con.setDataAlteracao(resultado.getDate("c.data_alteracao"));
-                con.setDataInativacao(resultado.getDate("c.data_inativacao"));
-                con.setUsuarioInclusao(new Usuario(resultado.getInt("c.usuario_inclusao_id"),null,null, null));
-                con.setUsuarioUpdate(new Usuario(resultado.getInt("c.usuario_alteracao_id"),null,null, null));
-                con.setUsuarioInativacao(new Usuario(resultado.getInt("c.usuario_inativacao_id"),null,null, null));
-                
-                listaDashboards.add(con);
+            	String sb = resultado.getInt("ano") + "-" + resultado.getInt("mes");
+            	
+            	if(mapaMes.containsKey(sb)) {
+        			mapaMes.get(sb).put(OcorrenciaStatus.getMapa().get(resultado.getInt("a.status")).getDescricao(), resultado.getInt("qtd"));
+            	} else {
+            		Map<String, Integer> status = new HashMap<String, Integer>();
+            		status.put(OcorrenciaStatus.getMapa().get(resultado.getInt("a.status")).getDescricao(), resultado.getInt("qtd"));
+            		mapaMes.put(sb, status);
+            	}
+            	
             }
+            
+            dashboard.setMapaListaAtividades(mapaMes);
+            listaDashboards.add(dashboard);
+            
             System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_CONSULTAR.getDescricao());
         } catch (SQLException e) {
             System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_NAO_ENCONTRADO.getDescricao()+ "\n" + e.getMessage());
@@ -240,7 +248,7 @@ public class DashboardDao extends DaoEntidade {
         List<Entidade> listaDashboards = new ArrayList<Entidade>();
         StringBuilder sql = new StringBuilder();
 
-        sql.append("SELECT produto_status_id, count(*) qtd FROM produto WHERE ativo = 1 GROUP BY produto_status_id  ORDER BY produto_status_id ASC");
+        sql.append("SELECT tipo, count(*) qtd FROM produto WHERE ativo = 1 GROUP BY tipo  ORDER BY tipo ASC");
         
         try {
 
@@ -251,7 +259,7 @@ public class DashboardDao extends DaoEntidade {
             Map<DominioType, Integer> mapaTipoProdutos = new HashMap<DominioType, Integer>();
             
             while (resultado.next())
-                mapaTipoProdutos.put(ProdutoTipo.getMapa().get(resultado.getInt("produto_status_id")), resultado.getInt("qtd"));
+                mapaTipoProdutos.put(ProdutoTipo.getMapa().get(resultado.getInt("tipo")), resultado.getInt("qtd"));
 
             dashboard.setMapaTipoProdutos(mapaTipoProdutos);
             

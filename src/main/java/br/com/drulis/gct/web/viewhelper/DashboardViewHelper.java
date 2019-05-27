@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 
 import br.com.drulis.gct.core.util.Resultado;
+import br.com.drulis.gct.dominio.Atividade;
+import br.com.drulis.gct.dominio.Chamado;
+import br.com.drulis.gct.dominio.Cliente;
 import br.com.drulis.gct.dominio.DominioInterface;
 import br.com.drulis.gct.dominio.Produto;
 import br.com.drulis.gct.dominio.classificacao.DominioType;
@@ -38,18 +41,13 @@ public class DashboardViewHelper implements ViewHelperInterface {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        String acao = "dashboard";
+        String tipo = request.getParameter("tipo");
         String dataInicio = request.getParameter("dataIncio");
         String dataFim = request.getParameter("dataFim");
-        String entidade = request.getParameter("entidade");
-        String statusEntidade = request.getParameter("statusEntidade");
         
         try {
         	dashboard.setDataInicio(dateFormat.parse("2018-01-01"));
         	dashboard.setDataFim(new Date());
-        	
-        	// TODO
-        	dashboard.setEntidade(new Produto());
         	
 			if(dataInicio != null)
 				dashboard.setDataInicio(dateFormat.parse(dataInicio));
@@ -57,8 +55,22 @@ public class DashboardViewHelper implements ViewHelperInterface {
 			if(dataFim != null)
 				dashboard.setDataFim(dateFormat.parse(dataFim));
 			
-//			if(entidade != null)
-//				dashboard.setEntidade();
+			if(tipo != null)
+				switch(tipo) {
+				case "produto":
+					dashboard.setEntidade(new Produto());
+					break;
+				case "cliente":
+					dashboard.setEntidade(new Cliente());
+					break;
+				case "atividade":
+					dashboard.setEntidade(new Atividade());
+					break;
+				case "chamado":
+				default:
+					dashboard.setEntidade(new Chamado());
+					break;
+				}
 			
         } catch (ParseException e) {
         	System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + e.getMessage());
@@ -72,9 +84,11 @@ public class DashboardViewHelper implements ViewHelperInterface {
     public void setView(Resultado resultado, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String uri = request.getRequestURI();
         String acao = request.getParameter("acao");
-        Gson dados = new Gson();
+        String tipo = request.getParameter("tipo");
+        Dashboard dash = new Dashboard();
+        Gson gson = new Gson();
         
-        System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Redirecionando requisicao: Acao = " + acao + ", URI: " + uri);
+        System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Redirecionando requisicao: Tipo = " + tipo + ", URI: " + uri);
         
         if(resultado != null && resultado.getMensagem() != null) {
         	request.setAttribute("mensagem", resultado.getMensagem());
@@ -82,19 +96,25 @@ public class DashboardViewHelper implements ViewHelperInterface {
         }
         
         // TODO
-        if(acao == null)
-        	acao = "Produto";
+        if(tipo == null)
+        	tipo = "atividade";
         
-        Dashboard dash = (Dashboard) resultado.getEntidades().get(0);
-        request.setAttribute("dadosGrafico", dash);
-        switch(acao) {
-	        case "Chamado":
+        if(resultado.getEntidades() != null) {
+        	dash = (Dashboard) resultado.getEntidades().get(0);
+        	request.setAttribute("dadosGrafico", dash);
+        }
+        
+        switch(tipo) {
+	        case "chamado":
 	        	request.getRequestDispatcher("/jsp/dashboard/chamado.jsp").forward(request, response);
 	        	break;
-	        case "Atividade":
+	        case "atividade":
+	        	if(dash.getMapaListaAtividades() != null)
+	        		request.setAttribute("dadosGrafico", gson.toJson(dash.getMapaListaAtividades()));
+	        	
 	        	request.getRequestDispatcher("/jsp/dashboard/atividade.jsp").forward(request, response);
 	        	break;
-	        case "Produto":
+	        case "produto":
 	        	if(dash.getMapaTipoProdutos() != null)
 	        			request.setAttribute("dadosGraficoTipo", Arrays.toString(getMapaDescricaoQtde(dash.getMapaTipoProdutos()).entrySet().toArray()));
 	        	
@@ -103,7 +123,7 @@ public class DashboardViewHelper implements ViewHelperInterface {
 	        	
 	        	request.getRequestDispatcher("/jsp/dashboard/produto.jsp").forward(request, response);
 	        	break;
-	        case "Cliente":
+	        case "cliente":
 	        	request.getRequestDispatcher("/jsp/dashboard/cliente.jsp").forward(request, response);
 	        	break;
 	    	default:

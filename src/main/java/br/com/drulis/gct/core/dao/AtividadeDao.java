@@ -42,7 +42,7 @@ public class AtividadeDao extends DaoEntidade {
             ps = sessaoBD.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, atividade.getTitulo());
             ps.setString(2, atividade.getDescricao());
-            ps.setInt(3, atividade.getStatus());
+            ps.setInt(3, atividade.getOcorrenciaStatus().getId());
             ps.setInt(4, atividade.getAtivo());
             ps.setInt(5, atividade.getUsuarioAtribuido().getId());
             ps.setInt(6, atividade.getUsuarioInclusao().getId());
@@ -168,6 +168,7 @@ public class AtividadeDao extends DaoEntidade {
                 sql.append(" AND a.id = " + atividade.getId());
             }
 
+            sql.append(" ORDER BY a.data_inclusao DESC");
             ps = sessaoBD.prepareStatement(sql.toString());
             ResultSet resultado = ps.executeQuery();
 
