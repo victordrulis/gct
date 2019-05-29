@@ -95,16 +95,22 @@ to {
 	
 <%@include file="../fragmentos/footer.jsp" %>
 <script>
-
-
+var labels = JSON.parse('${labels}');
+var label = JSON.parse('${label}');
+var values = JSON.parse('${values}');
 
 function criarDados() {
 	let dadosGrafico = JSON.parse('${dadosGrafico}');
+	
 	let meses = [];
 	let statusMes = [];
 	let status = [];
 
 	console.log(dadosGrafico);
+	
+	console.log(labels);
+	console.log(label);
+	console.log(values);
 
 	for(let mes in dadosGrafico) {
 		meses.push(mes);
@@ -139,36 +145,20 @@ function criarDados() {
 criarDados();
 
 var lineChartData = {
-		labels: meses,
+		labels: labels,
 		datasets: [{
 			label: 'Melhoria',
 			borderColor: window.chartColors.red,
 			backgroundColor: window.chartColors.red,
 			fill: false,
-			data: [
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor()
-			],
+			data: values[0],
 			yAxisID: 'y-axis-1',
 		}, {
 			label: 'Tarefa',
 			borderColor: window.chartColors.blue,
 			backgroundColor: window.chartColors.blue,
 			fill: false,
-			data: [
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor()
-			],
+			data: values[1],
 			yAxisID: 'y-axis-2'
 		},{
 			label: 'Alteração',
@@ -209,11 +199,17 @@ var lineChartData = {
 						display: true,
 						position: 'left',
 						id: 'y-axis-1',
+						ticks: {
+			                beginAtZero: true
+			            },
 					}, {
 						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
 						display: true,
 						position: 'right',
 						id: 'y-axis-2',
+						ticks: {
+                            beginAtZero: true
+                        },
 
 						// grid line settings
 						gridLines: {
