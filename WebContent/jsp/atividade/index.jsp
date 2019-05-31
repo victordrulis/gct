@@ -70,7 +70,7 @@
       <td><%= atividade.getAtivo() > 0 ? "Sim" : "-" %></td>
       <td>
             <a href="/gct/atividade?acao=exibir&id=<%= atividade.getId() %>"><button type="button" class="btn btn-primary">Visualizar</button></a>
-            <a href="/gct/chamado?acao=exibir&id=<%= atividade.getChamado().getId() %>"><button type="button" class="btn btn-secundary">Chamado</button></a>
+            <a href="/gct/chamado?acao=exibir&id=<%= atividade.getChamado().getId() %>"><button type="button" class="btn btn-warning">Chamado</button></a>
       </td>
     </tr>
     <%

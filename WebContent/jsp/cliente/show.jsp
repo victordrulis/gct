@@ -75,8 +75,8 @@
 			      <td align="center"><%= contrato.getDataInicio() %></td>
 			      <td align="center"><%= contrato.getAtivo() > 0 ? "Sim" : "-" %></td>
 			      <td align="center">
-			            <a href="/gct/produto?acao=exibir&id=<%= contrato.getProduto().getId() %>">Visualizar</a>
-			            <span><a href="/gct/chamado?acao=novo&produtoId=<%= contrato.getProduto().getId() %>&clienteId=<%= contrato.getCliente().getId() %>"> | + Chamado </a></span>
+			            <a href="/gct/produto?acao=exibir&id=<%= contrato.getProduto().getId() %>"><button type="button" class="btn btn-primary">Visualizar</button></a>
+			            <span><a href="/gct/chamado?acao=novo&produtoId=<%= contrato.getProduto().getId() %>&clienteId=<%= contrato.getCliente().getId() %>"><button type="button" class="btn btn-warning">Chamado</button></a></span>
 			      </td>
 			    </tr>
 				

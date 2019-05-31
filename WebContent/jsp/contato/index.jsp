@@ -67,7 +67,7 @@
           <td><%= contato.getTel() %></td>
           <td><%= contato.getCpfCnpj() %></td>
           <td><%= contato.getDataInclusao() %></td>
-          <td><%= contato.getAtivo() %></td>
+          <td><%= contato.getAtivo() >= 1 ? "Sim" : "-" %></td>
           <td>
             <a href="/gct/contato?acao=exibir&id=<%= contato.getId() %>"><button type="button" class="btn btn-primary">Visualizar</button></a>
           </td>

@@ -63,7 +63,7 @@
           <td><%= produto.getTitulo() %></td>
           <td><%= produto.getDescricao() %></td>
           <td><%= produto.getDataInclusao() %></td>
-          <td><%= produto.getAtivo() %></td>
+          <td><%= produto.getAtivo() >= 1 ? "Sim" : "-" %></td>
           <td>
             <span><a href="/gct/produto?acao=exibir&id=<%= produto.getId() %>"><button type="button" class="btn btn-primary">Visualizar</button></a></span>
             <span><a href="/gct/chamado?acao=novo&produtoId=<%= produto.getId() %>"><button type="button" class="btn btn-warning">Chamado</button></a></span>

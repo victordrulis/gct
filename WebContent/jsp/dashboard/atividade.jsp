@@ -85,20 +85,14 @@ to {
         </div>
         <canvas id="chart-0" style="display: block; width: 800px; height: 400px;" width="800" height="400" class="chartjs-render-monitor"></canvas>
         <hr>
-        <canvas id="chart-1" style="display: block; width: 800px; height: 400px;" width="800" height="400" class="chartjs-render-monitor"></canvas>
-        <hr>
+        <button id="randomizeData">Randomize Data</button>
     </div>
     <br>
     </div>
 </div>
 </main>
-    
-<%@include file="../fragmentos/footer.jsp" %>
-<script>
-var dados = JSON.parse('${dadosGrafico}');
-var estatus = [];
-var jsonfile = dados;
 
+<!--
 var labels = JSON.parse('${dadosGrafico}').map(function(e) {
 	console.log(e);
 	return e.name;
@@ -108,111 +102,130 @@ var data = jsonfile.map(function(e) {
 	console.log(e);
 	return e.age;
 });
+-->
+    
+<%@include file="../fragmentos/footer.jsp" %>
+<script>
+var dados = JSON.parse('${dadosGrafico}');
+var estatus = [];
+var jsonfile = dados;
+var arr = {"meu" : ["a", "b", "c"]};
+arr.meu.push("huhu");
+console.log(arr.meu);
 
 var labels = JSON.parse('${labels}');
 var label = JSON.parse('${label}');
 var values = JSON.parse('${values}');
-var mapaStatus = JSON.parse('${mapaStatus}');
+var mapaStatus = '${mapaStatus}';
 
-for (i in dados) {
-	estatus.push(dados[i]);
-	console.log("labels : " + i);
-	for (x in dados[i]) {
-		console.log("    status: " + x);
-		for (z in dados[i][x]) {
-			console.log(z);
+/**
+ * Transforma os dados vindos na request no formato para ChartJS
+ */
+function formataDataSet(obj) {
+	for (i in dados) {
+		console.log("labels : " + i);
+		for (x in dados[i]) {
+			console.log("    status: " + x);
+			for (z in dados[i][x]) {
+				console.log(z);
+			}
 		}
-	}
-}
-
-var ctx = canvas.getContext('2d');
-
-var config = {
-	type : 'line',
-	data : {
-		labels : labels,
-		datasets : [ {
-			label : 'Graph Line',
-			data : data,
-			backgroundColor : 'rgba(0, 119, 204, 0.3)'
-		} ]
 	}
 };
 
 var lineChartData = {
-	labels : labels,
-	datasets : [
-			{
-				label : 'Melhoria',
-				borderColor : window.chartColors.red,
-				backgroundColor : window.chartColors.red,
-				fill : false,
-				data : values[0],
-				yAxisID : 'y-axis-1',
-			},
-			{
-				label : 'Tarefa',
-				borderColor : window.chartColors.blue,
-				backgroundColor : window.chartColors.blue,
-				fill : false,
-				data : values[1],
-				yAxisID : 'y-axis-2'
-			},
-			{
-				label : 'Alteração',
-				borderColor : window.chartColors.blue,
-				backgroundColor : window.chartColors.blue,
-				fill : false,
-				data : [ randomScalingFactor(), randomScalingFactor(),
-						randomScalingFactor(), randomScalingFactor(),
-						randomScalingFactor(), randomScalingFactor(),
-						randomScalingFactor() ],
-				yAxisID : 'y-axis-2'
-			} ]
-};
+		labels: ['January 2019', 'February 2019', 'March 2019', 'April 2019', 'May 2019', 'June 2019', 'July 2019'],
+		datasets: [{
+			label: 'Melhoria',
+			borderColor: window.chartColors.red,
+			backgroundColor: window.chartColors.red,
+			fill: false,
+			data: [
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor()
+			],
+			yAxisID: 'y-axis-1',
+		}, {
+			label: 'Tarefa',
+			borderColor: window.chartColors.blue,
+			backgroundColor: window.chartColors.blue,
+			fill: false,
+			data: [
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor()
+			],
+			yAxisID: 'y-axis-2'
+		},{
+			label: 'Alteração',
+			borderColor: window.chartColors.blue,
+			backgroundColor: window.chartColors.blue,
+			fill: false,
+			data: [
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor()
+			],
+			yAxisID: 'y-axis-2'
+		}]
+	};
 
-window.onload = function() {
-	var ctx = document.getElementById('chart-0').getContext('2d');
-	window.myLine = Chart.Line(ctx, {
-		data : lineChartData,
-		options : {
-			responsive : true,
-			hoverMode : 'index',
-			stacked : false,
-			title : {
-				display : true,
-				text : [ 'ATIVIDADE: STATUS',
-						'Quantidade de atividades ativas por status' ]
-			},
-			scales : {
-				yAxes : [ {
-					type : 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-					display : true,
-					position : 'left',
-					id : 'y-axis-1',
-				}, {
-					type : 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-					display : true,
-					position : 'right',
-					id : 'y-axis-2', // grid line settings
-					gridLines : {
-						drawOnChartArea : false, // only want the grid lines for one axis to show up
-					},
-				} ],
+	window.onload = function() {
+		var ctx = document.getElementById('chart-0').getContext('2d');
+		window.myLine = Chart.Line(ctx, {
+			data: lineChartData,
+			options: {
+				responsive: true,
+				hoverMode: 'index',
+				stacked: false,
+				title: {
+					display: true,
+					text: 'Chart.js Line Chart - Multi Axis'
+				},
+				scales: {
+					yAxes: [{
+						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+						display: true,
+						position: 'left',
+						id: 'y-axis-1',
+					}, {
+						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+						display: true,
+						position: 'right',
+						id: 'y-axis-2',
+
+						// grid line settings
+						gridLines: {
+							drawOnChartArea: false, // only want the grid lines for one axis to show up
+						},
+					}],
+				}
 			}
-		}
-	});
-};
+		});
+	};
 
-document.getElementById('randomizeData').addEventListener('click', function() {
-																		lineChartData.datasets.forEach(function(dataset) {
-																			dataset.data = dataset.data.map(function() {
-																				return randomScalingFactor();
-																			});
-																		});
-															
-																		window.myLine.update();
-																	});
+	document.getElementById('randomizeData').addEventListener('click', function() {
+		lineChartData.datasets.forEach(function(dataset) {
+			dataset.data = dataset.data.map(function() {
+				return randomScalingFactor();
+			});
+		});
+
+		window.myLine.update();
+	});
 </script>
 </body>
 </html>
