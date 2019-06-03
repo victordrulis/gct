@@ -123,18 +123,12 @@ public class DashboardViewHelper implements ViewHelperInterface {
 	        			labels.add(k);
 	        			List<Integer> values = new ArrayList<Integer>();
 	        			
-	        			v.forEach((kl, vl) -> {
-	        				values.add(vl);
-	        			});
+	        			v.forEach((kl, vl) -> {values.add(vl);});
 	        			
 	        			mapaDados.put(k, values);
 	        			label.addProperty("data", gson.toJson(mapaDados));
 	        			
 	        		});
-	        		
-	        		request.setAttribute("labels", gson.toJson(labels));
-	        		request.setAttribute("label", gson.toJson(label));
-	        		request.setAttribute("values", gson.toJson(mapaDados));
 	        		
 	        		request.setAttribute("dadosGrafico", gson.toJson(dash.getMapaListaAtividades()));
 	        	}

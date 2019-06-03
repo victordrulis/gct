@@ -107,14 +107,10 @@ var data = jsonfile.map(function(e) {
 <%@include file="../fragmentos/footer.jsp" %>
 <script>
 var dados = JSON.parse('${dadosGrafico}');
-var labels = JSON.parse('${labels}');
-var label = '${label}';
-var values = JSON.parse('${values}');
-var mapaStatus = '${mapaStatus}';
+var labels = [];
+var dataSets = [];
 
-console.log('----values/data');
-console.log(values);
-
+console.log(" ----  ATIVIDADES ATIVAS POR STATUS E DATA DE INCLUSAO ----")
 formataDataSet(dados);
 
 /**
@@ -122,61 +118,38 @@ formataDataSet(dados);
  */
 function formataDataSet(obj) {
 	for (i in dados) {
+		labels.push(i); // pegando o eixo X do gráfico.
 		console.log("labels: " + i);
+		var count = 0;
+		
 		for (x in dados[i]) {
 			console.log("\t" + x + ": " + dados[i][x]);
+			dataSets.push(
+				{label: x,
+					borderColor: window.chartColors.red,
+					backgroundColor: window.chartColors.red,
+					fill: false,
+					data: [
+						dados[i][x],
+					],
+					yAxisID: 'y-axis-' + (count+1)
+				}	
+			);
 		}
+		
 	}
+	
+	console.log("labels: " + labels);
+	console.log("+++++");
+	console.log(dataSets);
+	console.log("+++++");
+	
 };
 
+
 var lineChartData = {
-		labels: ['January 2019', 'February 2019', 'March 2019', 'April 2019', 'May 2019', 'June 2019', 'July 2019'],
-		datasets: [{
-			label: 'Melhoria',
-			borderColor: window.chartColors.red,
-			backgroundColor: window.chartColors.red,
-			fill: false,
-			data: [
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor()
-			],
-			yAxisID: 'y-axis-1',
-		}, {
-			label: 'Tarefa',
-			borderColor: window.chartColors.blue,
-			backgroundColor: window.chartColors.blue,
-			fill: false,
-			data: [
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor()
-			],
-			yAxisID: 'y-axis-2'
-		},{
-			label: 'Alteração',
-			borderColor: window.chartColors.blue,
-			backgroundColor: window.chartColors.blue,
-			fill: false,
-			data: [
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor(),
-				randomScalingFactor()
-			],
-			yAxisID: 'y-axis-2'
-		}]
+		labels: labels,
+		datasets: dataSets
 	};
 
 	window.onload = function() {
