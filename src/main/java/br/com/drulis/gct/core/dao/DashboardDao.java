@@ -189,14 +189,15 @@ public class DashboardDao extends DaoEntidade {
         List<Entidade> listaDashboards = new ArrayList<Entidade>();
         StringBuilder sql = new StringBuilder();
 
-		sql.append("SELECT YEAR(a.data_inclusao) ano, ");
-		sql.append("MONTH(a.data_inclusao) mes, ");
+		sql.append("SELECT ");
 		sql.append("a.status,");
+		sql.append("YEAR(a.data_inclusao) ano, ");
+		sql.append("MONTH(a.data_inclusao) mes, ");
 		sql.append("count(*) qtd ");
 		sql.append("FROM atividade a ");
 		sql.append("WHERE a.ativo = 1 AND YEAR(a.data_inclusao) = YEAR(NOW()) ");
-		sql.append("GROUP BY YEAR(a.data_inclusao), MONTH(a.data_inclusao), a.status ");
-		sql.append("ORDER BY ano DESC, mes ASC, a.status, qtd ASC");
+		sql.append("GROUP BY a.status, YEAR(a.data_inclusao), MONTH(a.data_inclusao) ");
+		sql.append("ORDER BY  a.status, ano DESC, mes ASC, qtd ASC");
         
 		// <ANO/MES, <Status, Qtde>>>>
 		Map<String,  Map<String, Integer>> mapaMes = new HashMap<String, Map<String, Integer>>(); 
@@ -213,7 +214,13 @@ public class DashboardDao extends DaoEntidade {
             	if(mapaMes.containsKey(sb)) {
         			mapaMes.get(sb).put(OcorrenciaStatus.getMapa().get(resultado.getInt("a.status")).getDescricao(), resultado.getInt("qtd"));
             	} else {
+            		
             		Map<String, Integer> status = new HashMap<String, Integer>();
+            		
+            		OcorrenciaStatus.getMapa().forEach((i, o) -> {
+            			status.put(o.getDescricao(), 0);
+            		});
+            			
             		status.put(OcorrenciaStatus.getMapa().get(resultado.getInt("a.status")).getDescricao(), resultado.getInt("qtd"));
             		mapaMes.put(sb, status);
             	}

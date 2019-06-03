@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -16,6 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import br.com.drulis.gct.core.util.Resultado;
 import br.com.drulis.gct.dominio.Atividade;
@@ -89,6 +93,7 @@ public class DashboardViewHelper implements ViewHelperInterface {
         String tipo = request.getParameter("tipo");
         Dashboard dash = new Dashboard();
         Gson gson = new Gson();
+        JsonArray gsonArray = new JsonArray();
         
         System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Redirecionando requisicao: Tipo = " + tipo + ", URI: " + uri);
         
@@ -112,20 +117,24 @@ public class DashboardViewHelper implements ViewHelperInterface {
 	        case "atividade":
 	        	if(dash.getMapaListaAtividades() != null) {
 	        		List<String> labels = new ArrayList<String>();
-	        		List<String> label = new ArrayList<String>();
-	        		List<Integer> values = new ArrayList<Integer>();
-	        		
+	        		JsonObject label = new JsonObject();
+	        		Map<String, List<Integer>> mapaDados = new LinkedHashMap<String, List<Integer>>(); 
 	        		dash.getMapaListaAtividades().forEach((k, v) -> {
 	        			labels.add(k);
+	        			List<Integer> values = new ArrayList<Integer>();
+	        			
 	        			v.forEach((kl, vl) -> {
-	        				label.add(kl);
 	        				values.add(vl);
 	        			});
+	        			
+	        			mapaDados.put(k, values);
+	        			label.addProperty("data", gson.toJson(mapaDados));
+	        			
 	        		});
 	        		
 	        		request.setAttribute("labels", gson.toJson(labels));
 	        		request.setAttribute("label", gson.toJson(label));
-	        		request.setAttribute("values", gson.toJson(values));
+	        		request.setAttribute("values", gson.toJson(mapaDados));
 	        		
 	        		request.setAttribute("dadosGrafico", gson.toJson(dash.getMapaListaAtividades()));
 	        	}

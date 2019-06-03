@@ -107,24 +107,28 @@ var data = jsonfile.map(function(e) {
 <%@include file="../fragmentos/footer.jsp" %>
 <script>
 var dados = JSON.parse('${dadosGrafico}');
+var estatus = [];
+var jsonfile = dados;
+var arr = {"meu" : ["a", "b", "c"]};
+arr.meu.push("huhu");
+console.log(arr.meu);
+
 var labels = JSON.parse('${labels}');
-var label = '${label}';
+var label = JSON.parse('${label}');
 var values = JSON.parse('${values}');
 var mapaStatus = '${mapaStatus}';
-
-console.log('----values/data');
-console.log(values);
-
-formataDataSet(dados);
 
 /**
  * Transforma os dados vindos na request no formato para ChartJS
  */
 function formataDataSet(obj) {
 	for (i in dados) {
-		console.log("labels: " + i);
+		console.log("labels : " + i);
 		for (x in dados[i]) {
-			console.log("\t" + x + ": " + dados[i][x]);
+			console.log("    status: " + x);
+			for (z in dados[i][x]) {
+				console.log(z);
+			}
 		}
 	}
 };
@@ -189,7 +193,7 @@ var lineChartData = {
 				stacked: false,
 				title: {
 					display: true,
-					text: ['ATIVIDADES', 'Quantidade de atividades ativas por status']
+					text: 'Chart.js Line Chart - Multi Axis'
 				},
 				scales: {
 					yAxes: [{
