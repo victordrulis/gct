@@ -106,10 +106,10 @@ public class Fachada implements FachadaInterface {
         contatoRegrasAlterar.add(this.regrasFactory.getValidarAtivo());
         contatoRegrasAlterar.add(this.regrasFactory.getValidarTelefoneComDDD());
         contatoRegrasExcluir.add(this.regrasFactory.getValidarAtivo());
-        this.mapRegrasContato.put("SALVAR", contatoRegrasSalvar);
-        this.mapRegrasContato.put("ALTERAR", contatoRegrasAlterar);
-        this.mapRegrasContato.put("CONSULTAR", contatoRegrasConsultar);
-        this.mapRegrasContato.put("EXCLUIR", contatoRegrasExcluir);
+        this.mapRegrasContato.put("salvar", contatoRegrasSalvar);
+        this.mapRegrasContato.put("alterar", contatoRegrasAlterar);
+        this.mapRegrasContato.put("consultar", contatoRegrasConsultar);
+        this.mapRegrasContato.put("excluir", contatoRegrasExcluir);
         
         this.mapRegrasUsuario.put("SALVAR", listRegrasSalvar);
         this.mapRegrasUsuario.put("ALTERAR", listRegrasAlterar);

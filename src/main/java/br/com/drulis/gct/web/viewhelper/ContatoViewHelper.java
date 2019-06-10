@@ -76,13 +76,19 @@ public class ContatoViewHelper implements ViewHelperInterface {
         
         System.out.println("[" + this.getClass().getSimpleName() + "] setView: Acao = " + acao + ", URI: " + uri);
         
-        if(resultado != null) {
-            mensagem = resultado.getMensagem();
-            listContato = (List<Contato>) (Object) resultado.getEntidades();
-        }
+        
+        
+        if(resultado != null)
+        		listContato = (List<Contato>) (Object) resultado.getEntidades();
         
         switch(listContato.size()) {
         case 0:
+        	if(resultado != null && resultado.getMensagem() != null) {
+                mensagem = resultado.getMensagem();
+                request.getRequestDispatcher("/mensagem.jsp").forward(request, response);
+                break;
+            }
+        	
             request.getRequestDispatcher("/jsp/contato/form.jsp").forward(request, response);
             break;
         

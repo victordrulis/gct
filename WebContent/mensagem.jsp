@@ -26,12 +26,17 @@
 <div class="row">
     <div class="col-sm-12 col-md-6">
         
-        <h5>Mensagem:</h5>
-        <p>${ mensagem }</p> 
+        <%
+            String msg = request.getParameter("resultado");
+            
+        %>
+        <h5><strong>Mensagem:</strong></h5>
+        <span><p><%= msg %></p></span> 
     </div>
 </div>
 
 </div>
 </main>
+<%@include file="jsp/fragmentos/footer.jsp" %>
 </body>
 </html>

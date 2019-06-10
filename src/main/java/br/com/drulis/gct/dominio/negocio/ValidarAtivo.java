@@ -16,7 +16,7 @@ public class ValidarAtivo implements StrategyInterface {
 
     @Override
     public String processar(Entidade entidade) {
-    	if(entidade.getAtivo() == 0 || entidade.getAtivo() > 1 || entidade.getAtivo() < 0) 
+    	if(entidade.getAtivo() <= 0 || entidade.getAtivo() > 1) 
     		return "A entidade tipo " + entidade.getClass().getSimpleName() + " está inativa.";
     			
 		return null;

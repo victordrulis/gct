@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import br.com.drulis.gct.infra.Conexao;
+import br.com.drulis.gct.core.infra.Conexao;
 
 /**
  * @author Victor Drulis Oliveira
