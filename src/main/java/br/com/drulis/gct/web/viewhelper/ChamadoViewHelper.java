@@ -99,7 +99,7 @@ public class ChamadoViewHelper implements ViewHelperInterface {
                 if(usuarioInclusao == null)
                     chamado.setUsuarioInclusao(new Usuario(1));
                 else
-                    chamado.setUsuarioInclusao(new Usuario(Integer.parseInt(usrInclusao)));
+                    chamado.setUsuarioInclusao(new Usuario(1));
             }
             
             Calendar calendar = Calendar.getInstance();
