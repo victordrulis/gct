@@ -100,9 +100,9 @@ public class ChamadoDao extends DaoEntidade {
             ps.setInt(1, alterado.getUsuarioAtribuido().getId());
             ps.setString(2, alterado.getTitulo());
             ps.setString(3, alterado.getDescricao());
-            ps.setInt(5, alterado.getStatus());
+            ps.setInt(4, alterado.getStatus());
             ps.setInt(5, alterado.getAtivo());
-            ps.setInt(6, alterado.getUsuarioInclusao().getId());
+            ps.setInt(6, alterado.getUsuarioUpdate().getId());
             ps.setInt(7, alterado.getProduto().getId());
             ps.setInt(8, alterado.getCliente().getId());
             ps.setInt(9, alterado.getId());

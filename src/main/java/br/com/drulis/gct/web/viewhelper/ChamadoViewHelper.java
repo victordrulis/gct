@@ -19,6 +19,7 @@ import br.com.drulis.gct.dominio.DominioInterface;
 import br.com.drulis.gct.dominio.Mensagem;
 import br.com.drulis.gct.dominio.Produto;
 import br.com.drulis.gct.dominio.Usuario;
+import br.com.drulis.gct.dominio.classificacao.OcorrenciaStatus;
 import br.com.drulis.gct.dominio.classificacao.OcorrenciaTipo;
 import br.com.drulis.gct.web.command.ConsultarCommand;
 
@@ -87,6 +88,20 @@ public class ChamadoViewHelper implements ViewHelperInterface {
             cliente.setId(Integer.parseInt(clienteId));
             produto.setId(Integer.parseInt(produtoId));
             
+            if(acao != null && acao.equals(Acao.ALTERAR.getAcao())) {
+                if(usuarioAlteracao == null)
+                    chamado.setUsuarioUpdate(new Usuario(1));
+                else
+                    chamado.setUsuarioUpdate(new Usuario(Integer.parseInt(usuarioAlteracao)));
+            }
+            
+            if(acao != null && acao.equals(Acao.SALVAR.getAcao())) {
+                if(usuarioInclusao == null)
+                    chamado.setUsuarioInclusao(new Usuario(1));
+                else
+                    chamado.setUsuarioInclusao(new Usuario(Integer.parseInt(usrInclusao)));
+            }
+            
             Calendar calendar = Calendar.getInstance();
             
             if (listaAtividades != null){
@@ -109,11 +124,10 @@ public class ChamadoViewHelper implements ViewHelperInterface {
             	
             	resultado = consultar.execute(produto);
             	chamado.setProduto((Produto) resultado.getEntidades().get(0));
-            	
                 chamado.setTitulo(titulo);
                 chamado.setDescricao(descricao);
-                chamado.setTipo(OcorrenciaTipo.valueOf(tipo));
-                chamado.setStatus(Integer.parseUnsignedInt(status));
+                chamado.setTipo(OcorrenciaTipo.getMapa().get(Integer.parseUnsignedInt(tipo)));
+                chamado.setOcorrenciaStatus(OcorrenciaStatus.getMapa().get(Integer.parseUnsignedInt(status)));
                 chamado.setStatus(1);
                 chamado.setDataAbertura(dateFormat.parse(dataAbertura));
                 calendar.setTime(dateFormat.parse(dataAbertura));
@@ -214,9 +228,10 @@ public class ChamadoViewHelper implements ViewHelperInterface {
             	request.setAttribute("listaCliente", resCliente.getEntidades());
                 request.setAttribute("listaProduto", resProduto.getEntidades());
                 request.setAttribute("listaUsuario", resUsuario.getEntidades());
-                request.setAttribute("resultado", resultado.getEntidades().get(0));
+                request.setAttribute("resultado", resultado.getEntidades());
                 
                 if(acao != null && acao.equals(Acao.EDITAR.getAcao())) {
+                    request.setAttribute("resultado", resultado.getEntidades().get(0));
                     request.getRequestDispatcher("/jsp/chamado/edit.jsp").forward(request, response);
                     break;
                 }
@@ -225,6 +240,7 @@ public class ChamadoViewHelper implements ViewHelperInterface {
                 	Atividade ativ = new Atividade();
                 	ativ.setChamado((Chamado) resultado.getEntidades().get(0));
                 	resAtividade = consultar.execute(ativ);
+                	request.setAttribute("resultado", resultado.getEntidades().get(0));
                 	request.setAttribute("listaAtividades", resAtividade.getEntidades());
                     request.getRequestDispatcher("/jsp/chamado/show.jsp").forward(request, response);
                     break;

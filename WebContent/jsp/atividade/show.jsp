@@ -67,6 +67,10 @@
                 </div>
             </div>
 			<div class="row">
+			     <div class="form-group col-md-2">
+                    <h6><strong>Ativo</strong></h6> 
+                    <span><%= atividade.getAtivo() > 0 ? "Sim" : "Não" %></span>
+                </div>
 	            <div class="form-group col-md-3">
 	                <h6><strong>Início</strong></h6>
                     <span><%= atividade.getDataInicio() %></span>

@@ -78,18 +78,27 @@
 	        </div>
 	        
 	        <div class="row">
-	           <div class="form-group col-md-3">
-                    <label for="tipo">Tipo</label>
-                    <select class="form-control" id="tipo" name="tipo">
-                    <%
-                        for(Map.Entry<Integer, OcorrenciaTipo> tipo : OcorrenciaTipo.getMapa().entrySet()) {
-                    %>
-                        <option value="<%= tipo.getKey() %>"><%= tipo.getValue().getDescricao() %></option>
-                   <%
-                        }                    
-                   %>
+	        <div class="form-group col-md-4">
+                    <label for="usuarioAtribuidoId">Atribuido:</label>
+                    <select class="form-control" id="usuarioAtribuidoId" name="usuarioAtribuidoId">
+                        <%
+                           List<Usuario> listaUsuario = (List<Usuario>) request.getAttribute("listaUsuario");
+                        if(listaUsuario == null || listaUsuario.size() < 1) {
+                        %>
+                        
+                            <option value="0">Selecione um usuário...</option>
+                        <%
+                        } else {
+                           for(Usuario usuario : listaUsuario) {
+                        %>
+                                <option value="<%= usuario.getId() %>"><%= usuario.getLogin() %></option>
+                        <%
+                           }
+                        }
+                        %>
                     </select>
                 </div>
+               
 	        </div>
 	        
 	        <div class="row">
@@ -101,34 +110,27 @@
 	        </div>
 	        
 	        <div class="row">
-               <div class="form-group col-md-4">
-                    <label for="usuarioAtribuidoId">Atribuido:</label>
-                    <select class="form-control" id="usuarioAtribuidoId" name="usuarioAtribuidoId">
-                        <%
-                           List<Usuario> listaUsuario = (List<Usuario>) request.getAttribute("listaUsuario");
-                        if(listaUsuario == null || listaUsuario.size() < 1) {
-                       	%>
-                       	
-                       	    <option value="0">Selecione um usuário...</option>
-                       	<%
-                        } else {
-                           for(Usuario usuario : listaUsuario) {
-                        %>
-                                <option value="<%= usuario.getId() %>"><%= usuario.getLogin() %></option>
-                        <%
-                           }
-                        }
-                        %>
+               
+               <div class="form-group col-md-3">
+                    <label for="tipo">Tipo</label>
+                    <select class="form-control" id="tipo" name="tipo">
+                    <%
+                        for(OcorrenciaTipo tipo : OcorrenciaTipo.values()) {
+                    %>
+                        <option value="<%= tipo.getId() %>"><%= tipo.getDescricao() %></option>
+                   <%
+                        }                    
+                   %>
                     </select>
                 </div>
-                
+                 
                 <div class="form-group col-md-4">
                     <label for="status">Status</label>
                     <select class="form-control" id="status" name="status">
                         <%
                         for(OcorrenciaStatus status : OcorrenciaStatus.values()) {
 	                    %>
-	                        <option value="<%= status %>"><%= status.getDescricao() %></option>
+	                        <option value="<%= status.getId() %>"><%= status.getDescricao() %></option>
 	                   <%
                         }                    
 	                   %>

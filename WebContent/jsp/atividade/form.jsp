@@ -39,7 +39,7 @@
                     		if(listaUsuario != null || !listaUsuario.isEmpty()) {
                            		for(Usuario usuarioAtribuido : listaUsuario) {
 		                        	%>
-		                                <option value="<%= usuarioAtribuido.getId() %>">Usuario forçado</option>
+		                                <option value="<%= usuarioAtribuido.getId() %>"><%= usuarioAtribuido.getContato().getNome() %></option>
 		                        	<%
                            		}
                     		}
@@ -55,7 +55,7 @@
                            List<Chamado> listaChamado = (List<Chamado>) request.getAttribute("listaChamado");
                            for(Chamado chamado : listaChamado) {
 	                        	%>
-	                                <option value="<%= chamado.getId() %>"><%= chamado.getTitulo() %></option>
+	                                <option value="<%= chamado.getId() %>"><span>#<%= chamado.getId() %>: <%= chamado.getTitulo() %></span></option>
 	                        	<%
                            }
                         %>

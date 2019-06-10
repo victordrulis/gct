@@ -9,6 +9,7 @@ import br.com.drulis.gct.core.Entidade;
  *
  */
 public class Usuario extends Entidade {
+    private static final long serialVersionUID = 1L;
     private Contato contato;
     private String login;
     private String senha;
@@ -33,6 +34,11 @@ public class Usuario extends Entidade {
         this.contato = contato;
         this.login = login;
         this.senha = senha;
+    }
+    
+    public Usuario(Integer id) {
+        super();
+        this.id = id;
     }
 
     /**

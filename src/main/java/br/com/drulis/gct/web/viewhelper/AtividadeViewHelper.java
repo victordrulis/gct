@@ -154,19 +154,20 @@ public class AtividadeViewHelper implements ViewHelperInterface {
             case 1:
                 request.setAttribute("listaChamado", resChamado.getEntidades());
                 request.setAttribute("listaUsuario", resUsuario.getEntidades());
-                request.setAttribute("resultado", resultado.getEntidades().get(0));
+                request.setAttribute("resultado", resultado.getEntidades());
                 
                 if(acao != null && acao.equals(Acao.EDITAR.getAcao())) {
+                    request.setAttribute("resultado", resultado.getEntidades().get(0));
                     request.getRequestDispatcher("/jsp/atividade/edit.jsp").forward(request, response);
                     break;
                 }
                 
                 if(acao != null && acao.equals(Acao.EXIBIR.getAcao())) {
+                    request.setAttribute("resultado", resultado.getEntidades().get(0));
                     request.getRequestDispatcher("/jsp/atividade/show.jsp").forward(request, response);
                     break;
                 }
                 
-                request.setAttribute("resultado", resultado.getEntidades());
                 request.getRequestDispatcher("/jsp/atividade/index.jsp").forward(request, response);
                 break;
             
