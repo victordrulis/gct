@@ -46,8 +46,7 @@ public class ChamadoDao extends DaoEntidade {
             ps.setInt(3, chamado.getOcorrenciaStatus().getId());
             ps.setInt(4, chamado.getAtivo());
             ps.setInt(5, chamado.getUsuarioAtribuido().getId());
-//            ps.setInt(6, chamado.getUsuarioInclusao().getId());
-            ps.setInt(6, 1);
+            ps.setInt(6, chamado.getUsuarioInclusao().getId());
             ps.setTimestamp(7, dataInclusao);
             ps.setInt(8, chamado.getProduto().getId());
             ps.setInt(9, chamado.getCliente().getId());
@@ -146,25 +145,28 @@ public class ChamadoDao extends DaoEntidade {
         try {
             this.conectar();
             
-            if (chamado.getProduto() != null && chamado.getProduto().getId() > 0) {
+            if (chamado.getProduto() != null && chamado.getProduto().getId() > 0)
+                sql.append(" AND c.titulo LIKE '%" + chamado.getProduto().getTitulo() +"%'");
+            
+            if (chamado.getProduto() != null && chamado.getProduto().getId() > 0)
                 sql.append(" AND c.produto_id = " + chamado.getProduto().getId());
-            }
             
-            if (chamado.getCliente() != null && chamado.getCliente().getId() > 0) {
+            if (chamado.getCliente() != null && chamado.getCliente().getId() > 0)
                 sql.append(" AND c.cliente_id = " + chamado.getCliente().getId());
-            }
             
-            if (chamado.getUsuarioAtribuido() != null && chamado.getUsuarioAtribuido().getId() > 0) {
+            if (chamado.getUsuarioAtribuido() != null && chamado.getUsuarioAtribuido().getId() > 0)
                 sql.append(" AND c.usuario_atribuido_id = " + chamado.getUsuarioAtribuido().getId());
-            }
             
-            if (chamado.getUsuarioInclusao() != null && chamado.getUsuarioInclusao().getId() > 0) {
+            if (chamado.getUsuarioInclusao() != null && chamado.getUsuarioInclusao().getId() > 0)
                 sql.append(" AND c.usuario_inclusao_id = " + chamado.getUsuarioInclusao().getId());
-            }
             
-            if (chamado.getId() > 0) {
+            if (chamado.getId() > 0)
                 sql.append(" AND c.id = " + chamado.getId());
-            }
+            
+            if(chamado.getAtivo() > 0)
+                sql.append(" AND c.ativo = 1");
+            else
+                sql.append(" AND c.ativo = 0");
 
             ps = sessaoBD.prepareStatement(sql.toString());
             ResultSet resultado = ps.executeQuery();

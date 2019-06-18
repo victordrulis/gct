@@ -83,24 +83,15 @@ public class ChamadoViewHelper implements ViewHelperInterface {
         	Cliente cliente = new Cliente();
         	Produto produto = new Produto();
         	Usuario usuarioAtribuido = new Usuario();
-//        	usuarioInclusao.setId(Integer.parseInt(usrInclusao));
             usuarioAtribuido.setId(Integer.parseInt(usrAtribuido));
             cliente.setId(Integer.parseInt(clienteId));
             produto.setId(Integer.parseInt(produtoId));
             
-            if(acao != null && acao.equals(Acao.ALTERAR.getAcao())) {
-                if(usuarioAlteracao == null)
-                    chamado.setUsuarioUpdate(new Usuario(1));
-                else
-                    chamado.setUsuarioUpdate(new Usuario(Integer.parseInt(usuarioAlteracao)));
-            }
+            if(acao != null && (acao.equals(Acao.ALTERAR.getAcao()) || acao.equals(Acao.EDITAR.getAcao())))
+                chamado.setUsuarioUpdate(new Usuario(1));
             
-            if(acao != null && acao.equals(Acao.SALVAR.getAcao())) {
-                if(usuarioInclusao == null)
-                    chamado.setUsuarioInclusao(new Usuario(1));
-                else
-                    chamado.setUsuarioInclusao(new Usuario(1));
-            }
+            if(acao != null && acao.equals(Acao.SALVAR.getAcao()))
+                chamado.setUsuarioInclusao(new Usuario(1));
             
             Calendar calendar = Calendar.getInstance();
             

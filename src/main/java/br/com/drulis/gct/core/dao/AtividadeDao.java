@@ -87,10 +87,10 @@ public class AtividadeDao extends DaoEntidade {
             sql.append("descricao = ?, ");
             sql.append("status = ?, ");
             sql.append("tipo = ?, ");
+            sql.append("chamado_id = ?, ");
             sql.append("ativo = ?, ");
-            sql.append("usuario_alteracao_id = ?, ");
             sql.append("data_alteracao = ?, ");
-            sql.append("chamado_id = ? ");
+            sql.append("usuario_alteracao_id = ? ");
             sql.append("WHERE id = ?");
             
             ps = sessaoBD.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
@@ -99,10 +99,10 @@ public class AtividadeDao extends DaoEntidade {
             ps.setString(3, alterado.getDescricao());
             ps.setInt(4, alterado.getOcorrenciaStatus().getId());
             ps.setInt(5, alterado.getTipo().getId());
-            ps.setInt(6, alterado.getAtivo());
-            ps.setInt(7, alterado.getUsuarioUpdate().getId());
+            ps.setInt(6, alterado.getChamado().getId());
+            ps.setInt(7, alterado.getAtivo());
             ps.setTimestamp(8, new Timestamp(System.currentTimeMillis()));
-            ps.setInt(9, alterado.getChamado().getId());
+            ps.setInt(9, alterado.getUsuarioUpdate().getId());
             ps.setInt(10, alterado.getId());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();

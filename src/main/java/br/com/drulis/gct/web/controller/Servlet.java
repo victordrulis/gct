@@ -1,6 +1,7 @@
 package br.com.drulis.gct.web.controller;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import javax.servlet.ServletException;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import br.com.drulis.gct.core.Acao;
 import br.com.drulis.gct.core.Entidade;
+import br.com.drulis.gct.core.util.FileUtils;
 import br.com.drulis.gct.core.util.Resultado;
 import br.com.drulis.gct.web.command.AlterarCommand;
 import br.com.drulis.gct.web.command.CommandInterface;
@@ -81,6 +83,9 @@ public class Servlet extends HttpServlet {
         Resultado resultado = new Resultado();
         String uri = request.getRequestURI();
         String acao = request.getParameter("acao");
+        
+        FileUtils.criarArquivo();
+        FileUtils.leitor("C:\\Users\\vdrul\\Desktop\\log_" + Calendar.DAY_OF_YEAR + ".txt");
         
         // TODO adicionar metodos para capturar o usuario e colocar na sessao
         session.setAttribute("idUsuario", "1");
