@@ -2,12 +2,11 @@
 <%@page import="br.com.drulis.gct.dominio.Contato"%>
 <%@page import="br.com.drulis.gct.dominio.Chamado"%>
 <%@page import="java.util.List"%>
-<%@include file="../fragmentos/header.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
+<%@include file="../fragmentos/header.jsp" %>
 <meta charset="ISO-8859-1">
-<title>GCT - Chamados</title>
 <style type="text/css">
 .conteudo-topo {
     padding-top: 40px;
@@ -30,7 +29,7 @@
 <div class="row">
 	<div class="col-sm-12 col-md-6">
 	    <div id="dtBasicExample_filter" class="dataTables_filter">
-	        <label>Busca:<input type="search" class="form-control" placeholder="" aria-controls="dtBasicExample"></label>
+	        <label>Busca:<input id="busca" name="busca" type="search" class="form-control" placeholder="" aria-controls="dtBasicExample"></label>
 	    </div>
     </div>
     <div class="col-sm-12 col-md-6">
@@ -39,7 +38,7 @@
 	    </div>
     </div>
 </div>
-    <table id="listaChamado" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+    <table id="tabela" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
 		<thead>
 		  <tr>
 		      <th class="th-sm">ID</th>
@@ -80,15 +79,5 @@
 </div>
 </main>
 <%@include file="../fragmentos/footer.jsp" %>
-
-<script>
-//Basic example
-$(document).ready(function () {
-  $('#dtBasicExample').DataTable({
-    "paging": false // false to disable pagination (or any other option)
-  });
-  $('.dataTables_length').addClass('bs-select');
-});
-</script>
 </body>
 </html>

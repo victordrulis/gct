@@ -23,48 +23,14 @@
 
 	<!-- Graphs -->
 	<script	src="../js/Chart.min.js.download"></script>
-	<script>
-        function newWindow(url) {
-            var myWindow = window.open(url, "_blank", "location=no,height=570,width=520,scrollbars=yes,status=yes");
-        }
-    </script>
-	<script>
-	function gerarGrafico() {
-		var ctx = document.getElementById("myChart");
-		var myChart = new Chart(ctx, {
-			type : 'line',
-			data : {
-				labels : [ "Tim", "Rodrigo's Company", "AT&T", "Atacadão",
-						"UMC", "Claro", "Vivo" ],
-				datasets : [ {
-					data : [ 339, 345, 483, 303, 489, 92, 34 ],
-					lineTension : 0,
-					backgroundColor : 'transparent',
-					borderColor : '#007bff',
-					borderWidth : 4,
-					pointBackgroundColor : '#007bff'
-				} ]
-			},
-			options : {
-				scales : {
-					yAxes : [ {
-						ticks : {
-							beginAtZero : false
-						}
-					} ]
-				},
-				legend : {
-					display : false,
-				}
-			}
-		});
-	}
 	
-	function novaLinha(idPai, idLinha) {
-	    var linha = document.getElementById(idLinha);
-	    var elementoPai = document.getElementById(idPai);
-	    var clone = linha.cloneNode(true);
-	    clone.id = "linhaClonada";
-	    elementoPai.appendChild(clone);
-	}
-	</script>
+	<script>
+	$(document).ready(function(){
+	    $("#busca").on("keyup", function() {
+	      var value = $(this).val().toLowerCase();
+	      $("#tabela tr").filter(function() {
+	        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+	      });
+	    });
+	  });
+  </script>
