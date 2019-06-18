@@ -199,31 +199,48 @@ public class DashboardDao extends DaoEntidade {
 		sql.append("GROUP BY a.status, YEAR(a.data_inclusao), MONTH(a.data_inclusao) ");
 		sql.append("ORDER BY  a.status, ano DESC, mes ASC, qtd ASC");
         
-		// <ANO/MES, <Status, Qtde>>>>
-		Map<String,  Map<String, Integer>> mapaMes = new HashMap<String, Map<String, Integer>>(); 
-		
+		/* 
+		 * Estutura do mapa
+		 * 
+		 * Status
+		 *   |----Data
+		 *   	    |---- Qtde
+		 */
+		Map<String,  Map<String, Integer>> mapaMes = new HashMap<>(); 
 		
 		try {
             this.conectar();
             ps = sessaoBD.prepareStatement(sql.toString());
             ResultSet resultado = ps.executeQuery();
+            
+            OcorrenciaStatus.getMapa().forEach((i, o) -> {
+    			mapaMes.put(o.getDescricao(), new HashMap<>());
+    		});
 
             while (resultado.next()) {
-            	String sb = resultado.getInt("ano") + "-" + resultado.getInt("mes");
+            	String data = resultado.getInt("ano") + "-" + resultado.getInt("mes");
             	
-            	if(mapaMes.containsKey(sb)) {
+            	if(OcorrenciaStatus.getMapa().get(resultado.getInt("a.status")).getDescricao().isEmpty()) {
+        			mapaMes.get(OcorrenciaStatus.getMapa().get(resultado.getInt("a.status")).getDescricao()).put(data, resultado.getInt("qtd"));
+            	} else {
+            		mapaMes.get(OcorrenciaStatus.getMapa().get(resultado.getInt("a.status")).getDescricao()).put(data, 0);
+            	}
+            	
+            	/*
+            	 * TODO remover apenas se o mapa for gerado correto
+            	 * 
+            	 * 
+				if(mapaMes.containsKey(sb)) {
         			mapaMes.get(sb).put(OcorrenciaStatus.getMapa().get(resultado.getInt("a.status")).getDescricao(), resultado.getInt("qtd"));
             	} else {
-            		
             		Map<String, Integer> status = new HashMap<String, Integer>();
-            		
             		OcorrenciaStatus.getMapa().forEach((i, o) -> {
             			status.put(o.getDescricao(), 0);
             		});
-            			
             		status.put(OcorrenciaStatus.getMapa().get(resultado.getInt("a.status")).getDescricao(), resultado.getInt("qtd"));
             		mapaMes.put(sb, status);
             	}
+            	*/
             	
             }
             

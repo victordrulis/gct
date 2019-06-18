@@ -108,10 +108,12 @@ var data = jsonfile.map(function(e) {
 <script>
 var dados = JSON.parse('${dadosGrafico}');
 var labels = [];
+var qtds = [];
 var dataSets = [];
 
 console.log(" ----  ATIVIDADES ATIVAS POR STATUS E DATA DE INCLUSAO ----")
 formataDataSet(dados);
+console.log(dados);
 
 /**
  * Transforma os dados vindos na request no formato para ChartJS
@@ -119,10 +121,10 @@ formataDataSet(dados);
 function formataDataSet(obj) {
 	for (i in dados) {
 		labels.push(i); // pegando o eixo X do gráfico.
-		console.log("labels: " + i);
+		console.log(": " + i);
 		var count = 0;
 		
-		for (x in dados[i]) {
+		for(x in dados[i]) {
 			console.log("\t" + x + ": " + dados[i][x]);
 			dataSets.push(
 				{label: x,
@@ -139,6 +141,7 @@ function formataDataSet(obj) {
 		
 	}
 	
+	console.log("---------");
 	console.log("labels: " + labels);
 	console.log("+++++");
 	console.log(dataSets);

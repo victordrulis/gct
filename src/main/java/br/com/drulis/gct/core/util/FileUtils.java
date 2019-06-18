@@ -17,7 +17,7 @@ public abstract class FileUtils {
     public FileUtils() {};
     
     public static void criarArquivo() throws IOException {
-        String path = "C:\\Users\\vdrul\\Desktop\\log_" + Calendar.DAY_OF_YEAR + ".txt";
+        String path = "/tmp/log_drulic_gct_" + Calendar.DAY_OF_YEAR + ".txt";
         System.out.println(path);
         BufferedWriter buffWrite = new BufferedWriter(new FileWriter(path));
         String linha = "UOOOOOOOOOOOOOOWWW!!";
