@@ -84,9 +84,6 @@ public class Servlet extends HttpServlet {
         String uri = request.getRequestURI();
         String acao = request.getParameter("acao");
         
-        FileUtils.criarArquivo();
-        FileUtils.leitor("C:\\Users\\vdrul\\Desktop\\log_" + Calendar.DAY_OF_YEAR + ".txt");
-        
         // TODO adicionar metodos para capturar o usuario e colocar na sessao
         session.setAttribute("idUsuario", "1");
         
