@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,7 @@ public class DashboardDao extends DaoEntidade {
         Dashboard dash = (Dashboard) entidade;
         
         if(dash.getEntidade().getClass() == Atividade.class)
-        	return consultarAtividades(dash);
+        	return Arrays.asList(consultarAtividades(dash));
 
         if(dash.getEntidade().getClass() == Produto.class)
         	return consultarProdutos(dash);
@@ -181,12 +182,10 @@ public class DashboardDao extends DaoEntidade {
      * @param entidade
      * @return
      */
-    public List<Entidade> consultarAtividades(Entidade entidade) {
+    public Dashboard consultarAtividades(Entidade entidade) {
     	System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] Consulta de atividades na data e status");
     	PreparedStatement ps = null;
         Dashboard dashboard = (Dashboard) entidade;
-        
-        List<Entidade> listaDashboards = new ArrayList<Entidade>();
         StringBuilder sql = new StringBuilder();
 
 		sql.append("SELECT ");
@@ -217,35 +216,12 @@ public class DashboardDao extends DaoEntidade {
     			mapaMes.put(o.getDescricao(), new HashMap<>());
     		});
 
-            while (resultado.next()) {
-            	String data = resultado.getInt("ano") + "-" + resultado.getInt("mes");
-            	
-            	if(OcorrenciaStatus.getMapa().get(resultado.getInt("a.status")).getDescricao().isEmpty()) {
-        			mapaMes.get(OcorrenciaStatus.getMapa().get(resultado.getInt("a.status")).getDescricao()).put(data, resultado.getInt("qtd"));
-            	} else {
-            		mapaMes.get(OcorrenciaStatus.getMapa().get(resultado.getInt("a.status")).getDescricao()).put(data, 0);
-            	}
-            	
-            	/*
-            	 * TODO remover apenas se o mapa for gerado correto
-            	 * 
-            	 * 
-				if(mapaMes.containsKey(sb)) {
-        			mapaMes.get(sb).put(OcorrenciaStatus.getMapa().get(resultado.getInt("a.status")).getDescricao(), resultado.getInt("qtd"));
-            	} else {
-            		Map<String, Integer> status = new HashMap<String, Integer>();
-            		OcorrenciaStatus.getMapa().forEach((i, o) -> {
-            			status.put(o.getDescricao(), 0);
-            		});
-            		status.put(OcorrenciaStatus.getMapa().get(resultado.getInt("a.status")).getDescricao(), resultado.getInt("qtd"));
-            		mapaMes.put(sb, status);
-            	}
-            	*/
-            	
-            }
+            while (resultado.next())
+    			mapaMes.get(OcorrenciaStatus.getMapa().get(resultado.getInt("a.status")).getDescricao())
+    				.put(resultado.getInt("ano") + "-" + resultado.getInt("mes"), resultado.getInt("qtd"));
+            
             
             dashboard.setMapaListaAtividades(mapaMes);
-            listaDashboards.add(dashboard);
             
             System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_CONSULTAR.getDescricao());
         } catch (SQLException e) {
@@ -255,7 +231,8 @@ public class DashboardDao extends DaoEntidade {
             System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_EXIBIR.getDescricao() + e.getMessage());
             e.printStackTrace();
         }
-        return listaDashboards;
+		
+        return dashboard;
     }
     
     /**

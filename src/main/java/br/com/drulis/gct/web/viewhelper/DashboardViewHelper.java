@@ -3,14 +3,13 @@ package br.com.drulis.gct.web.viewhelper;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -18,8 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import br.com.drulis.gct.core.util.Resultado;
 import br.com.drulis.gct.dominio.Atividade;
@@ -115,24 +112,16 @@ public class DashboardViewHelper implements ViewHelperInterface {
 	        	request.getRequestDispatcher("/jsp/dashboard/chamado.jsp").forward(request, response);
 	        	break;
 	        case "atividade":
+	        	Set<String> meses = new TreeSet<>();
+	        	
 	        	if(dash.getMapaListaAtividades() != null) {
-	        		List<String> labels = new ArrayList<String>();
-	        		JsonObject label = new JsonObject();
-	        		Map<String, List<Integer>> mapaDados = new LinkedHashMap<String, List<Integer>>(); 
 	        		dash.getMapaListaAtividades().forEach((k, v) -> {
-	        			labels.add(k);
-	        			List<Integer> values = new ArrayList<Integer>();
-	        			
-	        			v.forEach((kl, vl) -> {values.add(vl);});
-	        			
-	        			mapaDados.put(k, values);
-	        			label.addProperty("data", gson.toJson(mapaDados));
-	        			
+	        			v.forEach((kl, vl) -> {meses.add(kl);});
 	        		});
-	        		
-	        		request.setAttribute("dadosGrafico", gson.toJson(dash.getMapaListaAtividades()));
 	        	}
 	        	
+	        	request.setAttribute("meses", gson.toJson(meses));
+	        	request.setAttribute("dadosGrafico", gson.toJson(dash.getMapaListaAtividades()));
 	        	request.getRequestDispatcher("/jsp/dashboard/atividade.jsp").forward(request, response);
 	        	break;
 	        case "produto":

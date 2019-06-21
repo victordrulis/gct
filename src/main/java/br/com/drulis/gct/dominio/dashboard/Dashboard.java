@@ -5,6 +5,7 @@ package br.com.drulis.gct.dominio.dashboard;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.dominio.Chamado;
@@ -21,6 +22,8 @@ public class Dashboard extends Entidade {
 	private Date dataInicio;
 	private Date dataFim;
 	private Entidade entidade;
+	private Set<String> labels;
+	private Map<String, Integer> dados;
 	private Map<Chamado, Integer> mapaListaChamados;
 	
 	// <Data <Status, Qtde>>>>
@@ -44,6 +47,22 @@ public class Dashboard extends Entidade {
 	
 	public void setEntidade(Entidade entidade) {
 		this.entidade = entidade;
+	}
+
+	public Map<String, Integer> getDados() {
+		return dados;
+	}
+
+	public void setDados(Map<String, Integer> dados) {
+		this.dados = dados;
+	}
+
+	public Set<String> getLabels() {
+		return labels;
+	}
+	
+	public void setLabels(Set<String> labels) {
+		this.labels = labels;
 	}
 
 	public Date getDataInicio() {

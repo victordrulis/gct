@@ -106,7 +106,7 @@ var data = jsonfile.map(function(e) {
     
 <%@include file="../fragmentos/footer.jsp" %>
 <script>
-var dados = JSON.parse('${dadosGrafico}');
+var dados = ${dadosGrafico};
 var labels = [];
 var qtds = [];
 var dataSets = [];
@@ -115,43 +115,50 @@ console.log(" ----  ATIVIDADES ATIVAS POR STATUS E DATA DE INCLUSAO ----")
 formataDataSet(dados);
 console.log(dados);
 
+console.log("--- MESES gravados");
+console.log(${meses});
+
+console.log("--- MAPAS gravados");
+console.log(${mapa});
+
 /**
  * Transforma os dados vindos na request no formato para ChartJS
  */
-function formataDataSet(obj) {
+function formataDataSet(dados) {
 	for (i in dados) {
 		labels.push(i); // pegando o eixo X do gráfico.
 		console.log(": " + i);
 		var count = 0;
 		
 		for(x in dados[i]) {
-			console.log("\t" + x + ": " + dados[i][x]);
-			dataSets.push(
-				{label: x,
+			console.log("\tvalor: " + dados[i][x]);
+		}
+		
+		dataSets.push(
+				{label: "label",
 					borderColor: window.chartColors.red,
 					backgroundColor: window.chartColors.red,
 					fill: false,
 					data: [
-						dados[i][x],
+						"1",
+						"5",
 					],
 					yAxisID: 'y-axis-' + (count+1)
 				}	
 			);
-		}
-		
 	}
+	
 	
 	console.log("---------");
 	console.log("labels: " + labels);
 	console.log("+++++");
+	console.log("DATASETSSSSS");
 	console.log(dataSets);
-	console.log("+++++");
 	
 };
 
-
 var lineChartData = {
-		labels: labels,
+		labels: ${meses},
 		datasets: dataSets
 	};
 
@@ -173,16 +180,6 @@ var lineChartData = {
 						display: true,
 						position: 'left',
 						id: 'y-axis-1',
-					}, {
-						type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-						display: true,
-						position: 'right',
-						id: 'y-axis-2',
-
-						// grid line settings
-						gridLines: {
-							drawOnChartArea: false, // only want the grid lines for one axis to show up
-						},
 					}],
 				}
 			}
