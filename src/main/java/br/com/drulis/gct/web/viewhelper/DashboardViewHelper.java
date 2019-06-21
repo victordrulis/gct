@@ -6,10 +6,12 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -113,12 +115,16 @@ public class DashboardViewHelper implements ViewHelperInterface {
 	        	break;
 	        case "atividade":
 	        	Set<String> meses = new TreeSet<>();
-	        	
+	        	Map<String, Map<String, Integer>> mapaResult = new HashMap<>();
 	        	if(dash.getMapaListaAtividades() != null) {
+	        		mapaResult = dash.getMapaListaAtividades();
 	        		dash.getMapaListaAtividades().forEach((k, v) -> {
 	        			v.forEach((kl, vl) -> {meses.add(kl);});
 	        		});
 	        	}
+	        	
+//	        	mapaResult.forEach((k, v)-> mapaResult.get(k).putAll(meses.stream().collect(Collectors.toMap(m -> (String) m, m -> 0))));
+//	        	meses.forEach(m -> mapaResult.forEach((k, v)-> mapaResult.get(k).put(m, +0)));
 	        	
 	        	request.setAttribute("meses", gson.toJson(meses));
 	        	request.setAttribute("dadosGrafico", gson.toJson(dash.getMapaListaAtividades()));
