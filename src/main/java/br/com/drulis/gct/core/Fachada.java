@@ -66,54 +66,37 @@ public class Fachada implements FachadaInterface {
 
         this.rnf = new RegrasFactory();
         
-        UsuarioDao usuarioDao = new UsuarioDao();
-        ContatoDao contatoDao = new ContatoDao();
-        ContratoDao contratoDao = new ContratoDao();
-        ClienteDao clienteDao = new ClienteDao();
-        ProdutoDao produtoDao = new ProdutoDao();
-        AtividadeDao atividadeDao = new AtividadeDao();
-        ChamadoDao chamadoDao = new ChamadoDao();
-        DashboardDao dashboardDao = new DashboardDao();
-        this.mapDao.put(Contato.class.getName(), contatoDao);
-        this.mapDao.put(Usuario.class.getName(), usuarioDao);
-        this.mapDao.put(Contrato.class.getName(), contratoDao);
-        this.mapDao.put(Cliente.class.getName(), clienteDao);
-        this.mapDao.put(Produto.class.getName(), produtoDao);
-        this.mapDao.put(Atividade.class.getName(), atividadeDao);
-        this.mapDao.put(Chamado.class.getName(), chamadoDao);
-        this.mapDao.put(Dashboard.class.getName(), dashboardDao);
+        this.mapDao.put(Contato.class.getName(), new ContatoDao());
+        this.mapDao.put(Usuario.class.getName(), new UsuarioDao());
+        this.mapDao.put(Contrato.class.getName(), new ContratoDao());
+        this.mapDao.put(Cliente.class.getName(), new ClienteDao());
+        this.mapDao.put(Produto.class.getName(), new ProdutoDao());
+        this.mapDao.put(Atividade.class.getName(), new AtividadeDao());
+        this.mapDao.put(Chamado.class.getName(), new ChamadoDao());
+        this.mapDao.put(Dashboard.class.getName(), new DashboardDao());
 
         List<StrategyInterface> listRegrasSalvar = new ArrayList<StrategyInterface>();
         List<StrategyInterface> listRegrasAlterar = new ArrayList<StrategyInterface>();
         List<StrategyInterface> listRegrasConsultar = new ArrayList<StrategyInterface>();
         List<StrategyInterface> listRegrasExcluir = new ArrayList<StrategyInterface>();
-        List<StrategyInterface> contatoRegrasAlterar = new ArrayList<StrategyInterface>();
-        List<StrategyInterface> contatoRegrasConsultar = new ArrayList<StrategyInterface>();
-        List<StrategyInterface> contatoRegrasExcluir = new ArrayList<StrategyInterface>();
         
-        contatoRegrasConsultar.add(this.rnf.getValidarFormatoData());
-        contatoRegrasConsultar.add(this.rnf.getValidarNaoVazio());
-        contatoRegrasAlterar.add(this.rnf.getValidarExistencia());
-        contatoRegrasAlterar.add(this.rnf.getValidarAtivo());
-        contatoRegrasAlterar.add(this.rnf.getValidarTelefoneComDDD());
-        contatoRegrasExcluir.add(this.rnf.getValidarAtivo());
         this.mapRegrasContato.put("salvar", Arrays.asList(rnf.getValidarCpfCnpj(), rnf.getValidarEmail(), rnf.getValidarNaoExistencia()));
-        this.mapRegrasContato.put("alterar", contatoRegrasAlterar);
-        this.mapRegrasContato.put("consultar", contatoRegrasConsultar);
-        this.mapRegrasContato.put("excluir", contatoRegrasExcluir);
+        this.mapRegrasContato.put("alterar", Arrays.asList(rnf.getValidarExistencia(), rnf.getValidarAtivo()));
+        this.mapRegrasContato.put("consultar", Arrays.asList(rnf.getValidarRangeDeDatas()));
+        this.mapRegrasContato.put("excluir",  Arrays.asList(rnf.getValidarExistencia(), rnf.getValidarAtivo()));
         
         this.mapRegrasUsuario.put("salvar", listRegrasSalvar);
-        this.mapRegrasUsuario.put("alterar", listRegrasAlterar);
+        this.mapRegrasUsuario.put("alterar", Arrays.asList(rnf.getValidarAtivo()));
         this.mapRegrasUsuario.put("consultar", listRegrasConsultar);
         this.mapRegrasUsuario.put("excluir", listRegrasExcluir);
         
         this.mapRegrasCliente.put("salvar", listRegrasSalvar);
-        this.mapRegrasCliente.put("alterar", listRegrasAlterar);
+        this.mapRegrasCliente.put("alterar", Arrays.asList(rnf.getValidarAtivo()));
         this.mapRegrasCliente.put("consultar", listRegrasConsultar);
-        this.mapRegrasCliente.put("excluir", listRegrasExcluir);
+        this.mapRegrasCliente.put("excluir", Arrays.asList(rnf.getValidarAtivo()));
         
         this.mapRegrasProduto.put("salvar", listRegrasSalvar);
-        this.mapRegrasProduto.put("alterar", listRegrasAlterar);
+        this.mapRegrasProduto.put("alterar", Arrays.asList(rnf.getValidarAtivo()));
         this.mapRegrasProduto.put("consultar", listRegrasConsultar);
         this.mapRegrasProduto.put("excluir", listRegrasExcluir);
 
@@ -124,7 +107,7 @@ public class Fachada implements FachadaInterface {
         
         this.mapRegrasAtividade.put("salvar", Arrays.asList(rnf.getValidarChamadoAtivo()));
         this.mapRegrasAtividade.put("alterar", Arrays.asList(rnf.getValidarAtivo()));
-        this.mapRegrasAtividade.put("consultar", listRegrasConsultar);
+        this.mapRegrasAtividade.put("consultar", Arrays.asList(rnf.getValidarRangeDeDatas()));
         this.mapRegrasAtividade.put("excluir", Arrays.asList(rnf.getValidarAtivo()));
         
         this.mapRegrasChamado.put("salvar", Arrays.asList(rnf.getValidarClienteAtivo(), rnf.getValidarProdutoAtivo(), rnf.getValidarUsuarioAtivo()));

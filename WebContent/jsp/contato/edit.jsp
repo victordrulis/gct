@@ -55,7 +55,7 @@
                 </div>
 	        </div>
 				<div class="form-check">
-					<input type="checkbox" class="form-check-input" id="ativo" name="ativo" <%= contato.getAtivo() == 1 ? "checked" : null%>>
+					<input type="checkbox" class="form-check-input" id="ativo" name="ativo" <%= contato.getAtivo() == 1 ? "checked" : null%> value="<%= contato.getAtivo() == 1 ? 1 : 0%>">
 					<label class="form-check-label" for="ativo">Ativo</label>
 				</div>
 				<div class="row">

@@ -47,9 +47,10 @@ public class ContatoViewHelper implements ViewHelperInterface {
             contato.setCpfCnpj(request.getParameter("cpfCnpj"));
             contato.setEmail(request.getParameter("email"));
             contato.setTel(request.getParameter("telefone"));
+            contato.setAtivo(1);
             
-            if(request.getParameter("ativo") != null)
-                contato.setAtivo(1);
+            if(request.getParameter("ativo") == null)
+            	contato.setAtivo(0);
         }
         
         return contato;
