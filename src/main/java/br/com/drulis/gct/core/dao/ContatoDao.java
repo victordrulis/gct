@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.dominio.Contato;
@@ -113,40 +114,15 @@ public class ContatoDao extends DaoEntidade {
 
     @Override
     public List<Entidade> consultar(Entidade entidade) {
-//        System.out.println("[" + this.getClass().getSimpleName() + "] Consultar");
-        this.logger.info(this.getClass().getSimpleName() + ": Consultar");
+        System.out.println("[" + this.getClass().getSimpleName() + "] Consultar");
         PreparedStatement ps = null;
         Contato contato = (Contato) entidade;
         
-        List<Entidade> listaContatos = new ArrayList<Entidade>();
+        List<Contato> listaContatos = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
+        sql.append("SELECT c.* FROM contato c");
 
-        sql.append("SELECT c.* FROM contato c  WHERE ");
-        
         try {
-        	if(contato.getNome() != null)
-        		sql.append(" c.nome LIKE '%" + contato.getNome() + "%'");
-        	else
-        		sql.append(" c.nome LIKE '%%'");
-        	
-            if(contato.getCpfCnpj() != null)
-            	sql.append(" OR c.cpf_cnpj = '" + contato.getCpfCnpj() +"'");
-
-            if (contato.getId() > 0)
-            	sql.append(" OR c.id = " + contato.getId());
-
-			if (contato.getEmail() != null)
-				sql.append(" OR c.email = '" + contato.getEmail() + "'");
-
-			if(contato.getUsuarioInclusao() != null)
-            	sql.append(" OR c.usuario_inclusao_id = " + contato.getUsuarioInclusao().getId());
-			
-			if(contato.getUsuarioUpdate() != null)
-            	sql.append(" OR c.usuario_alteracao_id = " + contato.getUsuarioUpdate().getId());
-			
-			if(contato.getUsuarioInativacao() != null)
-            	sql.append(" OR c.usuario_inativacao_id = " + contato.getUsuarioInativacao().getId());
-            
             this.conectar();
             ps = sessaoBD.prepareStatement(sql.toString());
             ResultSet resultado = ps.executeQuery();
@@ -169,6 +145,7 @@ public class ContatoDao extends DaoEntidade {
                 
                 listaContatos.add(con);
             }
+            
             System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_CONSULTAR.getDescricao());
         } catch (SQLException e) {
             System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_NAO_ENCONTRADO.getDescricao()+ "\n" + e.getMessage());
@@ -177,7 +154,17 @@ public class ContatoDao extends DaoEntidade {
             System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_EXIBIR.getDescricao() + e.getMessage());
             e.printStackTrace();
         }
-        return listaContatos;
+
+        if(contato.getId() > 0)
+			return listaContatos.stream().filter(c -> c.getId() == contato.getId()).collect(Collectors.toList());
+
+        if(contato.getCpfCnpj() != null)
+    		return listaContatos.stream().filter(c -> c.getCpfCnpj().equals(contato.getCpfCnpj())).collect(Collectors.toList());
+        
+        if(contato.getEmail() != null)
+        	return listaContatos.stream().filter(c -> c.getEmail().equalsIgnoreCase(contato.getEmail())).collect(Collectors.toList());
+        
+        return listaContatos.stream().collect(Collectors.toList());
     }
 
     @Override

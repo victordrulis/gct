@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@page import="br.com.drulis.gct.dominio.Contato"%>
+<%@page import="java.text.SimpleDateFormat" %>
 <%@page import="java.util.List"%>
 <!DOCTYPE html>
 <html>
@@ -54,6 +55,7 @@
 		</thead>
   <tbody>
    <%
+   		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
        List<Contato> resultado = (List<Contato>) request.getAttribute("resultado");
    
        if(resultado != null) {
@@ -65,7 +67,7 @@
           <td><%= contato.getEmail() %></td>
           <td><%= contato.getTel() %></td>
           <td><%= contato.getCpfCnpj() %></td>
-          <td><%= contato.getDataInclusao() %></td>
+          <td><%= dateFormat.format(contato.getDataInclusao()) %></td>
           <td><%= contato.getAtivo() >= 1 ? "Sim" : "-" %></td>
           <td>
             <a href="/gct/contato?acao=exibir&id=<%= contato.getId() %>"><button type="button" class="btn btn-primary">Visualizar</button></a>

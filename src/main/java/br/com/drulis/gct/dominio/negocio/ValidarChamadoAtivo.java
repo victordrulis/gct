@@ -5,6 +5,7 @@ package br.com.drulis.gct.dominio.negocio;
 
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.core.StrategyInterface;
+import br.com.drulis.gct.dominio.Chamado;
 
 /**
  * @author Victor Drulis Oliveira
@@ -12,14 +13,16 @@ import br.com.drulis.gct.core.StrategyInterface;
  * @contact victordrulis@gmail.com
  *
  */
-public class ValidarProdutoAtivo implements StrategyInterface {
+public class ValidarChamadoAtivo implements StrategyInterface {
 
     @Override
     public String processar(Entidade entidade) {
-    	if(entidade.getAtivo() <= 0 || entidade.getAtivo() > 1) 
-    		return "O registro de " + entidade.getClass().getSimpleName() + " está inativo.";
-    			
-		return null;
+
+    	if(entidade.getClass().isInstance(Chamado.class))
+	    	if(entidade.getAtivo() > 0 ) 
+	    		return null;
+
+    	return "O registro de " + entidade.getClass().getSimpleName() + " está inativo.";
     }
 
 }

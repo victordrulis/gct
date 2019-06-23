@@ -86,4 +86,16 @@ public class RegrasFactory {
     public StrategyInterface getValidarProdutoAtivo() {
     	return new ValidarProdutoAtivo();
     }
+    
+    public StrategyInterface getValidarChamadoAtivo() {
+		return new ValidarChamadoAtivo();
+    }
+    
+    public StrategyInterface getValidarAtividadeAtivo() {
+		return new ValidarAtividadeAtivo();
+    }
+
+	public StrategyInterface getValidarUsuarioAtivo() {
+		return new ValidarUsuarioAtivo();
+	}
 }

@@ -18,7 +18,7 @@ public class ValidarExistenciaStrategy implements StrategyInterface {
     @Override
     public String processar(Entidade entidade) {
         ContatoDao dao = new ContatoDao();
-         return dao.consultar(entidade).size() != 0 ? "Contato já existe." : null;
+         return dao.consultar(entidade).size() != 0 ? null : "Contato já existe." ;
     }
 
 }

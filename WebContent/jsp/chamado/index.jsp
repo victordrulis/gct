@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@page import="br.com.drulis.gct.dominio.Contato"%>
 <%@page import="br.com.drulis.gct.dominio.Chamado"%>
+<%@page import="java.text.SimpleDateFormat" %>
 <%@page import="java.util.List"%>
 <!DOCTYPE html>
 <html>
@@ -45,6 +46,7 @@
 		      <th class="th-sm">Título</th>
 		      <th class="th-sm">Cliente</th>
 			  <th class="th-sm">Produto</th>
+			  <th class="th-sm">Data Inclusão</th>
 	          <th class="th-sm">Atribuido</th>
 	          <th class="th-sm">Status</th>
 			  <th class="th-sm">Ativo</th>
@@ -53,6 +55,7 @@
 		</thead>
   <tbody>
     <%
+    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
        List<Chamado> resultado = (List<Chamado>) request.getAttribute("resultado");
    
        if(resultado != null) {
@@ -63,6 +66,7 @@
       <td><%= chamado.getTitulo() %></td>
       <td><a href="/gct/cliente?acao=exibir&id=<%= chamado.getCliente().getId() %>"><%= chamado.getCliente().getContato().getNome() %></a></td>
       <td><a href="/gct/produto?acao=exibir&id=<%= chamado.getProduto().getId() %>"><span><%= chamado.getProduto().getTitulo() %> (ID: <%= chamado.getProduto().getId() %>)</span></td>
+      <td><%= dateFormat.format(chamado.getDataInclusao()) %></td>
       <td><%= chamado.getUsuarioAtribuido().getContato().getNome() %></td>
       <td align="center"><%= chamado.getOcorrenciaStatus().getDescricao() %></td>
       <td align="center"><%= chamado.getAtivo() > 0 ? "Sim" : "-" %></td>

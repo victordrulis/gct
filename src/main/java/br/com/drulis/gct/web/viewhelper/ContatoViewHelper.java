@@ -42,22 +42,11 @@ public class ContatoViewHelper implements ViewHelperInterface {
                 contato.setId(Integer.parseInt(id));
         }
         
-        if(!acao.equals(Acao.EXCLUIR.getAcao()) || acao.equals(Acao.SALVAR.getAcao()) && request.getMethod().equals("GET")) {
+        if(!acao.equals(Acao.EXCLUIR.getAcao()) && (request.getMethod().equals("GET") || request.getMethod().equals("POST"))) {
             contato.setNome(request.getParameter("nome"));
             contato.setCpfCnpj(request.getParameter("cpfCnpj"));
             contato.setEmail(request.getParameter("email"));
             contato.setTel(request.getParameter("telefone"));
-            
-            if(request.getParameter("ativo") != null)
-                contato.setAtivo(1);
-        }
-        
-        if(acao.equals(Acao.SALVAR.getAcao()) || acao.equals(Acao.ALTERAR.getAcao()) || acao.equals(Acao.EDITAR.getAcao()) && request.getMethod().equals("POST")) {
-            contato.setNome(request.getParameter("nome"));
-            contato.setCpfCnpj(request.getParameter("cpfCnpj"));
-            contato.setEmail(request.getParameter("email"));
-            contato.setTel(request.getParameter("telefone"));
-            contato.setAtivo(1);
             
             if(request.getParameter("ativo") != null)
                 contato.setAtivo(1);
@@ -102,7 +91,12 @@ public class ContatoViewHelper implements ViewHelperInterface {
                 break;
             }
             
-            request.setAttribute("resultado", listContato);
+            if(resultado.getMensagem() != null) {
+            	request.setAttribute("resultado", resultado.getMensagem());
+                request.getRequestDispatcher("/mensagem.jsp").forward(request, response);
+                break;
+            }
+            
             request.getRequestDispatcher("/jsp/contato/index.jsp").forward(request, response);
             break;
         

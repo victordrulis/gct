@@ -60,7 +60,7 @@
 				</div>
 				<div class="row">
 				     <button type="submit" class="btn btn-primary col-md-1">Salvar</button>
-				     <button type="submit" class="btn btn-secundary col-md-1">Cancelar</button>
+				     <a class="col-sm-1" href="/gct/contato"><button type="button" class="btn btn-secundary">Cancelar</button></a>
 				</div>
 			
 		</form>

@@ -5,6 +5,7 @@ package br.com.drulis.gct.core;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,7 @@ import br.com.drulis.gct.dominio.negocio.RegrasFactory;
 public class Fachada implements FachadaInterface {
 
     private Resultado resultado;
-    private RegrasFactory regrasFactory;
+    private RegrasFactory rnf;
     private Map<String, DaoInterface> mapDao;
     private Map<String, Map<String, List<StrategyInterface>>> mapRegrasNegocio;
     private Map<String, List<StrategyInterface>> mapRegrasContato;
@@ -63,7 +64,7 @@ public class Fachada implements FachadaInterface {
         this.mapRegrasChamado = new HashMap<String, List<StrategyInterface>>();
         this.mapRegrasDashboard = new HashMap<String, List<StrategyInterface>>();
 
-        this.regrasFactory = new RegrasFactory();
+        this.rnf = new RegrasFactory();
         
         UsuarioDao usuarioDao = new UsuarioDao();
         ContatoDao contatoDao = new ContatoDao();
@@ -86,26 +87,17 @@ public class Fachada implements FachadaInterface {
         List<StrategyInterface> listRegrasAlterar = new ArrayList<StrategyInterface>();
         List<StrategyInterface> listRegrasConsultar = new ArrayList<StrategyInterface>();
         List<StrategyInterface> listRegrasExcluir = new ArrayList<StrategyInterface>();
-        List<StrategyInterface> contatoRegrasSalvar = new ArrayList<StrategyInterface>();
         List<StrategyInterface> contatoRegrasAlterar = new ArrayList<StrategyInterface>();
         List<StrategyInterface> contatoRegrasConsultar = new ArrayList<StrategyInterface>();
         List<StrategyInterface> contatoRegrasExcluir = new ArrayList<StrategyInterface>();
         
-        List<StrategyInterface> chamadoRegrasSalvar = new ArrayList<StrategyInterface>();
-        List<StrategyInterface> chamadoRegrasAlterar = new ArrayList<StrategyInterface>();
-        List<StrategyInterface> chamadoRegrasConsultar = new ArrayList<StrategyInterface>();
-        List<StrategyInterface> chamadoRegrasExcluir = new ArrayList<StrategyInterface>();
-        
-        contatoRegrasConsultar.add(this.regrasFactory.getValidarFormatoData());
-        contatoRegrasConsultar.add(this.regrasFactory.getValidarNaoVazio());
-        contatoRegrasSalvar.add(this.regrasFactory.getValidarCpfCnpj());
-        contatoRegrasSalvar.add(this.regrasFactory.getValidarEmail());
-        contatoRegrasSalvar.add(this.regrasFactory.getValidarNaoExistencia());
-        contatoRegrasAlterar.add(this.regrasFactory.getValidarExistencia());
-        contatoRegrasAlterar.add(this.regrasFactory.getValidarAtivo());
-        contatoRegrasAlterar.add(this.regrasFactory.getValidarTelefoneComDDD());
-        contatoRegrasExcluir.add(this.regrasFactory.getValidarAtivo());
-        this.mapRegrasContato.put("salvar", contatoRegrasSalvar);
+        contatoRegrasConsultar.add(this.rnf.getValidarFormatoData());
+        contatoRegrasConsultar.add(this.rnf.getValidarNaoVazio());
+        contatoRegrasAlterar.add(this.rnf.getValidarExistencia());
+        contatoRegrasAlterar.add(this.rnf.getValidarAtivo());
+        contatoRegrasAlterar.add(this.rnf.getValidarTelefoneComDDD());
+        contatoRegrasExcluir.add(this.rnf.getValidarAtivo());
+        this.mapRegrasContato.put("salvar", Arrays.asList(rnf.getValidarCpfCnpj(), rnf.getValidarEmail(), rnf.getValidarNaoExistencia()));
         this.mapRegrasContato.put("alterar", contatoRegrasAlterar);
         this.mapRegrasContato.put("consultar", contatoRegrasConsultar);
         this.mapRegrasContato.put("excluir", contatoRegrasExcluir);
@@ -130,21 +122,15 @@ public class Fachada implements FachadaInterface {
         this.mapRegrasContrato.put("consultar", listRegrasConsultar);
         this.mapRegrasContrato.put("excluir", listRegrasExcluir);
         
-        this.mapRegrasAtividade.put("salvar", listRegrasSalvar);
-        this.mapRegrasAtividade.put("alterar", listRegrasAlterar);
+        this.mapRegrasAtividade.put("salvar", Arrays.asList(rnf.getValidarChamadoAtivo()));
+        this.mapRegrasAtividade.put("alterar", Arrays.asList(rnf.getValidarAtivo()));
         this.mapRegrasAtividade.put("consultar", listRegrasConsultar);
-        this.mapRegrasAtividade.put("excluir", listRegrasExcluir);
+        this.mapRegrasAtividade.put("excluir", Arrays.asList(rnf.getValidarAtivo()));
         
-        chamadoRegrasConsultar.add(this.regrasFactory.getValidarRangeDeDatas());
-        chamadoRegrasSalvar.add(this.regrasFactory.getValidarClienteAtivo());
-        chamadoRegrasSalvar.add(this.regrasFactory.getValidarProdutoAtivo());
-        chamadoRegrasAlterar.add(this.regrasFactory.getValidarExistencia());
-        chamadoRegrasAlterar.add(this.regrasFactory.getValidarAtivo());
-        chamadoRegrasExcluir.add(this.regrasFactory.getValidarAtivo());
-        this.mapRegrasChamado.put("salvar", chamadoRegrasSalvar);
-        this.mapRegrasChamado.put("alterar", chamadoRegrasAlterar);
-        this.mapRegrasChamado.put("consultar", chamadoRegrasConsultar);
-        this.mapRegrasChamado.put("excluir", chamadoRegrasExcluir);
+        this.mapRegrasChamado.put("salvar", Arrays.asList(rnf.getValidarClienteAtivo(), rnf.getValidarProdutoAtivo(), rnf.getValidarUsuarioAtivo()));
+        this.mapRegrasChamado.put("alterar", Arrays.asList(rnf.getValidarExistencia(), rnf.getValidarAtivo()));
+        this.mapRegrasChamado.put("consultar", Arrays.asList(rnf.getValidarRangeDeDatas()));
+        this.mapRegrasChamado.put("excluir", Arrays.asList(rnf.getValidarAtivo()));
         
         this.mapRegrasDashboard.put("nr", null);
         

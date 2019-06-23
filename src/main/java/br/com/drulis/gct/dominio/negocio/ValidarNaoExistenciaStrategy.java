@@ -3,26 +3,10 @@
  */
 package br.com.drulis.gct.dominio.negocio;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.core.StrategyInterface;
-import br.com.drulis.gct.core.dao.AtividadeDao;
-import br.com.drulis.gct.core.dao.ChamadoDao;
-import br.com.drulis.gct.core.dao.ClienteDao;
 import br.com.drulis.gct.core.dao.ContatoDao;
-import br.com.drulis.gct.core.dao.ContratoDao;
-import br.com.drulis.gct.core.dao.DaoInterface;
-import br.com.drulis.gct.core.dao.ProdutoDao;
-import br.com.drulis.gct.core.dao.UsuarioDao;
-import br.com.drulis.gct.dominio.Atividade;
-import br.com.drulis.gct.dominio.Chamado;
-import br.com.drulis.gct.dominio.Cliente;
 import br.com.drulis.gct.dominio.Contato;
-import br.com.drulis.gct.dominio.Contrato;
-import br.com.drulis.gct.dominio.Produto;
-import br.com.drulis.gct.dominio.Usuario;
 
 /**
  * @author Victor Drulis Oliveira
@@ -32,28 +16,25 @@ import br.com.drulis.gct.dominio.Usuario;
  */
 public class ValidarNaoExistenciaStrategy implements StrategyInterface {
 
-	private Map<String, DaoInterface> daos;
-	
-	public ValidarNaoExistenciaStrategy() {
-		this.daos = new HashMap<>();
-		this.daos.put(Contato.class.getName(), new ContatoDao());
-		this.daos.put(Usuario.class.getName(), new UsuarioDao());
-        this.daos.put(Contrato.class.getName(), new ContratoDao());
-        this.daos.put(Cliente.class.getName(), new ClienteDao());
-        this.daos.put(Produto.class.getName(), new ProdutoDao());
-        this.daos.put(Atividade.class.getName(), new AtividadeDao());
-        this.daos.put(Chamado.class.getName(), new ChamadoDao());
-	}
-	
     @Override
     public String processar(Entidade entidade) {
+    	ContatoDao dao = new ContatoDao();
+    	Contato con = (Contato) entidade;
+    	
         try {
-        	DaoInterface dao = daos.get(entidade.getClass().getName());
-	        if(dao.consultar(entidade).size() > 0)
-	        	return "Já existem registros com os dados informados.";
+
+        	for(Entidade e: dao.consultar(entidade)) {
+        		Contato res = (Contato) e;
+        		
+        		if(con.getCpfCnpj().equals(res.getCpfCnpj()))
+        			return "O contato já existe para o CPF: " +  res.getCpfCnpj();
+        		
+        		if(con.getEmail().equalsIgnoreCase(res.getEmail()))
+        			return "O contato já existe para o e-mail: " + res.getEmail();
+        	}
         } catch (Exception e) {
         	e.printStackTrace();
-        	return "Erro ao verificar existencia de dados: " + e.getMessage();
+        	return "Erro ao verificar existencia de dados: \n" + e.getCause();
         }
         
         return null;
