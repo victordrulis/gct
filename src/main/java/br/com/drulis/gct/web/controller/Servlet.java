@@ -1,7 +1,6 @@
 package br.com.drulis.gct.web.controller;
 
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.HashMap;
 
 import javax.servlet.ServletException;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpSession;
 
 import br.com.drulis.gct.core.Acao;
 import br.com.drulis.gct.core.Entidade;
-import br.com.drulis.gct.core.util.FileUtils;
 import br.com.drulis.gct.core.util.Resultado;
 import br.com.drulis.gct.web.command.AlterarCommand;
 import br.com.drulis.gct.web.command.CommandInterface;

@@ -27,16 +27,24 @@
     <div class="col-sm-12 col-md-6">
         
         <%
-            String msg = request.getParameter("resultado");
+        	String mensagem = (String) request.getAttribute("resultado");
             
         %>
         <h5><strong>Mensagem:</strong></h5>
-        <span><p><%= msg %></p></span> 
+        <span><p><%= mensagem %></p></span> 
+        <hr>
+        <button type="button" class="btn btn-warning" onclick="goBack()">Voltar</button>
+
     </div>
 </div>
 
 </div>
 </main>
 <%@include file="jsp/fragmentos/footer.jsp" %>
+<script>
+function goBack() {
+  window.history.back();
+}
+</script>
 </body>
 </html>

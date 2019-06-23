@@ -118,33 +118,35 @@ public class ContatoDao extends DaoEntidade {
         PreparedStatement ps = null;
         Contato contato = (Contato) entidade;
         
-        if(contato.getUsuarioInclusao() == null) {
-            contato.setUsuarioInclusao(new Usuario());
-            contato.setUsuarioUpdate(new Usuario());
-            contato.setUsuarioInativacao(new Usuario());
-        }
-        
         List<Entidade> listaContatos = new ArrayList<Entidade>();
         StringBuilder sql = new StringBuilder();
 
-        sql.append("SELECT c.* FROM contato c  WHERE");
+        sql.append("SELECT c.* FROM contato c  WHERE ");
         
         try {
-
-            sql.append(" c.cpf_cnpj LIKE '%");
+        	if(contato.getNome() != null)
+        		sql.append(" c.nome LIKE '%" + contato.getNome() + "%'");
+        	else
+        		sql.append(" c.nome LIKE '%%'");
+        	
             if(contato.getCpfCnpj() != null)
-            	sql.append(contato.getCpfCnpj());
-            sql.append("%\'");
+            	sql.append(" OR c.cpf_cnpj = '" + contato.getCpfCnpj() +"'");
 
             if (contato.getId() > 0)
-				sql.append(" AND c.id = " + contato.getId());
+            	sql.append(" OR c.id = " + contato.getId());
 
-			if (contato.getNome() != null)
-				sql.append(" OR c.nome LIKE '%" + contato.getNome() + "%'");
-            
-            sql.append(" AND 1=1");
-            
+			if (contato.getEmail() != null)
+				sql.append(" OR c.email = '" + contato.getEmail() + "'");
 
+			if(contato.getUsuarioInclusao() != null)
+            	sql.append(" OR c.usuario_inclusao_id = " + contato.getUsuarioInclusao().getId());
+			
+			if(contato.getUsuarioUpdate() != null)
+            	sql.append(" OR c.usuario_alteracao_id = " + contato.getUsuarioUpdate().getId());
+			
+			if(contato.getUsuarioInativacao() != null)
+            	sql.append(" OR c.usuario_inativacao_id = " + contato.getUsuarioInativacao().getId());
+            
             this.conectar();
             ps = sessaoBD.prepareStatement(sql.toString());
             ResultSet resultado = ps.executeQuery();

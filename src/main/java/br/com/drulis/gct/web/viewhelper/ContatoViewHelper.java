@@ -70,13 +70,10 @@ public class ContatoViewHelper implements ViewHelperInterface {
     @Override
     public void setView(Resultado resultado, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         List<Contato> listContato = new ArrayList<>();
-        String mensagem = null;
         String uri = request.getRequestURI();
         String acao = request.getParameter("acao");
         
         System.out.println("[" + this.getClass().getSimpleName() + "] setView: Acao = " + acao + ", URI: " + uri);
-        
-        
         
         if(resultado != null)
         		listContato = (List<Contato>) (Object) resultado.getEntidades();
@@ -84,7 +81,7 @@ public class ContatoViewHelper implements ViewHelperInterface {
         switch(listContato.size()) {
         case 0:
         	if(resultado != null && resultado.getMensagem() != null) {
-                mensagem = resultado.getMensagem();
+        		request.setAttribute("resultado", resultado.getMensagem());
                 request.getRequestDispatcher("/mensagem.jsp").forward(request, response);
                 break;
             }
@@ -110,12 +107,6 @@ public class ContatoViewHelper implements ViewHelperInterface {
             break;
         
         default:
-            if(mensagem != null && !mensagem.equals("")) {
-                request.setAttribute("mensagem", mensagem);
-                request.getRequestDispatcher("mensagem.jsp").forward(request, response);
-                break;
-            }
-            
             if(acao != null && acao.equals(Acao.NOVO.getAcao())) {
                 request.getRequestDispatcher("/jsp/contato/form.jsp").forward(request, response);
                 break;

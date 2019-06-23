@@ -101,7 +101,6 @@ public class Fachada implements FachadaInterface {
         contatoRegrasSalvar.add(this.regrasFactory.getValidarCpfCnpj());
         contatoRegrasSalvar.add(this.regrasFactory.getValidarEmail());
         contatoRegrasSalvar.add(this.regrasFactory.getValidarNaoExistencia());
-        contatoRegrasSalvar.add(this.regrasFactory.getValidarExistencia());
         contatoRegrasAlterar.add(this.regrasFactory.getValidarExistencia());
         contatoRegrasAlterar.add(this.regrasFactory.getValidarAtivo());
         contatoRegrasAlterar.add(this.regrasFactory.getValidarTelefoneComDDD());
@@ -111,30 +110,30 @@ public class Fachada implements FachadaInterface {
         this.mapRegrasContato.put("consultar", contatoRegrasConsultar);
         this.mapRegrasContato.put("excluir", contatoRegrasExcluir);
         
-        this.mapRegrasUsuario.put("SALVAR", listRegrasSalvar);
-        this.mapRegrasUsuario.put("ALTERAR", listRegrasAlterar);
-        this.mapRegrasUsuario.put("CONSULTAR", listRegrasConsultar);
-        this.mapRegrasUsuario.put("EXCLUIR", listRegrasExcluir);
+        this.mapRegrasUsuario.put("salvar", listRegrasSalvar);
+        this.mapRegrasUsuario.put("alterar", listRegrasAlterar);
+        this.mapRegrasUsuario.put("consultar", listRegrasConsultar);
+        this.mapRegrasUsuario.put("excluir", listRegrasExcluir);
         
-        this.mapRegrasCliente.put("SALVAR", listRegrasSalvar);
-        this.mapRegrasCliente.put("ALTERAR", listRegrasAlterar);
-        this.mapRegrasCliente.put("CONSULTAR", listRegrasConsultar);
-        this.mapRegrasCliente.put("EXCLUIR", listRegrasExcluir);
+        this.mapRegrasCliente.put("salvar", listRegrasSalvar);
+        this.mapRegrasCliente.put("alterar", listRegrasAlterar);
+        this.mapRegrasCliente.put("consultar", listRegrasConsultar);
+        this.mapRegrasCliente.put("excluir", listRegrasExcluir);
         
-        this.mapRegrasProduto.put("SALVAR", listRegrasSalvar);
-        this.mapRegrasProduto.put("ALTERAR", listRegrasAlterar);
-        this.mapRegrasProduto.put("CONSULTAR", listRegrasConsultar);
-        this.mapRegrasProduto.put("EXCLUIR", listRegrasExcluir);
+        this.mapRegrasProduto.put("salvar", listRegrasSalvar);
+        this.mapRegrasProduto.put("alterar", listRegrasAlterar);
+        this.mapRegrasProduto.put("consultar", listRegrasConsultar);
+        this.mapRegrasProduto.put("excluir", listRegrasExcluir);
 
-        this.mapRegrasContrato.put("SALVAR", listRegrasSalvar);
-        this.mapRegrasContrato.put("ALTERAR", listRegrasAlterar);
-        this.mapRegrasContrato.put("CONSULTAR", listRegrasConsultar);
-        this.mapRegrasContrato.put("EXCLUIR", listRegrasExcluir);
+        this.mapRegrasContrato.put("salvar", listRegrasSalvar);
+        this.mapRegrasContrato.put("alterar", listRegrasAlterar);
+        this.mapRegrasContrato.put("consultar", listRegrasConsultar);
+        this.mapRegrasContrato.put("excluir", listRegrasExcluir);
         
-        this.mapRegrasAtividade.put("SALVAR", listRegrasSalvar);
-        this.mapRegrasAtividade.put("ALTERAR", listRegrasAlterar);
-        this.mapRegrasAtividade.put("CONSULTAR", listRegrasConsultar);
-        this.mapRegrasAtividade.put("EXCLUIR", listRegrasExcluir);
+        this.mapRegrasAtividade.put("salvar", listRegrasSalvar);
+        this.mapRegrasAtividade.put("alterar", listRegrasAlterar);
+        this.mapRegrasAtividade.put("consultar", listRegrasConsultar);
+        this.mapRegrasAtividade.put("excluir", listRegrasExcluir);
         
         chamadoRegrasConsultar.add(this.regrasFactory.getValidarRangeDeDatas());
         chamadoRegrasSalvar.add(this.regrasFactory.getValidarClienteAtivo());
@@ -142,15 +141,12 @@ public class Fachada implements FachadaInterface {
         chamadoRegrasAlterar.add(this.regrasFactory.getValidarExistencia());
         chamadoRegrasAlterar.add(this.regrasFactory.getValidarAtivo());
         chamadoRegrasExcluir.add(this.regrasFactory.getValidarAtivo());
-        this.mapRegrasChamado.put("SALVAR", chamadoRegrasSalvar);
-        this.mapRegrasChamado.put("ALTERAR", chamadoRegrasAlterar);
-        this.mapRegrasChamado.put("CONSULTAR", chamadoRegrasConsultar);
-        this.mapRegrasChamado.put("EXCLUIR", chamadoRegrasExcluir);
+        this.mapRegrasChamado.put("salvar", chamadoRegrasSalvar);
+        this.mapRegrasChamado.put("alterar", chamadoRegrasAlterar);
+        this.mapRegrasChamado.put("consultar", chamadoRegrasConsultar);
+        this.mapRegrasChamado.put("excluir", chamadoRegrasExcluir);
         
-        this.mapRegrasDashboard.put("SALVAR", null);
-        this.mapRegrasDashboard.put("ALTERAR", null);
-        this.mapRegrasDashboard.put("CONSULTAR", null);
-        this.mapRegrasDashboard.put("EXCLUIR", null);
+        this.mapRegrasDashboard.put("nr", null);
         
         this.mapRegrasNegocio.put(Contato.class.getName(), mapRegrasContato);
         this.mapRegrasNegocio.put(Usuario.class.getName(), mapRegrasUsuario);
@@ -178,6 +174,7 @@ public class Fachada implements FachadaInterface {
                 entidades.add(entidade);
                 resultado.setEntidades(entidades);
                 System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] " + entidade.getClass().getSimpleName() + " salvo. ID: " + resultado.getEntidades().get(0).getId());
+                mensagem = "Dados salvos com sucesso.";
             } catch (SQLException e) {
                 e.printStackTrace();
                 System.out.println(this.getClass().getSimpleName() + Mensagem.ERRO_INSERIR.getDescricao() + "-- Entidade: " + entidade.getClass() + "\n" + e.getMessage());
@@ -227,6 +224,7 @@ public class Fachada implements FachadaInterface {
                 entidades.add(entidade);
                 resultado.setEntidades(entidades);
                 System.out.println("[" + this.getClass().getSimpleName() + "] Registro alterado: " + entidade.getClass().getSimpleName() + ", Id: " + entidade.getId());
+                mensagem = "Dados alterados com sucesso.";
             } catch (SQLException e) {
                 e.printStackTrace();
                 System.out.println("[" + this.getClass().getName() + entidade.getClass() + "] " + Mensagem.ERRO_ATUALIZAR.getDescricao() + ":\n" + e.getMessage());
@@ -254,10 +252,11 @@ public class Fachada implements FachadaInterface {
                 entidades.add(entidade);
                 resultado.setEntidades(entidades);
                 System.out.println("[" + this.getClass().getSimpleName() + "] Registro excluído: " + entidade.getClass().getSimpleName() + ", Id: " + entidade.getId());
+                mensagem = "Excluido com sucesso.";
             } catch (SQLException e) {
                 e.printStackTrace();
                 System.out.println("[" + this.getClass().getName() + entidade.getClass() + "] " + Mensagem.ERRO_EXCLUIR.getDescricao() + ":\n" + e.getMessage());
-                resultado.setMensagem(Mensagem.ERRO_EXCLUIR.getDescricao());
+                resultado.setMensagem(Mensagem.ERRO_EXCLUIR.getDescricao() + ": " + e.getMessage());
             }
         }
 
