@@ -141,7 +141,6 @@ public class ChamadoDao extends DaoEntidade {
         sql.append("LEFT JOIN produto p ON p.id = c.produto_id ");
         sql.append("LEFT JOIN cliente cli ON cli.id = c.cliente_id ");
         sql.append("LEFT JOIN contato con ON con.id = cli.contato_id ");
-        sql.append("WHERE 1 = 1 ");
 
         try {
             this.conectar();
@@ -201,6 +200,9 @@ public class ChamadoDao extends DaoEntidade {
                 
                 listaChamados.add(cham);
             }
+            
+            if(listaChamados.size() == 0)
+            	listaChamados.add(chamado);
             
             System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] " + Mensagem.OK_CONSULTAR.getDescricao());
         } catch (SQLException e) {
