@@ -114,17 +114,25 @@ public class DashboardViewHelper implements ViewHelperInterface {
 	        	request.getRequestDispatcher("/jsp/dashboard/chamado.jsp").forward(request, response);
 	        	break;
 	        case "atividade":
-	        	Set<String> meses = new TreeSet<>();
+	        	Map<String, Integer> meses = new TreeMap<>();
 	        	Map<String, Map<String, Integer>> mapaResult = new HashMap<>();
 	        	if(dash.getMapaListaAtividades() != null) {
 	        		mapaResult = dash.getMapaListaAtividades();
+	        		
+	        		// Obtendo mapa de meses e zerando todos
 	        		dash.getMapaListaAtividades().forEach((k, v) -> {
-	        			v.forEach((kl, vl) -> {meses.add(kl);});
+	        			v.forEach((kl, vl) -> {
+	        					meses.put(kl, +0);
+	        				});
+	        		});
+	        		
+	        		// Setar meses e seus valores
+	        		dash.getMapaListaAtividades().forEach((k, v) -> {
+	        			v.putAll(meses);
 	        		});
 	        	}
 	        	
-//	        	mapaResult.forEach((k, v)-> mapaResult.get(k).putAll(meses.stream().collect(Collectors.toMap(m -> (String) m, m -> 0))));
-//	        	meses.forEach(m -> mapaResult.forEach((k, v)-> mapaResult.get(k).put(m, +0)));
+	        	// Map<String, Map<String, Foo>> map = list.stream().collect(Collectors.groupingBy(f -> f.b.id, Collectors.toMap(f -> f.b.date, Function.identity())));
 	        	
 	        	request.setAttribute("meses", gson.toJson(meses));
 	        	request.setAttribute("dadosGrafico", gson.toJson(dash.getMapaListaAtividades()));

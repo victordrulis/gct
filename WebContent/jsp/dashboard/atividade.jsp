@@ -110,10 +110,13 @@ var dados = ${dadosGrafico};
 var labels = [];
 var qtds = [];
 var dataSets = [];
+var meses = [];
+var tratado = [];
 
 console.log(" ----  ATIVIDADES ATIVAS POR STATUS E DATA DE INCLUSAO ----")
-formataDataSet(dados);
 console.log(dados);
+
+formataDataSet(dados);
 
 console.log("--- MESES gravados");
 console.log(${meses});
@@ -121,46 +124,59 @@ console.log(${meses});
 console.log("--- MAPAS gravados");
 console.log(${mapa});
 
-/**
- * Transforma os dados vindos na request no formato para ChartJS
- */
-function formataDataSet(dados) {
-	for (i in dados) {
-		labels.push(i); // pegando o eixo X do gráfico.
-		console.log(": " + i);
-		var count = 0;
-		
-		for(x in dados[i]) {
-			console.log("\tvalor: " + dados[i][x]);
-		}
-		
-		dataSets.push(
-				{label: "label",
-					borderColor: window.chartColors.red,
-					backgroundColor: window.chartColors.red,
-					fill: false,
-					data: [
-						"1",
-						"5",
-					],
-					yAxisID: 'y-axis-' + (count+1)
-				}	
-			);
-	}
-	
-	
-	console.log("---------");
-	console.log("labels: " + labels);
-	console.log("+++++");
-	console.log("DATASETSSSSS");
-	console.log(dataSets);
-	
-};
+ /**
+  * Transforma os dados vindos na request no formato para ChartJS
+  */
+ function formataDataSet(dados) {
+     for (i in dados) {
+         this.tratado[i] = [];
+         for(x in dados[i]) {
+             if(!meses.includes(x)) {
+                 meses.push(x);
+             }
+         }
+     }
+     
+     for (i in dados) {
+         for(m in meses) {
+             tratado[i].push(0);
+         }
+     }
+     
+     for (i in tratado) {
+    	 var count = 0;
+         dataSets.push(
+             {label: i,
+                 borderColor: window.chartColors.red,
+                 backgroundColor: window.chartColors.red,
+                 fill: false,
+                 data: tratado[i],
+                 yAxisID: 'y-axis-' + (count+1)
+             }   
+         );
+     }
+     
+     for (i in dados) {
+         for(x in dados[i]) {
+             if(!meses.includes(x)) {
+                 
+             } else {
+                 tratado[i].push(dados[i][x]);
+             }
+         }   
+     }
+     
+     
+     labels = meses;
+     
+     console.log("tratado:\n");
+     console.log(tratado);
+     
+     console.log("meses:\n");
+     console.log(meses.sort());
+ };
 
-var lineChartData = {
-		labels: ${meses},
-		datasets: dataSets
-	};
+var lineChartData = {labels: ${meses}, datasets: dataSets};
 
 	window.onload = function() {
 		var ctx = document.getElementById('chart-0').getContext('2d');
