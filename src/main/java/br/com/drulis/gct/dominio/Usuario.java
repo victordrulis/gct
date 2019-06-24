@@ -40,6 +40,12 @@ public class Usuario extends Entidade {
         super();
         this.id = id;
     }
+    
+    public Usuario(Integer id, Integer ativo) {
+        super();
+        this.id = id;
+        this.ativo = ativo;
+    }
 
     /**
      * @return the contato

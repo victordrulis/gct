@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.dominio.Cliente;
@@ -118,20 +119,14 @@ public class ClienteDao extends DaoEntidade {
         PreparedStatement ps = null;
         Cliente cliente = (Cliente) entidade;
         ContratoDao daoContrato = new ContratoDao();
-        List<Entidade> listaClientes = new ArrayList<Entidade>();
+        List<Cliente> listaClientes = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         
         sql.append("SELECT cli.*, c.* FROM cliente cli ");
         sql.append("LEFT JOIN contato c ON c.id = cli.contato_id ");
-        sql.append("WHERE 1 = 1 ");
         
         try {
             this.conectar();
-
-            if (cliente.getId() > 0) {
-                sql.append(" AND cli.id = " + cliente.getId());
-            }
-
             ps = sessaoBD.prepareStatement(sql.toString());
             ResultSet resultado = ps.executeQuery();
 
@@ -165,6 +160,12 @@ public class ClienteDao extends DaoEntidade {
                 listaClientes.add(cli);
             }
             
+            if(cliente.getId() > 0)
+            	return listaClientes.stream().filter(c -> c.getId() == cliente.getId()).collect(Collectors.toList());
+            
+            if(cliente.getAtivo() == 1)
+            	return listaClientes.stream().filter(c -> c.getAtivo() == cliente.getAtivo()).collect(Collectors.toList());
+            
             System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.OK_CONSULTAR.getDescricao());
         } catch (SQLException e) {
             System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_NAO_ENCONTRADO.getDescricao()+ "\n" + e.getMessage());
@@ -173,7 +174,7 @@ public class ClienteDao extends DaoEntidade {
             System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_EXIBIR.getDescricao() + e.getMessage());
             e.printStackTrace();
         }
-        return listaClientes;
+        return listaClientes.stream().collect(Collectors.toList());
     }
 
     @Override

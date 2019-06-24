@@ -8,11 +8,11 @@ public class ValidarUsuarioAtivo implements StrategyInterface {
 
 	@Override
 	public String processar(Entidade entidade) {
-		if(entidade.getClass().isInstance(Usuario.class)) {
+		if(entidade.getClass().equals(Usuario.class.getName())) {
 			return entidade.getAtivo() > 0 ? null : "O registro do Usuario está inativo.";
 		}
 		
-		return "Não é um registro de usuário ativo.";
+		return null;
 	}
 
 }

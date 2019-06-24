@@ -44,6 +44,11 @@ public class Cliente extends Entidade {
     public Cliente(Integer id) {
 		this.id = id;
 	}
+    
+    public Cliente(Integer id, Integer ativo) {
+		this.id = id;
+		this.ativo = ativo;
+	}
 
 	/**
      * @return the contato

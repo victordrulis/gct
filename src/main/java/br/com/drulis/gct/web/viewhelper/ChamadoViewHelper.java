@@ -77,15 +77,15 @@ public class ChamadoViewHelper implements ViewHelperInterface {
         	}
         }
 
-        if(acao.equals(Acao.SALVAR.getAcao()) || acao.equals(Acao.ALTERAR.getAcao()) || acao.equals(Acao.EDITAR.getAcao()) && request.getMethod().equals("POST")) {
+        if(!acao.equals(Acao.EXCLUIR.getAcao()) && request.getMethod().equals("POST")) {
         	Resultado resultado = new Resultado();
-        	Usuario usuarioInclusao = new Usuario();
+        	Usuario usuarioAtribuido = new Usuario();
         	Cliente cliente = new Cliente();
         	Produto produto = new Produto();
-        	Usuario usuarioAtribuido = new Usuario();
-            usuarioAtribuido.setId(Integer.parseInt(usrAtribuido));
+            Usuario usuarioInclusao = new Usuario(1, 1);
             cliente.setId(Integer.parseInt(clienteId));
             produto.setId(Integer.parseInt(produtoId));
+            usuarioAtribuido.setId(Integer.parseInt(usrAtribuido));
             
             if(acao != null && (acao.equals(Acao.ALTERAR.getAcao()) || acao.equals(Acao.EDITAR.getAcao())))
                 chamado.setUsuarioUpdate(new Usuario(1));
@@ -105,7 +105,7 @@ public class ChamadoViewHelper implements ViewHelperInterface {
 
             try {
                 resultado = consultar.execute(usuarioInclusao);
-                chamado.setUsuarioInclusao(usuarioInclusao);
+                chamado.setUsuarioInclusao((Usuario) resultado.entidades.get(0));
                 
             	resultado = consultar.execute(usuarioAtribuido);
             	chamado.setUsuarioAtribuido((Usuario) resultado.getEntidades().get(0));
@@ -180,8 +180,8 @@ public class ChamadoViewHelper implements ViewHelperInterface {
         
         try {
         	resProduto = consultar.execute(new Produto());
-        	resCliente = consultar.execute(new Cliente());
-        	resUsuario = consultar.execute(new Usuario());
+        	resCliente = consultar.execute(new Cliente(0, 1));
+        	resUsuario = consultar.execute(new Usuario(0, 1));
         } catch (Exception e) {
         	System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_CONVERTER_DADOS.getDescricao() + ": " + e.getMessage());
         	e.printStackTrace();
