@@ -51,7 +51,7 @@ public class ValidarNaoExistenciaStrategy implements StrategyInterface {
     	DaoInterface dao = this.mapDao.get(entidade.getClass().getName());
 
     	try {
-			return dao.consultar(entidade).size() == 0 ? null : "Existem registros para os dados informados.";
+			return dao.consultar(entidade).size() <= 0 ? null : "Existem registros para os dados informados.";
 		} catch (SQLException e) {
 			System.out.println("[" + this.getClass().getSimpleName() + "] Erro de validação de existência: " + e.getCause());
 			e.printStackTrace();

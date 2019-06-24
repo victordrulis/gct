@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.dominio.Chamado;
@@ -133,7 +134,7 @@ public class ChamadoDao extends DaoEntidade {
         Chamado chamado = (Chamado) entidade;
         UsuarioDao daoUsuario = new UsuarioDao();
         
-        List<Entidade> listaChamados = new ArrayList<Entidade>();
+        List<Chamado> listaChamados = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         
         sql.append("SELECT c.*, p.*, cli.*, con.* FROM chamado c ");
@@ -144,30 +145,6 @@ public class ChamadoDao extends DaoEntidade {
 
         try {
             this.conectar();
-            
-            if (chamado.getProduto() != null && chamado.getProduto().getId() > 0)
-                sql.append(" AND c.titulo LIKE '%" + chamado.getProduto().getTitulo() +"%'");
-            
-            if (chamado.getProduto() != null && chamado.getProduto().getId() > 0)
-                sql.append(" AND c.produto_id = " + chamado.getProduto().getId());
-            
-            if (chamado.getCliente() != null && chamado.getCliente().getId() > 0)
-                sql.append(" AND c.cliente_id = " + chamado.getCliente().getId());
-            
-            if (chamado.getUsuarioAtribuido() != null && chamado.getUsuarioAtribuido().getId() > 0)
-                sql.append(" AND c.usuario_atribuido_id = " + chamado.getUsuarioAtribuido().getId());
-            
-            if (chamado.getUsuarioInclusao() != null && chamado.getUsuarioInclusao().getId() > 0)
-                sql.append(" AND c.usuario_inclusao_id = " + chamado.getUsuarioInclusao().getId());
-            
-            if (chamado.getId() > 0)
-                sql.append(" AND c.id = " + chamado.getId());
-            
-            if(chamado.getAtivo() > 0)
-                sql.append(" AND c.ativo = 1");
-            else
-                sql.append(" AND c.ativo = 0");
-
             ps = sessaoBD.prepareStatement(sql.toString());
             ResultSet resultado = ps.executeQuery();
 
@@ -233,7 +210,11 @@ public class ChamadoDao extends DaoEntidade {
             System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + Mensagem.ERRO_EXIBIR.getDescricao() + e.getMessage());
             e.printStackTrace();
         }
-        return listaChamados;
+        
+        if(chamado.getId() > 0)
+        	return listaChamados.stream().filter(c -> c.getId() == chamado.getId()).collect(Collectors.toList());
+        
+        return listaChamados.stream().collect(Collectors.toList());
     }
 
     @Override

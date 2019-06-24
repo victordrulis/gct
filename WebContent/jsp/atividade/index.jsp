@@ -3,6 +3,7 @@
 <%@page import="br.com.drulis.gct.dominio.Atividade"%>
 <%@page import="br.com.drulis.gct.dominio.Chamado"%>
 <%@page import="br.com.drulis.gct.dominio.Usuario"%>
+<%@page import="java.text.SimpleDateFormat" %>
 <%@page import="java.util.List"%>
 <%@include file="../fragmentos/header.jsp" %>
 <!DOCTYPE html>
@@ -47,7 +48,8 @@
 		      <th class="th-sm">ID</th>
 		      <th class="th-sm">Título</th>
 			  <th class="th-sm">Chamado</th>
-	          <th class="th-sm"> Usr Atribuido</th>
+			  <th class="th-sm">Data Inclusão</th>
+	          <th class="th-sm">Usr Atribuido</th>
 	          <th class="th-sm">Status</th>
 			  <th class="th-sm">Ativo</th>
 			  <th class="th-sm">Ação</th>
@@ -55,6 +57,7 @@
 		</thead>
   <tbody>
     <%
+       SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
        List<Atividade> resultado = (List<Atividade>) request.getAttribute("resultado");
    
        if(resultado != null) {
@@ -63,8 +66,9 @@
     <tr>
       <td><%= atividade.getId() %></td>
       <td><%= atividade.getTitulo() %></td>
-      <td><%= atividade.getChamado().getTitulo() %></td>
-      <td><%= atividade.getUsuarioAtribuido().getId() %></td>
+      <td><span>#<%= atividade.getChamado().getId() %>: <%= atividade.getChamado().getTitulo() %></span></td>
+      <td><%= dateFormat.format(atividade.getDataInclusao()) %></td>
+      <td><span><%= atividade.getUsuarioAtribuido().getLogin() %></span></td>
 <%--       <td><%= atividade.getUsuarioAtribuido().getContato().getNome() %></td> --%>
       <td><%= atividade.getOcorrenciaStatus().getDescricao() %></td>
       <td><%= atividade.getAtivo() > 0 ? "Sim" : "-" %></td>

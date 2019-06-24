@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.dominio.Atividade;
@@ -132,42 +133,16 @@ public class AtividadeDao extends DaoEntidade {
         Atividade atividade = (Atividade) entidade;
         UsuarioDao daoUsuario = new UsuarioDao();
         
-        List<Entidade> listaAtividades = new ArrayList<Entidade>();
+        List<Atividade> listaAtividades = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         
         sql.append("SELECT a.*, c.*, u.*, con.* FROM atividade a ");
         sql.append("LEFT JOIN chamado c ON c.id = a.chamado_id ");
         sql.append("LEFT JOIN usuario u ON u.usuario_id = a.usuario_atribuido_id ");
         sql.append("LEFT JOIN contato con ON con.id = u.contato_id ");
-        sql.append("WHERE 1 = 1 ");
 
         try {
             this.conectar();
-            
-            if (atividade.getChamado() != null && atividade.getChamado().getId() > 0) {
-                sql.append(" AND a.chamado_id = " + atividade.getChamado().getId());
-            }
-            
-            if (atividade.getUsuarioInclusao() != null && atividade.getChamado().getUsuarioInclusao().getId() > 0) {
-                sql.append(" AND a.usuario_inclusao_id = " + atividade.getChamado().getUsuarioInclusao().getId());
-            }
-            
-            if (atividade.getUsuarioAtribuido() != null && atividade.getUsuarioAtribuido().getId() > 0) {
-                sql.append(" AND a.usuario_atribuido_id = " + atividade.getUsuarioAtribuido().getId());
-            }
-            
-            if (atividade.getUsuarioInclusao() != null && atividade.getUsuarioInclusao().getId() > 0) {
-                sql.append(" AND a.usuario_inclusao_id = " + atividade.getUsuarioInclusao().getId());
-            }
-            
-            if (atividade.getAtivo() != 0) {
-                sql.append(" AND a.ativo = 1");
-            }
-            
-            if (atividade.getId() > 0) {
-                sql.append(" AND a.id = " + atividade.getId());
-            }
-
             sql.append(" ORDER BY a.data_inclusao DESC");
             ps = sessaoBD.prepareStatement(sql.toString());
             ResultSet resultado = ps.executeQuery();
@@ -232,7 +207,20 @@ public class AtividadeDao extends DaoEntidade {
             System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + Mensagem.ERRO_EXIBIR.getDescricao() + e.getMessage());
             e.printStackTrace();
         }
-        return listaAtividades;
+        
+        if(atividade.getId() > 0)
+        	return listaAtividades.stream().filter(a -> a.getId() == atividade.getId()).collect(Collectors.toList());
+        
+        if(atividade.getChamado() != null && atividade.getChamado().getId() != 0)
+        	return listaAtividades.stream().filter(a -> a.getChamado().equals(atividade.getChamado())).collect(Collectors.toList());
+        
+        if(atividade.getOcorrenciaStatus() != null)
+        	return listaAtividades.stream().filter(a -> a.getOcorrenciaStatus().equals(atividade.getOcorrenciaStatus())).collect(Collectors.toList());
+        
+        if(atividade.getTipo() != null)
+        	return listaAtividades.stream().filter(a -> a.getTipo().equals(atividade.getTipo())).collect(Collectors.toList());
+        
+        return listaAtividades.stream().collect(Collectors.toList());
     }
 
     @Override

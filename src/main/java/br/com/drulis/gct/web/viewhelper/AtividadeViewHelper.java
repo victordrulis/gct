@@ -44,8 +44,6 @@ public class AtividadeViewHelper implements ViewHelperInterface {
         String dataAbertura = request.getParameter("dataAbertura");
         String usrAtribuido = request.getParameter("usuarioAtribuidoId");
         String ativo = request.getParameter("ativo");
-        String usrInclusao = request.getParameter("usuarioInclusaoId");
-        String usrAlteracao = request.getParameter("usuarioAlteracaoId");
         
         System.out.println("[" + this.getClass().getSimpleName() + "] --getData, ACAO: " + acao + ", URI: " + request.getRequestURI());
 
@@ -135,16 +133,17 @@ public class AtividadeViewHelper implements ViewHelperInterface {
         if(acao != null && (acao.equals(Acao.NOVO.getAcao()))) {
             request.getRequestDispatcher("/jsp/atividade/form.jsp").forward(request, response);
         } else {
+        	 
+        	try {
+                 resChamado = consultar.execute(new Chamado());
+                 resUsuario = consultar.execute(new Usuario());
+             } catch (Exception e) {
+                 System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_CONVERTER_DADOS.getDescricao() + ": " + e.getMessage());
+                 e.printStackTrace();
+             }
+        	 
             switch(resultado.getEntidades().size()) {
             case 0:
-                try {
-                    resChamado = consultar.execute(new Chamado());
-                    resUsuario = consultar.execute(new Usuario());
-                } catch (Exception e) {
-                    System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_CONVERTER_DADOS.getDescricao() + ": " + e.getMessage());
-                    e.printStackTrace();
-                }
-
                 request.setAttribute("listaChamado", resChamado.getEntidades());
                 request.setAttribute("listaUsuario", resUsuario.getEntidades());
                 

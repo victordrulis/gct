@@ -6,6 +6,7 @@
 <%@page import="br.com.drulis.gct.dominio.classificacao.OcorrenciaTipo"%>
 <%@page import="br.com.drulis.gct.dominio.classificacao.OcorrenciaStatus"%>
 <%@page import="java.util.List"%>
+<%@page import="java.util.ArrayList"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -116,7 +117,7 @@
                         %>
                                 <option value="<%= usuarioAtribuido.getId() %>" 
                                 <% if(usuarioAtribuido.getId() == atividade.getUsuarioAtribuido().getId()) { %> selected> <% } else {%> > <% } %>
-                                <%= usuarioAtribuido.getContato().getNome() %>  (CPF/CNPJ: <%= usuarioAtribuido.getContato().getCpfCnpj() %>)</option>
+                                <%= usuarioAtribuido.getContato().getNome() %></option>
                         <%
                            }
                         %>

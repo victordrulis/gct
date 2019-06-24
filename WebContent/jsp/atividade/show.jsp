@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@page import="br.com.drulis.gct.dominio.Atividade"%>
+<%@page import="java.text.SimpleDateFormat" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,6 +16,7 @@
 	<%@include file="../fragmentos/nav.jsp"%>
 	<%
         Atividade atividade = (Atividade) request.getAttribute("resultado");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     %>
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 	<div class="row conteudo-topo">
@@ -60,11 +62,6 @@
                     <h6><strong>Tipo</strong></h6>
                     <span><%= atividade.getTipo().getDescricao() %></span>
                 </div>
-                
-                <div class="form-group col-md-4">
-                    <h6><strong>Status</strong></h6>
-                    <span><%= atividade.getOcorrenciaStatus().getDescricao() %></span>
-                </div>
             </div>
 			<div class="row">
 			     <div class="form-group col-md-2">
@@ -73,18 +70,19 @@
                 </div>
 	            <div class="form-group col-md-3">
 	                <h6><strong>Início</strong></h6>
-                    <span><%= atividade.getDataInicio() %></span>
+                    <span><%= dateFormat.format(atividade.getDataInicio()) %></span>
 	            </div>
 	            
 	            <div class="form-group col-md-3">
                     <h6><strong>Data finalização</strong></h6>
-                    <span><%= atividade.getDataFim() %></span>
+                    <span><%= dateFormat.format(atividade.getDataFim()) %></span>
                 </div>
 	        </div>
 	        
 	        <div class="row">
-               <div class="form-group col-md-4">
-                    
+                  <div class="form-group col-md-4">
+                    <h6><strong>Status</strong></h6>
+                    <span><%= atividade.getOcorrenciaStatus().getDescricao() %></span>
                 </div>
                 
                 <div class="form-group col-md-4">
