@@ -2,6 +2,7 @@
 <%@page import="br.com.drulis.gct.dominio.Chamado"%>
 <%@page import="br.com.drulis.gct.dominio.Atividade"%>
 <%@page import="java.util.List"%>
+<%@page import="java.text.SimpleDateFormat" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,11 +18,12 @@
 	<%@include file="../fragmentos/nav.jsp"%>
     <%
         Chamado chamado = (Chamado) request.getAttribute("resultado");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     %>
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 	<div class="row conteudo-topo">
 		<div class="container">
-			<h2>Chamado - ID: <%= chamado.getId() %></h2>
+			<h2>Chamado #<%= chamado.getId() %></h2>
 			<p>Dados de chamado.</p>
 		</div>
 

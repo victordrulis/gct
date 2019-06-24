@@ -175,4 +175,10 @@ public class ProdutoDao extends DaoEntidade {
         return null;
     }
 
+	@Override
+	public List<Entidade> historico(Entidade entidade) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

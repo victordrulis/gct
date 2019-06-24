@@ -20,7 +20,7 @@
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 	<div class="row conteudo-topo">
 		<div class="container">
-			<h2>Produto - ID: <%= produto.getId() %></h2>
+			<h2>Produto #<%= produto.getId() %></h2>
 			<p>Dados de produto.</p>
 		</div>
 

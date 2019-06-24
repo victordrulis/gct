@@ -67,7 +67,7 @@
       <td><a href="/gct/cliente?acao=exibir&id=<%= chamado.getCliente().getId() %>"><%= chamado.getCliente().getContato().getNome() %></a></td>
       <td><a href="/gct/produto?acao=exibir&id=<%= chamado.getProduto().getId() %>"><span><%= chamado.getProduto().getTitulo() %> (ID: <%= chamado.getProduto().getId() %>)</span></td>
       <td><%= dateFormat.format(chamado.getDataInclusao()) %></td>
-      <td><%= chamado.getUsuarioAtribuido().getContato().getNome() %></td>
+      <td><%= chamado.getUsuarioAtribuido().getLogin() %></td>
       <td align="center"><%= chamado.getOcorrenciaStatus().getDescricao() %></td>
       <td align="center"><%= chamado.getAtivo() > 0 ? "Sim" : "-" %></td>
       <td align="center">

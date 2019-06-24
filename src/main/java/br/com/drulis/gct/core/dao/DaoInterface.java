@@ -19,4 +19,5 @@ public interface DaoInterface {
     public Entidade alterar(Entidade entidade)throws SQLException;
     public List<Entidade> consultar(Entidade entidade)throws SQLException;
     public Boolean excluir(Entidade entidade)throws SQLException;
+    public List<Entidade> historico(Entidade entidade)throws SQLException;
 }

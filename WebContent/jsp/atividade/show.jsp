@@ -21,7 +21,7 @@
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 	<div class="row conteudo-topo">
 		<div class="container">
-			<h3>Atividade # <%= atividade.getId() %></h3>
+			<h3>Atividade #<%= atividade.getId() %></h3>
 			<p>Informações da atividade.</p>
 		</div>
 	</div>
@@ -103,7 +103,8 @@
 				<div class="row">
 				     <a class="col-md-1" href="/gct/atividade?acao=editar&id=<%= atividade.getId() %>"><button type="submit" class="btn btn-warning">Editar</button></a>
 				     <a class="col-md-1" href="/gct/atividade?acao=alterar&id=<%= atividade.getId() %>&status=finalizado"><button type="button" class="btn btn-danger">Finalizar</button></a>
-				     <a class="col-md-1" href="/gct/chamado?acao=exibir&id=<%= atividade.getChamado().getId()%>"><button type="button" class="btn btn-primary">Voltar ao Chamado</button></a>
+				     <a class="col-md-2" href="/gct/chamado?acao=exibir&id=<%= atividade.getChamado().getId()%>"><button type="button" class="btn btn-primary">Ir ao Chamado</button></a>
+				     <a class="col-md-1" href="/gct/atividade?acao=historico&id=<%= atividade.getId() %>"><button type="button" class="btn btn-secondary">Histórico</button></a>
 				</div>
 
 	</div>

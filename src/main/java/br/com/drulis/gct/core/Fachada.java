@@ -109,11 +109,13 @@ public class Fachada implements FachadaInterface {
         this.mapRegrasAtividade.put("alterar", Arrays.asList(rnf.getValidarAtivo()));
         this.mapRegrasAtividade.put("consultar", Arrays.asList(rnf.getValidarRangeDeDatas()));
         this.mapRegrasAtividade.put("excluir", Arrays.asList(rnf.getValidarAtivo()));
+        this.mapRegrasAtividade.put("historico", Arrays.asList());
         
         this.mapRegrasChamado.put("salvar", Arrays.asList(rnf.getValidarClienteAtivo(), rnf.getValidarProdutoAtivo(), rnf.getValidarUsuarioAtivo()));
         this.mapRegrasChamado.put("alterar", Arrays.asList(rnf.getValidarExistencia(), rnf.getValidarAtivo()));
         this.mapRegrasChamado.put("consultar", Arrays.asList(rnf.getValidarRangeDeDatas()));
         this.mapRegrasChamado.put("excluir", Arrays.asList(rnf.getValidarAtivo()));
+        this.mapRegrasChamado.put("historico", Arrays.asList());
         
         this.mapRegrasDashboard.put("nr", null);
         
@@ -232,6 +234,27 @@ public class Fachada implements FachadaInterface {
         System.out.println("[" + this.getClass().getSimpleName() + "] Registro excluído: " + entidade.getClass().getSimpleName() + ", Id: " + entidade.getId() + " - " + mensagem);
         resultado.setMensagem(mensagem);
         return resultado;
+    }
+    
+    public Resultado historico(Entidade entidade) {
+        this.resultado = new Resultado();
+        List<Entidade> listaEntidade = new ArrayList<Entidade>();
+        String nomeEntidade = entidade.getClass().getName();
+        DaoInterface dao = this.mapDao.get(nomeEntidade);
+
+        System.out.println("[" + this.getClass().getSimpleName() + "] Histórico de registros de " + entidade.getClass().getSimpleName());
+
+        try {
+            listaEntidade = dao.historico(entidade);
+            this.resultado.setEntidades(listaEntidade);
+            System.out.println("[" + this.getClass().getSimpleName() + "] Registro encontrados do tipo " + entidade.getClass().getSimpleName() + ": " + listaEntidade.size());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("[" + this.getClass().getSimpleName() + "] " + Mensagem.ERRO_EXIBIR.getDescricao() + "\n" + e.getMessage());
+            this.resultado.setMensagem(Mensagem.ERRO_EXIBIR.getDescricao());
+        }
+
+        return this.resultado;
     }
 
     /**

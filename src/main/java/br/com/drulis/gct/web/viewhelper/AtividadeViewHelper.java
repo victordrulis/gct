@@ -1,15 +1,20 @@
 package br.com.drulis.gct.web.viewhelper;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import br.com.drulis.gct.core.Acao;
+import br.com.drulis.gct.core.Entidade;
+import br.com.drulis.gct.core.dao.AtividadeDao;
 import br.com.drulis.gct.core.util.Resultado;
 import br.com.drulis.gct.dominio.Atividade;
 import br.com.drulis.gct.dominio.Chamado;
@@ -60,18 +65,15 @@ public class AtividadeViewHelper implements ViewHelperInterface {
         
         if(!acao.equals(Acao.EXCLUIR.getAcao()) && request.getMethod().equals("POST")) {
         	Resultado resultado = new Resultado();
-        	Usuario usuarioInclusao = new Usuario(1, null, null, null);
-        	Usuario usuarioAlteracao = new Usuario(1, null, null, null);
-//        	usuarioInclusao.setId(Integer.parseInt(usrInclusao));
-        	usuarioInclusao.setId(1);
             Usuario usuarioAtribuido = new Usuario();
-            usuarioAtribuido.setId(Integer.parseInt(usrAtribuido));
             Chamado chamado = new Chamado();
             chamado.setId(Integer.parseInt(chamadoId));
-            
+            Usuario usuarioInclusao = new Usuario(1, null, null, null);
+            Usuario usuarioAlteracao = new Usuario(1, null, null, null);
+            usuarioAtribuido.setId(Integer.parseInt(usrAtribuido));
+
             Calendar calendar = Calendar.getInstance();
             
-
             try {
                 resultado = consultar.execute(usuarioInclusao);
                 atividade.setUsuarioInclusao(usuarioInclusao);
@@ -96,8 +98,10 @@ public class AtividadeViewHelper implements ViewHelperInterface {
                 e.printStackTrace();
             }
 
-            if(ativo != null || ativo != "0")
-                atividade.setAtivo(1);
+            atividade.setAtivo(1);
+            
+            if(ativo == null)
+            	atividade.setAtivo(0);
         }
         
         return atividade;
@@ -144,6 +148,13 @@ public class AtividadeViewHelper implements ViewHelperInterface {
         	 
             switch(resultado.getEntidades().size()) {
             case 0:
+            	
+            	if(resultado != null && resultado.getMensagem() != null) {
+            		request.setAttribute("resultado", resultado.getMensagem());
+                    request.getRequestDispatcher("/mensagem.jsp").forward(request, response);
+                    break;
+                }
+            	
                 request.setAttribute("listaChamado", resChamado.getEntidades());
                 request.setAttribute("listaUsuario", resUsuario.getEntidades());
                 
@@ -167,6 +178,12 @@ public class AtividadeViewHelper implements ViewHelperInterface {
                     break;
                 }
                 
+                if(resultado.getMensagem() != null) {
+                	request.setAttribute("resultado", resultado.getMensagem());
+                    request.getRequestDispatcher("/mensagem.jsp").forward(request, response);
+                    break;
+                }
+                
                 request.getRequestDispatcher("/jsp/atividade/index.jsp").forward(request, response);
                 break;
             
@@ -175,6 +192,19 @@ public class AtividadeViewHelper implements ViewHelperInterface {
                     request.setAttribute("mensagem", mensagem);
                     request.getRequestDispatcher("mensagem.jsp").forward(request, response);
                     break;
+                }
+                
+                if(acao != null && (acao.equals(Acao.HISTORICO.getAcao()))) {
+                	AtividadeDao historicoAtivDao = new AtividadeDao();
+                	List<Entidade> historico = new ArrayList<>();
+					try {
+						historico = historicoAtivDao.historico(resultado.getEntidades().get(0));
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+                	request.setAttribute("resultado", historico);
+                	request.getRequestDispatcher("/jsp/atividade/historico.jsp").forward(request, response);
+                	break;
                 }
                 
                 if(resultado.getEntidades() == null || resultado.getEntidades().size() < 1) {

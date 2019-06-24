@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@page import="br.com.drulis.gct.dominio.Produto"%>
 <%@page import="java.util.List"%>
+<%@page import="java.text.SimpleDateFormat" %>
 <%@include file="../fragmentos/header.jsp" %>
 <!DOCTYPE html>
 <html>
@@ -54,7 +55,7 @@
   <tbody>
    <%
        List<Produto> resultado = (List<Produto>) request.getAttribute("resultado");
-   
+   SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");   
        if(resultado != null) {
            for(Produto produto : resultado) {
    %>
@@ -62,7 +63,7 @@
           <td><%= produto.getId() %></td>
           <td><%= produto.getTitulo() %></td>
           <td><%= produto.getDescricao() %></td>
-          <td><%= produto.getDataInclusao() %></td>
+          <td><%= dateFormat.format(produto.getDataInclusao()) %></td>
           <td><%= produto.getAtivo() >= 1 ? "Sim" : "-" %></td>
           <td>
             <span><a href="/gct/produto?acao=exibir&id=<%= produto.getId() %>"><button type="button" class="btn btn-primary">Visualizar</button></a></span>

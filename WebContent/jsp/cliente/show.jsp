@@ -4,6 +4,7 @@
 <%@page import="br.com.drulis.gct.dominio.Produto"%>
 <%@page import="br.com.drulis.gct.dominio.Cliente"%>
 <%@page import="java.util.List"%>
+<%@page import="java.text.SimpleDateFormat" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,13 +19,14 @@
 <body>
 	<%@include file="../fragmentos/nav.jsp"%>
 	<%
-	   System.out.println(this.getClass().getSimpleName() + ": Show");
 	   Cliente cliente = (Cliente) request.getAttribute("resultado");
+	   SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+	   
 	%>
 	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 	<div class="row conteudo-topo">
 		<div class="container">
-			<h2>Cliente - ID: <%= cliente.getId() %></h2>
+			<h2><span>Cliente #<%= cliente.getId() %></span></h2>
 			<p>Dados do cliente.</p>
 		</div>
 
@@ -72,7 +74,7 @@
 			      <td align="center"><%= contrato.getProduto().getId() %></td>
 			      <td><%= contrato.getProduto().getTitulo() %></td>
 			      <td><%= contrato.getProduto().getProdutoStatus().getDescricao() %></td>
-			      <td align="center"><%= contrato.getDataInicio() %></td>
+			      <td align="center"><%= dateFormat.format(contrato.getDataInicio()) %></td>
 			      <td align="center"><%= contrato.getAtivo() > 0 ? "Sim" : "-" %></td>
 			      <td align="center">
 			            <a href="/gct/produto?acao=exibir&id=<%= contrato.getProduto().getId() %>"><button type="button" class="btn btn-primary">Visualizar</button></a>

@@ -19,6 +19,7 @@ public enum Acao {
     LISTAR("listar"),
     NOVO("novo"),
     SALVAR("salvar"),
+    HISTORICO("historico"),
     ;
     
     private String acao;

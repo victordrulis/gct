@@ -59,6 +59,7 @@ public class AtividadeDao extends DaoEntidade {
             }
             sessaoBD.commit();
             System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] " + Mensagem.OK_INSERIR.getDescricao() +" id: " + atividade.getId());
+            this.addHistorico(atividade);
             return atividade;
         } catch (SQLException e) {
             System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e.getMessage());
@@ -114,6 +115,7 @@ public class AtividadeDao extends DaoEntidade {
             
             sessaoBD.commit();
             System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] " + Mensagem.OK_ATUALIZAR.getDescricao() + ", id: " + alterado.getId());
+            this.addHistorico(alterado);
             return alterado;
         } catch (SQLException e) {
             System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + Mensagem.ERRO_ATUALIZAR + ": " + e.getMessage());
@@ -238,12 +240,139 @@ public class AtividadeDao extends DaoEntidade {
             ps.setInt(1,  atividade.getId());
             ps.executeUpdate();
             this.sessaoBD.commit();
+            this.addHistorico(atividade);
             System.out.println("[" + this.getClass().getSimpleName() + "] [INFO] " + Mensagem.OK_EXCLUIR.getDescricao()+ " - Atividade id: " + atividade.getId());
             return true;
         } catch(SQLException e) {
             System.out.println("[" + this.getClass().getSimpleName() + "] [ERRO] " + Mensagem.ERRO_EXCLUIR.getDescricao()+ " - Atividade id: " + atividade.getId() + e.getMessage());
             return false;
         }
+    }
+    
+    private void addHistorico(Atividade atividade) {
+    	System.out.println("[" + this.getClass().getSimpleName() + "] [HISTORICO] Gravando histórico...");
+        PreparedStatement ps = null;
+        StringBuilder sql = new StringBuilder();
+        
+        try {
+        	Atividade historico = (Atividade) this.consultar(atividade).get(0);
+            this.conectar();
+            sessaoBD.setAutoCommit(false);
+            sql.append("INSERT INTO atividade_historico (atividade_id, chamado_id,titulo,descricao,tipo,status,ativo,data_inicio,data_final,usuario_atribuido_id,usuario_inclusao_id,usuario_alteracao_id,usuario_inativacao_id,data_inclusao,data_alteracao,data_inativacao) ");
+            sql.append("VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            ps = sessaoBD.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, historico.getId());
+            ps.setInt(2, historico.getChamado().getId());
+            ps.setString(3, historico.getTitulo());
+            ps.setString(4, historico.getDescricao());
+            ps.setInt(5, historico.getTipo().getId());
+            ps.setInt(6, historico.getOcorrenciaStatus().getId());
+            ps.setInt(7, historico.getAtivo());
+            ps.setTimestamp(8, historico.getDataInicio() != null ? new Timestamp(historico.getDataInicio().getTime()) : null);
+            ps.setTimestamp(9, historico.getDataFim() != null ? new Timestamp(historico.getDataFim().getTime()) : null);
+            ps.setInt(10, historico.getUsuarioAtribuido() != null ? historico.getUsuarioAtribuido().getId() : null);
+            ps.setInt(11, historico.getUsuarioInclusao().getId());
+            ps.setInt(12, historico.getUsuarioUpdate() != null ? historico.getUsuarioUpdate().getId() : null);
+            ps.setInt(13, historico.getUsuarioInativacao() != null ? historico.getUsuarioInativacao().getId() : null);
+            ps.setTimestamp(14, historico.getDataInclusao() != null ? new Timestamp(historico.getDataInclusao().getTime()) : null);
+            ps.setTimestamp(15, historico.getDataAlteracao() != null ? new Timestamp(historico.getDataAlteracao().getTime()) : null);
+            ps.setTimestamp(16, historico.getDataInativacao() != null ? new Timestamp(historico.getDataInativacao().getTime()) : null);
+            ps.executeUpdate();
+            sessaoBD.commit();
+            System.out.println("[" + this.getClass().getSimpleName() + "] [HISTORICO] " + Mensagem.OK_INSERIR.getDescricao() +" id: " + historico.getId());
+        } catch (SQLException e) {
+            System.out.println("[" + this.getClass().getSimpleName() + "] [HISTORICO] [ERRO] " + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println("[" + this.getClass().getSimpleName() + "] [HISTORICO] [ERRO] " + Mensagem.ERRO_INSERIR.getDescricao() + "\n: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Override
+	public List<Entidade> historico(Entidade entidade) throws SQLException {
+    	 System.out.println("[" + this.getClass().getSimpleName() + "] [HISTORICO] Consultando atividade...");
+         PreparedStatement ps = null;
+         UsuarioDao daoUsuario = new UsuarioDao();
+         
+         List<Atividade> listaAtividades = new ArrayList<>();
+         StringBuilder sql = new StringBuilder();
+         
+         sql.append("SELECT a.*, c.*, u.*, con.* FROM atividade_historico a ");
+         sql.append("LEFT JOIN chamado c ON c.id = a.chamado_id ");
+         sql.append("LEFT JOIN usuario u ON u.usuario_id = a.usuario_atribuido_id ");
+         sql.append("LEFT JOIN contato con ON con.id = u.contato_id ");
+         sql.append("WHERE a.atividade_id = ? ");
+         sql.append("ORDER BY a.id ASC");
+
+         try {
+             this.conectar();
+             ps = sessaoBD.prepareStatement(sql.toString());
+             ps.setInt(1, entidade.getId());
+             ResultSet resultado = ps.executeQuery();
+
+             while (resultado.next()) {
+                 Atividade ativ = new Atividade();
+                 Usuario usuarioAtribuido = new Usuario();
+                 Usuario usuarioInclusao = new Usuario();
+                 Usuario usuarioAlteracao = new Usuario();
+                 Usuario usuarioInativacao = new Usuario();
+                 Contato contato = new Contato();
+                 Chamado chamado = new Chamado();
+                 
+                 usuarioAtribuido.setId(resultado.getInt("a.usuario_atribuido_id"));
+                 usuarioInclusao.setId(resultado.getInt("a.usuario_inclusao_id"));
+                 usuarioAlteracao.setId(resultado.getInt("a.usuario_alteracao_id"));
+                 usuarioInativacao.setId(resultado.getInt("a.usuario_inativacao_id"));
+
+                 contato.setId(resultado.getInt("con.id"));
+                 contato.setNome(resultado.getString("con.nome"));
+                 contato.setCpfCnpj(resultado.getString("con.cpf_cnpj"));
+                 contato.setEmail(resultado.getString("con.email"));
+                 contato.setAtivo(resultado.getInt("con.ativo"));
+                 
+                 usuarioAtribuido.setContato(contato);
+                 usuarioAtribuido.setLogin(resultado.getString("u.login"));
+                 usuarioAtribuido.setAtivo(resultado.getInt("u.ativo"));
+                 
+                 chamado.setUsuarioInclusao(new Usuario(resultado.getInt("c.usuario_inclusao_id"), null, null, null));
+                 chamado.setId(resultado.getInt("c.id"));
+                 chamado.setTitulo(resultado.getString("c.titulo"));
+                 chamado.setStatus(resultado.getInt("c.status"));
+                 chamado.setAtivo(resultado.getInt("c.ativo"));
+                 
+                 ativ.setUsuarioAtribuido((Usuario) daoUsuario.consultar(usuarioAtribuido).get(0));
+                 ativ.setUsuarioInclusao((Usuario) daoUsuario.consultar(usuarioInclusao).get(0));
+                 ativ.setUsuarioUpdate((Usuario) daoUsuario.consultar(usuarioAlteracao).get(0));
+                 ativ.setUsuarioInativacao((Usuario) daoUsuario.consultar(usuarioInativacao).get(0));
+                 ativ.setUsuarioAtribuido((Usuario) daoUsuario.consultar(usuarioAtribuido).get(0));
+                 ativ.setChamado(chamado);
+                 ativ.setId(resultado.getInt("a.atividade_id"));
+                 ativ.setTitulo(resultado.getString("a.titulo"));
+                 ativ.setStatus(resultado.getInt("a.status"));
+                 ativ.setAtivo(resultado.getInt("a.ativo"));
+                 ativ.setTipo(OcorrenciaTipo.getMapa().get(resultado.getInt("a.tipo")));
+                 ativ.setOcorrenciaStatus(OcorrenciaStatus.getMapa().get(resultado.getInt("a.status")));
+                 ativ.setDescricao(resultado.getString("a.descricao"));
+                 ativ.setDataInicio(resultado.getDate("c.data_inicio"));
+                 ativ.setDataFim(resultado.getDate("c.data_final"));
+                 ativ.setDataInclusao(resultado.getDate("a.data_inclusao"));
+                 ativ.setDataAlteracao(resultado.getDate("a.data_alteracao"));
+                 ativ.setDataInativacao(resultado.getDate("a.data_inativacao"));
+                 
+                 listaAtividades.add(ativ);
+             }
+             
+             System.out.println("[" + this.getClass().getSimpleName() + "] [HISTORICO] " + Mensagem.OK_CONSULTAR.getDescricao());
+         } catch (SQLException e) {
+             System.out.println("[" + this.getClass().getSimpleName() + "] [HISTORICO] [ERRO] " + Mensagem.ERRO_NAO_ENCONTRADO.getDescricao()+ "\n" + e.getMessage());
+             e.printStackTrace();
+         } catch (Exception e) {
+             System.out.println("[" + this.getClass().getSimpleName() + "] [HISTORICO] [ERRO] " + Mensagem.ERRO_EXIBIR.getDescricao() + e.getMessage());
+             e.printStackTrace();
+         }
+         
+         return listaAtividades.stream().collect(Collectors.toList());
     }
 
 }

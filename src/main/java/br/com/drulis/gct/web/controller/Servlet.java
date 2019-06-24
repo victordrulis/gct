@@ -17,6 +17,7 @@ import br.com.drulis.gct.web.command.AlterarCommand;
 import br.com.drulis.gct.web.command.CommandInterface;
 import br.com.drulis.gct.web.command.ConsultarCommand;
 import br.com.drulis.gct.web.command.ExcluirCommand;
+import br.com.drulis.gct.web.command.HistoricoCommand;
 import br.com.drulis.gct.web.command.InserirCommand;
 import br.com.drulis.gct.web.viewhelper.AtividadeViewHelper;
 import br.com.drulis.gct.web.viewhelper.ChamadoViewHelper;
@@ -70,6 +71,7 @@ public class Servlet extends HttpServlet {
         listaCommand.put(Acao.LISTAR.getAcao(), new ConsultarCommand());
         listaCommand.put(Acao.NOVO.getAcao(), new ConsultarCommand());
         listaCommand.put(Acao.SALVAR.getAcao(), new InserirCommand());
+        listaCommand.put(Acao.HISTORICO.getAcao(), new HistoricoCommand());
         
     }
     

@@ -5,7 +5,7 @@ package br.com.drulis.gct.dominio.negocio;
 
 import br.com.drulis.gct.core.Entidade;
 import br.com.drulis.gct.core.StrategyInterface;
-import br.com.drulis.gct.dominio.Chamado;
+import br.com.drulis.gct.dominio.Atividade;
 
 /**
  * @author Victor Drulis Oliveira
@@ -18,11 +18,13 @@ public class ValidarChamadoAtivo implements StrategyInterface {
     @Override
     public String processar(Entidade entidade) {
 
-    	if(entidade.getClass().isInstance(Chamado.class))
-	    	if(entidade.getAtivo() > 0 ) 
-	    		return null;
-
-    	return "O registro de " + entidade.getClass().getSimpleName() + " está inativo.";
+    	if(entidade.getClass().getName().equals(Atividade.class.getName())) {
+    		Atividade atividade = (Atividade) entidade;
+	    	if(atividade.getChamado() != null && atividade.getChamado().getAtivo() <= 0 ) 
+	    		return "O chamado, ao qual a atividade está sendo relacioando, está inativo.";
+    	}
+    	
+    	return null;
     }
 
 }
