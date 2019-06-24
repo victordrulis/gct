@@ -162,6 +162,20 @@ public class AtividadeViewHelper implements ViewHelperInterface {
                 break;
             
             case 1:
+            	
+            	if(acao != null && (acao.equals(Acao.HISTORICO.getAcao()))) {
+                	AtividadeDao historicoAtivDao = new AtividadeDao();
+                	List<Entidade> historico = new ArrayList<>();
+					try {
+						historico = historicoAtivDao.historico(resultado.getEntidades().get(0));
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+                	request.setAttribute("resultado", historico);
+                	request.getRequestDispatcher("/jsp/atividade/historico.jsp").forward(request, response);
+                	break;
+                }
+            	
                 request.setAttribute("listaChamado", resChamado.getEntidades());
                 request.setAttribute("listaUsuario", resUsuario.getEntidades());
                 request.setAttribute("resultado", resultado.getEntidades());

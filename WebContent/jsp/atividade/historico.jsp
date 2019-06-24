@@ -28,7 +28,7 @@
    
 <div class="row conteudo-topo">
         <div class="container">
-            <h2>Histórico - Atividades #<%= resultado.get(0).getId() %></h2>
+            <h2>Histórico - Atividade #<%= resultado != null && resultado.get(0) != null ? resultado.get(0).getId() : "-" %></h2>
             <p>Histórico da atividade cadastrada.</p>
             <button type="button" class="btn btn-warning" onclick="goBack()">Voltar</button>
         </div>
@@ -69,16 +69,16 @@
 	           for(Atividade atividade : resultado) {
 	   %>
     <tr>
-      <td><%= atividade.getId() %></td>
-      <td><%= atividade.getTitulo() %></td>
-      <td><span><%= atividade.getDescricao() %></span></td>
+      <td><%= atividade.getId() > 0 ? atividade.getId() : 0 %></td>
+      <td><%= atividade.getTitulo() != null ? atividade.getTitulo() : "-" %></td>
+      <td><span><%= atividade.getDescricao() != null ? atividade.getDescricao() : "-" %></span></td>
       <td><%= atividade.getDataInicio() != null ? dateFormat.format(atividade.getDataInicio()) : "-" %></td>
       <td><%= atividade.getDataFim() != null ? dateFormat.format(atividade.getDataFim()) : "-" %></td>
-      <td><span><%= atividade.getUsuarioAtribuido().getLogin() %></span></td>
-      <td><%= atividade.getTipo().getDescricao() %></td>
-      <td><%= atividade.getOcorrenciaStatus().getDescricao() %></td>
+      <td><span><%= atividade.getUsuarioAtribuido() != null ? atividade.getUsuarioAtribuido().getLogin() : "-" %></span></td>
+      <td><%= atividade.getTipo() != null ? atividade.getTipo().getDescricao() : "-" %></td>
+      <td><%= atividade.getOcorrenciaStatus() != null ? atividade.getOcorrenciaStatus().getDescricao() : null %></td>
       <td><%= atividade.getAtivo() > 0 ? "Sim" : "-" %></td>
-      <td><%= dateFormat.format(atividade.getDataInclusao()) %></td>
+      <td><%= atividade.getDataInclusao() != null ? dateFormat.format(atividade.getDataInclusao()) : "-" %></td>
       <td><%= atividade.getDataAlteracao() != null ? dateFormat.format(atividade.getDataAlteracao()) : "-" %></td>
     </tr>
     <%

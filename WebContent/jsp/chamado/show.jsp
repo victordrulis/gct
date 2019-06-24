@@ -38,7 +38,7 @@
 	     </div>
 	     
 	     <div class=" ">
-              <a href="/gct/chamado"><button type="button" class="btn btn-secondary">Voltar</button></a>
+              <button type="button" class="btn btn-secondary" onclick="goBack()">Voltar</button>
            </div>
 	    </div>
 			<hr>
@@ -222,12 +222,17 @@
 				     </div>
 				     
 				     <div class="form-group ">
-                         <a href="/gct/chamado"><button type="button" class="btn btn-secondary">Voltar</button></a>
+                         <button type="button" class="btn btn-secondary" onclick="goBack()">Voltar</button>
                      </div>
 		     </div>
 
 	</div>
 	</main>
 	<%@include file="../fragmentos/footer.jsp"%>
+	<script>
+function goBack() {
+  window.history.back();
+}
+</script>
 </body>
 </html>

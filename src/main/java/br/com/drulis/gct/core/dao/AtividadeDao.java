@@ -363,6 +363,9 @@ public class AtividadeDao extends DaoEntidade {
                  listaAtividades.add(ativ);
              }
              
+             if(listaAtividades.isEmpty())
+            	 listaAtividades.add((Atividade) entidade);
+             
              System.out.println("[" + this.getClass().getSimpleName() + "] [HISTORICO] " + Mensagem.OK_CONSULTAR.getDescricao());
          } catch (SQLException e) {
              System.out.println("[" + this.getClass().getSimpleName() + "] [HISTORICO] [ERRO] " + Mensagem.ERRO_NAO_ENCONTRADO.getDescricao()+ "\n" + e.getMessage());
